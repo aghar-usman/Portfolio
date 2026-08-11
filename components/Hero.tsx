@@ -64,6 +64,7 @@ export default function Hero({ profile, contact }: HeroProps) {
         bg-[var(--color-bg)]
         flex
         items-center
+        box-border
       "
     >
       {/* Gradient Waves Background - Full coverage */}
@@ -101,7 +102,7 @@ export default function Hero({ profile, contact }: HeroProps) {
         />
       </div>
 
-      {/* Dark overlay for readability - Must be pointer-events-none */}
+      {/* Dark overlay for readability */}
       <div
         className="
           pointer-events-none
@@ -112,7 +113,7 @@ export default function Hero({ profile, contact }: HeroProps) {
         "
       />
 
-      {/* Bottom gradient fade into next section - Must be pointer-events-none */}
+      {/* Bottom gradient fade into next section */}
       <div
         className="
           pointer-events-none
@@ -138,19 +139,24 @@ export default function Hero({ profile, contact }: HeroProps) {
           flex-col
           items-start
           gap-8
-          px-8
+          px-4
+          sm:px-8
           py-20
           md:px-12
           lg:px-16
           pointer-events-none
+          box-border
+          min-w-0
         "
       >
         {/* Name + roles */}
-        <div className="pointer-events-auto">
+        <div className="pointer-events-auto w-full min-w-0">
           <div
             className="
               mb-6
               overflow-visible
+              w-full
+              min-w-0
             "
           >
             <FoldText
@@ -162,7 +168,7 @@ export default function Hero({ profile, contact }: HeroProps) {
               ease="power3.out"
               perspective={700}
               creaseShading={0.55}
-              fontSize="clamp(2.8rem, 6vw, 5rem)"
+              fontSize="clamp(2rem, 7vw, 5rem)"
               fontWeight={800}
               color="var(--color-text)"
             />
@@ -173,8 +179,10 @@ export default function Hero({ profile, contact }: HeroProps) {
             className="
               flex
               flex-wrap
-              gap-3
+              gap-2.5
               font-mono
+              w-full
+              min-w-0
             "
           >
             {profile.roles.map((role, index) => (
@@ -187,9 +195,12 @@ export default function Hero({ profile, contact }: HeroProps) {
                   bg-[var(--color-surface)]/70
                   px-3
                   py-1
-                  text-sm
+                  text-xs
+                  sm:text-sm
                   text-[var(--color-accent)]
                   backdrop-blur-md
+                  truncate
+                  max-w-full
                 "
               >
                 {role}
@@ -199,7 +210,7 @@ export default function Hero({ profile, contact }: HeroProps) {
         </div>
 
         {/* Summary */}
-        <div className="w-full pointer-events-auto">
+        <div className="w-full pointer-events-auto min-w-0">
           <TextType
             text={profile.summary}
             typingSpeed={100}
@@ -211,11 +222,15 @@ export default function Hero({ profile, contact }: HeroProps) {
             cursorClassName="text-[var(--color-accent)]"
             className="
               font-mono
-              text-lg
+              text-sm
+              sm:text-lg
               font-medium
               leading-relaxed
               text-white
               md:text-xl
+              break-words
+              w-full
+              min-w-0
             "
           />
         </div>
@@ -226,9 +241,12 @@ export default function Hero({ profile, contact }: HeroProps) {
             mt-4
             flex
             flex-wrap
-            gap-4
+            gap-3
+            sm:gap-4
             font-mono
             pointer-events-auto
+            w-full
+            min-w-0
           "
         >
           {/* Resume */}
@@ -242,8 +260,11 @@ export default function Hero({ profile, contact }: HeroProps) {
               justify-center
               rounded-lg
               bg-[var(--color-accent)]
-              px-6
+              px-5
+              sm:px-6
               py-3
+              text-sm
+              sm:text-base
               font-semibold
               text-[#000000]
               shadow-lg
@@ -273,8 +294,11 @@ export default function Hero({ profile, contact }: HeroProps) {
               border
               border-[var(--color-border)]
               bg-[var(--color-surface)]/75
-              px-5
+              px-4
+              sm:px-5
               py-3
+              text-sm
+              sm:text-base
               text-[var(--color-text)]
               backdrop-blur-md
               transition-all
@@ -316,8 +340,11 @@ export default function Hero({ profile, contact }: HeroProps) {
               border
               border-[var(--color-border)]
               bg-[var(--color-surface)]/75
-              px-5
+              px-4
+              sm:px-5
               py-3
+              text-sm
+              sm:text-base
               text-[var(--color-text)]
               backdrop-blur-md
               transition-all
