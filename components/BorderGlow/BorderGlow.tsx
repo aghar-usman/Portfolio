@@ -75,7 +75,7 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
   className = '',
   edgeSensitivity = 30,
   glowColor = '11 90 60',
-  backgroundColor = 'var(--color-surface)',
+  backgroundColor = 'var(--color-surface, #121212)',
   borderRadius = 12,
   glowRadius = 30,
   glowIntensity = 1.2,
@@ -149,6 +149,7 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
     });
   }, [animated]);
 
+  glowColor = glowColor || '11 90 60';
   const glowVars = buildGlowVars(glowColor, glowIntensity);
 
   return (
