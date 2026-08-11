@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import GooeyNav from "./GooeyNav/GooeyNav";
 import { Menu, X, Mail } from "lucide-react";
 
@@ -15,6 +15,9 @@ interface NavbarProps {
 
 export default function Navbar({ links }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [useBurger, setUseBurger] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // Prevent body scrolling when mobile menu is open
   useEffect(() => {
@@ -28,15 +31,35 @@ export default function Navbar({ links }: NavbarProps) {
     };
   }, [isOpen]);
 
-  // Filter out contact to place it cleanly inside the main navbar pill container
+  // Dynamically measure if the desktop nav content exceeds available space and switch to burger menu
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (containerRef.current && contentRef.current) {
+        const containerWidth = containerRef.current.clientWidth - 100; // Account for brand & padding
+        const contentWidth = contentRef.current.scrollWidth;
+        if (contentWidth > containerWidth || window.innerWidth < 950) {
+          setUseBurger(true);
+        } else {
+          setUseBurger(false);
+        }
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, [links]);
+
+  // Filter out contact to place it cleanly inside the desktop nav
   const navLinksWithoutContact = links.filter(
     (link) => !link.label.toLowerCase().includes("contact")
   );
 
   return (
     <>
-      <header className="fixed top-4 inset-x-0 z-50 flex justify-center px-4">
+      <header className="fixed top-4 inset-x-0 z-50 flex justify-center px-4 w-full">
         <div
+          ref={containerRef}
           className="
             flex
             h-16
@@ -75,8 +98,13 @@ export default function Navbar({ links }: NavbarProps) {
             AUKT.
           </a>
 
-          {/* DESKTOP NAV CONTAINER (GooeyNav + Contact Button completely enclosed) */}
-          <div className="hidden md:flex items-center gap-4 shrink-0">
+          {/* DESKTOP NAV CONTAINER (Switches to hamburger automatically if space is constrained) */}
+          <div
+            ref={contentRef}
+            className={`items-center gap-4 shrink-0 ${
+              useBurger ? "hidden" : "hidden md:flex"
+            }`}
+          >
             <GooeyNav
               items={navLinksWithoutContact}
               particleCount={6}
@@ -96,10 +124,12 @@ export default function Navbar({ links }: NavbarProps) {
             </a>
           </div>
 
-          {/* MOBILE HAMBURGER BUTTON */}
+          {/* HAMBURGER BUTTON (Triggered on small screens or when width is constrained) */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors focus:outline-none"
+            className={`p-2 text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors focus:outline-none shrink-0 ${
+              useBurger ? "flex md:flex" : "flex md:hidden"
+            }`}
             aria-label="Toggle Menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -107,15 +137,15 @@ export default function Navbar({ links }: NavbarProps) {
         </div>
       </header>
 
-      {/* MOBILE FULLSCREEN OVERLAY MENU */}
+      {/* FULLSCREEN OVERLAY MENU (Ensures every single item is completely visible with proper scrolling) */}
       <div
-        className={`fixed inset-0 z-40 bg-[var(--color-bg)]/95 backdrop-blur-xl flex flex-col justify-center items-center transition-all duration-300 md:hidden ${
+        className={`fixed inset-0 z-40 bg-[var(--color-bg)]/95 backdrop-blur-xl flex flex-col justify-center items-center px-6 transition-all duration-300 overflow-y-auto ${
           isOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         }`}
       >
-        <nav className="flex flex-col items-center gap-6 text-center">
+        <nav className="flex flex-col items-center gap-5 text-center w-full max-w-xs py-12 my-auto">
           {links.map((link, idx) => {
             const isContact = link.label.toLowerCase().includes("contact");
             return (
@@ -123,9 +153,9 @@ export default function Navbar({ links }: NavbarProps) {
                 key={idx}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`transition-colors py-2 flex items-center gap-2 ${
+                className={`transition-colors py-2.5 flex items-center justify-center gap-2.5 w-full ${
                   isContact
-                    ? "mt-4 px-6 py-3 bg-[var(--color-surface)] text-[var(--color-accent)] font-mono text-base font-bold rounded-xl border border-[var(--color-border)] hover:border-[var(--color-accent)]"
+                    ? "mt-3 px-6 py-3 bg-[var(--color-surface)] text-[var(--color-accent)] font-mono text-base font-bold rounded-xl border border-[var(--color-border)] hover:border-[var(--color-accent)] shadow-md"
                     : "text-2xl font-mono font-bold text-[var(--color-text)] hover:text-[var(--color-accent)]"
                 }`}
               >
