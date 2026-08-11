@@ -130,12 +130,15 @@ void main() {
   c = cos(uTilt); s = sin(uTilt);
   dir = mat3(c, 0.0, s, 0.0, 1.0, 0.0, -s, 0.0, c) * dir;
 
+  // Fully active 4-directional fluid wave flow mapped to both Yaw and Pitch
   if (uEnableMouse) {
-    float yaw = (uMouse.x - 0.5) * uParallax * 0.4;
-    float pitch = (uMouse.y - 0.5) * uParallax * 0.4;
+    float yaw = (uMouse.x - 0.5) * uParallax * 1.8;
+    float pitch = (0.5 - uMouse.y) * uParallax * 1.8;
+
     c = cos(yaw);
     s = sin(yaw);
     dir = mat3(c, 0.0, s, 0.0, 1.0, 0.0, -s, 0.0, c) * dir;
+
     c = cos(pitch);
     s = sin(pitch);
     dir = mat3(1.0, 0.0, 0.0, 0.0, c, -s, 0.0, s, c) * dir;
@@ -185,7 +188,7 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
   brightness = 1.3,
   opacity = 0.9,
   mouseInteraction = true,
-  parallaxStrength = 1.5,
+  parallaxStrength = 2.2,
   grain = true,
   grainIntensity = 0.04,
   className = "",
@@ -220,23 +223,23 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
       uniforms: {
         iTime: { value: 0 },
         iResolution: { value: new Float32Array([1, 1]) },
-        uSpeed: { value: 0.35 },
-        uAmplitude: { value: 2.5 },
-        uWaveScale: { value: 0.6 },
-        uWaveRatio: { value: 0.9 },
-        uSwell: { value: 38 },
-        uTurbulence: { value: 22 },
-        uTilt: { value: 1.08 },
-        uZoom: { value: 1.0 },
-        uHeight: { value: 5.5 },
-        uFogDepth: { value: 18 },
-        uSteps: { value: 70.0 },
-        uBrightness: { value: 1.3 },
-        uOpacity: { value: 0.9 },
-        uGrain: { value: 1.0 },
-        uGrainIntensity: { value: 0.04 },
+        uSpeed: { value: speed },
+        uAmplitude: { value: amplitude },
+        uWaveScale: { value: waveScale },
+        uWaveRatio: { value: waveRatio },
+        uSwell: { value: swell },
+        uTurbulence: { value: turbulence },
+        uTilt: { value: tilt },
+        uZoom: { value: zoom },
+        uHeight: { value: height },
+        uFogDepth: { value: fogDepth },
+        uSteps: { value: detailToSteps(detail) },
+        uBrightness: { value: brightness },
+        uOpacity: { value: opacity },
+        uGrain: { value: grain ? 1.0 : 0.0 },
+        uGrainIntensity: { value: grainIntensity },
         uMouse: { value: new Float32Array([0.5, 0.5]) },
-        uParallax: { value: 1.5 },
+        uParallax: { value: parallaxStrength },
         uEnableMouse: { value: true },
         uHorizonColor: { value: new Float32Array(hexToRgb(horizonColor)) },
         uWaveColor: { value: new Float32Array(hexToRgb(waveColor)) },
@@ -264,18 +267,22 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
 
     const currentMouse: [number, number] = [0.5, 0.5];
     const targetMouse: [number, number] = [0.5, 0.5];
+    let isHovered = false;
 
     const onPointerMove = (e: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
+      isHovered = true;
+      const rect = container.getBoundingClientRect();
       targetMouse[0] = (e.clientX - rect.left) / rect.width;
       targetMouse[1] = 1.0 - (e.clientY - rect.top) / rect.height;
     };
     const onPointerLeave = () => {
+      isHovered = false;
       targetMouse[0] = 0.5;
       targetMouse[1] = 0.5;
     };
-    canvas.addEventListener("pointermove", onPointerMove);
-    canvas.addEventListener("pointerleave", onPointerLeave);
+
+    container.addEventListener("pointermove", onPointerMove);
+    container.addEventListener("pointerleave", onPointerLeave);
 
     let raf = 0;
     let isVisible = true;
@@ -283,15 +290,30 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
     const t0 = performance.now();
 
     const loop = (t: number) => {
+      const timeVal = (t - t0) * 0.001;
       const iTime = program.uniforms.iTime as { value: number };
-      iTime.value = (t - t0) * 0.001;
-      const tx = enableMouseRef.current ? targetMouse[0] : 0.5;
-      const ty = enableMouseRef.current ? targetMouse[1] : 0.5;
-      currentMouse[0] += 0.05 * (tx - currentMouse[0]);
-      currentMouse[1] += 0.05 * (ty - currentMouse[1]);
+      iTime.value = timeVal;
+
+      let tx = 0.5;
+      let ty = 0.5;
+
+      if (enableMouseRef.current && isHovered) {
+        tx = targetMouse[0];
+        ty = targetMouse[1];
+      } else {
+        // Smooth organic idle flow across all 4 directions when mouse is idle
+        tx = 0.5 + Math.sin(timeVal * 0.35) * 0.1;
+        ty = 0.5 + Math.cos(timeVal * 0.3) * 0.1;
+      }
+
+      // Fluid interpolation response rate for a smooth flow instead of shaking
+      currentMouse[0] += 0.08 * (tx - currentMouse[0]);
+      currentMouse[1] += 0.08 * (ty - currentMouse[1]);
+
       const m = (program.uniforms.uMouse as { value: Float32Array }).value;
       m[0] = currentMouse[0];
       m[1] = currentMouse[1];
+
       renderer.render({ scene: mesh });
       raf = requestAnimationFrame(loop);
     };
@@ -336,15 +358,15 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
       ro.disconnect();
       io.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
-      canvas.removeEventListener("pointermove", onPointerMove);
-      canvas.removeEventListener("pointerleave", onPointerLeave);
+      container.removeEventListener("pointermove", onPointerMove);
+      container.removeEventListener("pointerleave", onPointerLeave);
       ctxMap.delete(container);
       try {
         container.removeChild(canvas);
       } catch {}
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  },);
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -415,6 +437,7 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
     <div
       ref={containerRef}
       className={`gradient-waves-container ${className}`.trim()}
+      style={{ pointerEvents: "auto" }}
     />
   );
 };
