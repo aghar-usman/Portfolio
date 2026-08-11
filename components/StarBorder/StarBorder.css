@@ -1,0 +1,64 @@
+.star-border-container {
+  display: block;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  /* Ensures proper box-sizing and containment for absolute gradient lines */
+  box-sizing: border-box;
+}
+
+.border-gradient-bottom {
+  position: absolute;
+  width: 400%;
+  height: 100%;
+  opacity: 0.9;
+  bottom: -50%;
+  right: -300%;
+  border-radius: 50%;
+  animation: star-movement-bottom linear infinite alternate;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.border-gradient-top {
+  position: absolute;
+  opacity: 0.9;
+  width: 400%;
+  height: 100%;
+  top: -50%;
+  left: -300%;
+  border-radius: 50%;
+  animation: star-movement-top linear infinite alternate;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.inner-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+@keyframes star-movement-bottom {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-75%, 0%);
+    opacity: 0.2;
+  }
+}
+
+@keyframes star-movement-top {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(75%, 0%);
+    opacity: 0.2;
+  }
+}
