@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import ReflectiveCard from "./ReflectiveCard/ReflectiveCard";
 import StarBorder from "./StarBorder/StarBorder";
@@ -44,24 +44,35 @@ export default function EducationAndExtras({
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const spotlightRef = useRef<HTMLDivElement>(null);
 
-  // Detect mobile viewport to lighten heavy graphical effects and improve scaling
+  // Optimized mobile and viewport checking using requestAnimationFrame throttling
   useEffect(() => {
+    let ticking = false;
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsMobile(window.innerWidth < 768);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     checkMobile();
-    window.addEventListener("resize", checkMobile);
+    window.addEventListener("resize", checkMobile, { passive: true });
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  // Optimized mouse move handler using requestAnimationFrame to eliminate scroll jank on touch/mouse devices
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (isMobile || !spotlightRef.current) return;
-    const rect = spotlightRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    spotlightRef.current.style.setProperty("--mouse-x", `${x}px`);
-    spotlightRef.current.style.setProperty("--mouse-y", `${y}px`);
-  };
+    const currentRef = spotlightRef.current;
+    window.requestAnimationFrame(() => {
+      const rect = currentRef.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      currentRef.style.setProperty("--mouse-x", `${x}px`);
+      currentRef.style.setProperty("--mouse-y", `${y}px`);
+    });
+  }, [isMobile]);
 
   return (
     <section id="education" className="py-16 flex flex-col gap-12 w-full max-w-full overflow-hidden box-border">
@@ -76,12 +87,12 @@ export default function EducationAndExtras({
         <div
           ref={spotlightRef}
           onMouseMove={handleMouseMove}
-          className="lg:col-span-7 relative p-5 sm:p-8 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden group flex flex-col justify-between transition-all duration-300 hover:border-[var(--color-accent)]/50 min-w-0 box-border"
+          className="lg:col-span-7 relative p-5 sm:p-8 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden group flex flex-col justify-between transition-colors duration-300 hover:border-[var(--color-accent)]/50 min-w-0 box-border"
         >
-          {/* Dynamic Spotlight Effect Layer (Disabled on mobile for performance) */}
+          {/* Dynamic Spotlight Effect Layer (Completely hidden/disabled on mobile for zero load/scroll lag) */}
           {!isMobile && (
             <div
-              className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
+              className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
               style={{
                 background:
                   "radial-gradient(500px circle at var(--mouse-x) var(--mouse-y), rgba(255, 90, 54, 0.1), transparent 80%)",
@@ -117,7 +128,7 @@ export default function EducationAndExtras({
                 {education.coursework.map((course: string, idx: number) => (
                   <span
                     key={idx}
-                    className="text-xs font-mono px-3 py-1.5 bg-[var(--color-surface-2)] text-[var(--color-text)] rounded-lg border border-[var(--color-border)] transition-all duration-200 hover:bg-[var(--color-accent)] hover:text-black hover:border-transparent font-medium flex items-center gap-1.5 group/course max-w-full truncate"
+                    className="text-xs font-mono px-3 py-1.5 bg-[var(--color-surface-2)] text-[var(--color-text)] rounded-lg border border-[var(--color-border)] transition-colors duration-200 hover:bg-[var(--color-accent)] hover:text-black hover:border-transparent font-medium flex items-center gap-1.5 group/course max-w-full truncate"
                   >
                     <BookOpen size={12} className="text-[var(--color-accent)] group-hover/course:text-black transition-colors shrink-0" />
                     <span className="truncate">{course}</span>
@@ -136,12 +147,12 @@ export default function EducationAndExtras({
           </div>
         </div>
 
-        {/* Right Side: Reflective Card (Responsive & Optimized across all screen sizes) */}
+        {/* Right Side: Reflective Card (Hardware-accelerated and lightened on mobile devices) */}
         <div className="lg:col-span-5 flex flex-col gap-6 min-w-0 w-full">
           <ReflectiveCard
             className="w-full h-full shadow-2xl"
             blurStrength={isMobile ? 0 : 4}
-            metalness={isMobile ? 0.2 : 0.95}
+            metalness={isMobile ? 0.1 : 0.95}
             roughness={0.15}
             displacementStrength={isMobile ? 0 : 18}
             noiseScale={1.2}
@@ -158,7 +169,7 @@ export default function EducationAndExtras({
                 <div className="flex items-center gap-2 p-1 bg-black/40 backdrop-blur-md rounded-xl border border-[var(--color-border)] mb-6 font-mono text-xs shadow-inner">
                   <button
                     onClick={() => setActiveTab(0)}
-                    className={`flex-1 py-2 px-2 sm:px-3 rounded-lg transition-all flex items-center justify-center gap-1.5 truncate ${
+                    className={`flex-1 py-2 px-2 sm:px-3 rounded-lg transition-colors flex items-center justify-center gap-1.5 truncate ${
                       activeTab === 0
                         ? "bg-[var(--color-surface)] text-[var(--color-accent)] font-bold shadow-sm border border-[var(--color-border)]"
                         : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
@@ -169,7 +180,7 @@ export default function EducationAndExtras({
                   </button>
                   <button
                     onClick={() => setActiveTab(1)}
-                    className={`flex-1 py-2 px-2 sm:px-3 rounded-lg transition-all flex items-center justify-center gap-1.5 truncate ${
+                    className={`flex-1 py-2 px-2 sm:px-3 rounded-lg transition-colors flex items-center justify-center gap-1.5 truncate ${
                       activeTab === 1
                         ? "bg-[var(--color-surface)] text-[var(--color-accent)] font-bold shadow-sm border border-[var(--color-border)]"
                         : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
@@ -182,7 +193,7 @@ export default function EducationAndExtras({
 
                 {/* Tab 0: Certifications Panel */}
                 {activeTab === 0 && (
-                  <div className="space-y-3 animate-fadeIn w-full min-w-0">
+                  <div className="space-y-3 w-full min-w-0">
                     {certifications.map((cert: Certification, idx: number) => {
                       const content = (
                         <div className="flex items-center gap-3 sm:gap-4 group/cert w-full min-w-0">
@@ -219,7 +230,7 @@ export default function EducationAndExtras({
                           href={cert.credentialUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block p-3.5 rounded-xl transition-all bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-[var(--color-border)]/60 hover:border-[var(--color-accent)]/50 shadow-sm w-full min-w-0 box-border"
+                          className="block p-3.5 rounded-xl transition-colors bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-[var(--color-border)]/60 hover:border-[var(--color-accent)]/50 shadow-sm w-full min-w-0 box-border"
                         >
                           {content}
                         </a>
@@ -234,7 +245,7 @@ export default function EducationAndExtras({
 
                 {/* Tab 1: Languages Panel */}
                 {activeTab === 1 && (
-                  <div className="grid grid-cols-1 gap-2.5 animate-fadeIn w-full min-w-0">
+                  <div className="grid grid-cols-1 gap-2.5 w-full min-w-0">
                     {languages.map((lang: Language, idx: number) => (
                       <div
                         key={idx}
@@ -263,7 +274,7 @@ export default function EducationAndExtras({
         color="var(--color-accent)"
         speed="5s"
         thickness={2}
-        className="w-full rounded-[22px] bg-[var(--color-surface)] transition-all duration-300 max-w-full overflow-hidden box-border"
+        className="w-full rounded-[22px] bg-[var(--color-surface)] max-w-full overflow-hidden box-border"
       >
         <div className="p-5 sm:p-6 bg-[var(--color-surface)] relative overflow-hidden group w-full h-full rounded-[20px] min-w-0 box-border">
           <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-accent)]/5 rounded-full blur-2xl pointer-events-none" />
@@ -279,7 +290,7 @@ export default function EducationAndExtras({
               return (
                 <div
                   key={idx}
-                  className="p-3.5 sm:p-4 rounded-xl bg-[var(--color-surface-2)]/40 border border-[var(--color-border)]/60 flex items-start gap-3 transition-all duration-300 hover:border-[var(--color-accent)]/40 hover:bg-[var(--color-surface-2)] w-full min-w-0 box-border"
+                  className="p-3.5 sm:p-4 rounded-xl bg-[var(--color-surface-2)]/40 border border-[var(--color-border)]/60 flex items-start gap-3 transition-colors duration-300 hover:border-[var(--color-accent)]/40 hover:bg-[var(--color-surface-2)] w-full min-w-0 box-border"
                 >
                   <span className="text-[var(--color-accent)] font-mono font-bold mt-0.5 flex items-center gap-1 shrink-0">
                     {isFirst && <Sparkles size={14} className="animate-pulse" />}
