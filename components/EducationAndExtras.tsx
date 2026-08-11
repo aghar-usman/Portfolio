@@ -41,12 +41,11 @@ export default function EducationAndExtras({
   languages,
 }: EducationAndExtrasProps) {
   const [activeTab, setActiveTab] = useState<number>(0);
-  const [, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   const [isMobile, setIsMobile] = useState<boolean>(true);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const spotlightRef = useRef<HTMLDivElement>(null);
 
-  // Defer heavy mounting tasks using requestIdleCallback or a micro-timeout to instantly unblock main thread layout/paint
   useEffect(() => {
     const handleInit = () => {
       setIsMobile(window.innerWidth < 768);
@@ -107,7 +106,6 @@ export default function EducationAndExtras({
           onMouseMove={handleMouseMove}
           className="lg:col-span-7 relative p-4 sm:p-8 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden group flex flex-col justify-between transition-colors duration-200 hover:border-[var(--color-accent)]/50 min-w-0 box-border will-change-transform"
         >
-          {/* Dynamic Spotlight Effect Layer (Completely eliminated until idle hydration for optimal scroll performance) */}
           {isLoaded && !isMobile && (
             <div
               className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-0 will-change-[opacity]"
@@ -165,7 +163,7 @@ export default function EducationAndExtras({
           </div>
         </div>
 
-        {/* Right Side: Reflective Card Module (Streamlined for immediate touch response) */}
+        {/* Right Side: Reflective Card Module with Instant Non-Blocking Tab Switching */}
         <div className="lg:col-span-5 flex flex-col gap-6 min-w-0 w-full">
           <ReflectiveCard
             className="w-full h-full shadow-xl"
@@ -209,78 +207,77 @@ export default function EducationAndExtras({
                   </button>
                 </div>
 
-                {/* Tab 0: Certifications Panel */}
-                {activeTab === 0 && (
-                  <div className="space-y-2.5 sm:space-y-3 w-full min-w-0">
-                    {certifications.map((cert: Certification, idx: number) => {
-                      const content = (
-                        <div className="flex items-center gap-3 sm:gap-4 group/cert w-full min-w-0">
-                          {cert.badgeUrl ? (
-                            <div className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-xl border border-[var(--color-border)] bg-black/50 p-1.5 sm:p-2 shrink-0 shadow-sm overflow-hidden">
-                              <Image
-                                src={cert.badgeUrl}
-                                alt={`${cert.name} badge`}
-                                fill
-                                sizes="64px"
-                                loading="lazy"
-                                className="object-contain p-1"
-                              />
+                {/* Content Panel Container with Concurrent Transition Rendering */}
+                <div className={`w-full min-w-0 transition-opacity duration-150 ${isPending ? "opacity-60" : "opacity-100"}`}>
+                  {activeTab === 0 ? (
+                    <div className="space-y-2.5 sm:space-y-3 w-full min-w-0">
+                      {certifications.map((cert: Certification, idx: number) => {
+                        const content = (
+                          <div className="flex items-center gap-3 sm:gap-4 group/cert w-full min-w-0">
+                            {cert.badgeUrl ? (
+                              <div className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-xl border border-[var(--color-border)] bg-black/50 p-1.5 sm:p-2 shrink-0 shadow-sm overflow-hidden">
+                                <Image
+                                  src={cert.badgeUrl}
+                                  alt={`${cert.name} badge`}
+                                  fill
+                                  sizes="64px"
+                                  loading="lazy"
+                                  className="object-contain p-1"
+                                />
+                              </div>
+                            ) : (
+                              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl border border-[var(--color-border)] bg-black/50 flex items-center justify-center shrink-0 text-[var(--color-accent)]">
+                                <Award size={22} />
+                              </div>
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-xs sm:text-sm text-[var(--color-text)] group-hover/cert:text-[var(--color-accent)] transition-colors leading-snug break-words">
+                                {cert.name}
+                              </p>
+                              <p className="text-[11px] sm:text-xs font-mono text-[var(--color-text-muted)] mt-1 flex items-center gap-1 flex-wrap">
+                                <span className="truncate">{cert.issuer}</span>
+                                {cert.credentialUrl && <ExternalLink size={11} className="inline opacity-70 shrink-0" />}
+                              </p>
                             </div>
-                          ) : (
-                            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl border border-[var(--color-border)] bg-black/50 flex items-center justify-center shrink-0 text-[var(--color-accent)]">
-                              <Award size={22} />
-                            </div>
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <p className="font-semibold text-xs sm:text-sm text-[var(--color-text)] group-hover/cert:text-[var(--color-accent)] transition-colors leading-snug break-words">
-                              {cert.name}
-                            </p>
-                            <p className="text-[11px] sm:text-xs font-mono text-[var(--color-text-muted)] mt-1 flex items-center gap-1 flex-wrap">
-                              <span className="truncate">{cert.issuer}</span>
-                              {cert.credentialUrl && <ExternalLink size={11} className="inline opacity-70 shrink-0" />}
-                            </p>
                           </div>
-                        </div>
-                      );
+                        );
 
-                      return cert.credentialUrl ? (
-                        <a
+                        return cert.credentialUrl ? (
+                          <a
+                            key={idx}
+                            href={cert.credentialUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block p-3 sm:p-3.5 rounded-xl transition-colors bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-[var(--color-border)]/60 hover:border-[var(--color-accent)]/50 shadow-sm w-full min-w-0 box-border"
+                          >
+                            {content}
+                          </a>
+                        ) : (
+                          <div key={idx} className="p-3 sm:p-3.5 rounded-xl bg-black/30 backdrop-blur-sm border border-[var(--color-border)]/60 shadow-sm w-full min-w-0 box-border">
+                            {content}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 gap-2.5 w-full min-w-0">
+                      {languages.map((lang: Language, idx: number) => (
+                        <div
                           key={idx}
-                          href={cert.credentialUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block p-3 sm:p-3.5 rounded-xl transition-colors bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-[var(--color-border)]/60 hover:border-[var(--color-accent)]/50 shadow-sm w-full min-w-0 box-border"
+                          className="flex items-center justify-between p-3 rounded-xl bg-black/30 backdrop-blur-sm border border-[var(--color-border)]/60 shadow-sm w-full min-w-0 gap-2 box-border"
                         >
-                          {content}
-                        </a>
-                      ) : (
-                        <div key={idx} className="p-3 sm:p-3.5 rounded-xl bg-black/30 backdrop-blur-sm border border-[var(--color-border)]/60 shadow-sm w-full min-w-0 box-border">
-                          {content}
+                          <span className="text-xs sm:text-sm font-mono text-[var(--color-text)] font-medium flex items-center gap-2 truncate min-w-0">
+                            <Languages size={13} className="text-[var(--color-accent)] shrink-0" />
+                            <span className="truncate">{lang.name}</span>
+                          </span>
+                          <span className="text-[11px] sm:text-xs font-mono px-2 py-1 bg-black/50 text-[var(--color-accent)] rounded border border-[var(--color-border)] shrink-0">
+                            {lang.level}
+                          </span>
                         </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* Tab 1: Languages Panel */}
-                {activeTab === 1 && (
-                  <div className="grid grid-cols-1 gap-2.5 w-full min-w-0">
-                    {languages.map((lang: Language, idx: number) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between p-3 rounded-xl bg-black/30 backdrop-blur-sm border border-[var(--color-border)]/60 shadow-sm w-full min-w-0 gap-2 box-border"
-                      >
-                        <span className="text-xs sm:text-sm font-mono text-[var(--color-text)] font-medium flex items-center gap-2 truncate min-w-0">
-                          <Languages size={13} className="text-[var(--color-accent)] shrink-0" />
-                          <span className="truncate">{lang.name}</span>
-                        </span>
-                        <span className="text-[11px] sm:text-xs font-mono px-2 py-1 bg-black/50 text-[var(--color-accent)] rounded border border-[var(--color-border)] shrink-0">
-                          {lang.level}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </ReflectiveCard>
