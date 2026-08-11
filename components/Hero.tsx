@@ -75,6 +75,7 @@ export default function Hero({ profile, contact }: HeroProps) {
           width: "100%",
           height: "100%",
           zIndex: 0,
+          pointerEvents: "auto",
         }}
       >
         <GradientWaves
@@ -100,7 +101,7 @@ export default function Hero({ profile, contact }: HeroProps) {
         />
       </div>
 
-      {/* Dark overlay for readability */}
+      {/* Dark overlay for readability - Must be pointer-events-none */}
       <div
         className="
           pointer-events-none
@@ -111,7 +112,7 @@ export default function Hero({ profile, contact }: HeroProps) {
         "
       />
 
-      {/* Bottom gradient fade into next section */}
+      {/* Bottom gradient fade into next section - Must be pointer-events-none */}
       <div
         className="
           pointer-events-none
@@ -141,10 +142,11 @@ export default function Hero({ profile, contact }: HeroProps) {
           py-20
           md:px-12
           lg:px-16
+          pointer-events-none
         "
       >
         {/* Name + roles */}
-        <div>
+        <div className="pointer-events-auto">
           <div
             className="
               mb-6
@@ -197,7 +199,7 @@ export default function Hero({ profile, contact }: HeroProps) {
         </div>
 
         {/* Summary */}
-        <div className="w-full">
+        <div className="w-full pointer-events-auto">
           <TextType
             text={profile.summary}
             typingSpeed={100}
@@ -226,6 +228,7 @@ export default function Hero({ profile, contact }: HeroProps) {
             flex-wrap
             gap-4
             font-mono
+            pointer-events-auto
           "
         >
           {/* Resume */}
