@@ -105,7 +105,7 @@ const FoldText = ({
   perspective = 700,
   creaseShading = 0.55,
 
-  fontSize = 80,
+  fontSize = "clamp(2rem, 5vw, 5rem)",
   fontWeight = 800,
   color = "#f7f2e8",
 
@@ -229,12 +229,6 @@ const FoldText = ({
 
   /*
    * Main animation.
-   *
-   * This function always:
-   *
-   * 1. Puts all characters into folded state.
-   * 2. Animates them into visible state.
-   * 3. Leaves them visible.
    */
   const playFoldAnimation = useCallback(() => {
     const root = rootRef.current;
@@ -253,15 +247,9 @@ const FoldText = ({
       return;
     }
 
-    /*
-     * Stop any previous animation.
-     */
     timelineRef.current?.kill();
     gsap.killTweensOf(pieces);
 
-    /*
-     * Accessibility / reduced motion.
-     */
     const reduceMotion =
       typeof window !== "undefined" &&
       window.matchMedia?.(
@@ -276,9 +264,6 @@ const FoldText = ({
       ? 0
       : stagger;
 
-    /*
-     * Initial folded state.
-     */
     gsap.set(pieces, {
       opacity: 0,
       rotateX: reduceMotion
@@ -294,9 +279,6 @@ const FoldText = ({
       force3D: true,
     });
 
-    /*
-     * Unfold.
-     */
     const timeline = gsap.timeline();
 
     timeline.to(pieces, {
@@ -324,9 +306,6 @@ const FoldText = ({
     safeCrease,
   ]);
 
-  /*
-   * Mount + mouse enter.
-   */
   useEffect(() => {
     const root = rootRef.current;
 
@@ -334,16 +313,10 @@ const FoldText = ({
       return;
     }
 
-    /*
-     * Initial animation when component loads.
-     */
     const initialTimer = window.setTimeout(() => {
       playFoldAnimation();
     }, 80);
 
-    /*
-     * Every mouse enter repeats the exact same animation.
-     */
     const handleMouseEnter = () => {
       playFoldAnimation();
     };
