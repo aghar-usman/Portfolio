@@ -44,7 +44,7 @@ export default function EducationAndExtras({
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const spotlightRef = useRef<HTMLDivElement>(null);
 
-  // Detect mobile viewport to lighten heavy graphical effects
+  // Detect mobile viewport to lighten heavy graphical effects and improve scaling
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -64,7 +64,7 @@ export default function EducationAndExtras({
   };
 
   return (
-    <section id="education" className="py-16 flex flex-col gap-12 w-full max-w-full overflow-hidden">
+    <section id="education" className="py-16 flex flex-col gap-12 w-full max-w-full overflow-hidden box-border">
       <h2 className="text-3xl font-bold font-mono text-[var(--color-text)]">
         education & credentials
       </h2>
@@ -76,7 +76,7 @@ export default function EducationAndExtras({
         <div
           ref={spotlightRef}
           onMouseMove={handleMouseMove}
-          className="lg:col-span-7 relative p-5 sm:p-8 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden group flex flex-col justify-between transition-all duration-300 hover:border-[var(--color-accent)]/50 min-w-0"
+          className="lg:col-span-7 relative p-5 sm:p-8 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden group flex flex-col justify-between transition-all duration-300 hover:border-[var(--color-accent)]/50 min-w-0 box-border"
         >
           {/* Dynamic Spotlight Effect Layer (Disabled on mobile for performance) */}
           {!isMobile && (
@@ -136,8 +136,8 @@ export default function EducationAndExtras({
           </div>
         </div>
 
-        {/* Right Side: Reflective Card (Simplified / Non-distorted on mobile for speed) */}
-        <div className="lg:col-span-5 flex flex-col gap-6 min-w-0">
+        {/* Right Side: Reflective Card (Responsive & Optimized across all screen sizes) */}
+        <div className="lg:col-span-5 flex flex-col gap-6 min-w-0 w-full">
           <ReflectiveCard
             className="w-full h-full shadow-2xl"
             blurStrength={isMobile ? 0 : 4}
@@ -219,12 +219,12 @@ export default function EducationAndExtras({
                           href={cert.credentialUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block p-3.5 rounded-xl transition-all bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-[var(--color-border)]/60 hover:border-[var(--color-accent)]/50 shadow-sm w-full min-w-0"
+                          className="block p-3.5 rounded-xl transition-all bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-[var(--color-border)]/60 hover:border-[var(--color-accent)]/50 shadow-sm w-full min-w-0 box-border"
                         >
                           {content}
                         </a>
                       ) : (
-                        <div key={idx} className="p-3.5 rounded-xl bg-black/30 backdrop-blur-sm border border-[var(--color-border)]/60 shadow-sm w-full min-w-0">
+                        <div key={idx} className="p-3.5 rounded-xl bg-black/30 backdrop-blur-sm border border-[var(--color-border)]/60 shadow-sm w-full min-w-0 box-border">
                           {content}
                         </div>
                       );
@@ -238,7 +238,7 @@ export default function EducationAndExtras({
                     {languages.map((lang: Language, idx: number) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between p-3 rounded-xl bg-black/30 backdrop-blur-sm border border-[var(--color-border)]/60 shadow-sm w-full min-w-0 gap-2"
+                        className="flex items-center justify-between p-3 rounded-xl bg-black/30 backdrop-blur-sm border border-[var(--color-border)]/60 shadow-sm w-full min-w-0 gap-2 box-border"
                       >
                         <span className="text-sm font-mono text-[var(--color-text)] font-medium flex items-center gap-2 truncate min-w-0">
                           <Languages size={14} className="text-[var(--color-accent)] shrink-0" />
@@ -263,9 +263,9 @@ export default function EducationAndExtras({
         color="var(--color-accent)"
         speed="5s"
         thickness={2}
-        className="w-full rounded-[22px] bg-[var(--color-surface)] transition-all duration-300 max-w-full overflow-hidden"
+        className="w-full rounded-[22px] bg-[var(--color-surface)] transition-all duration-300 max-w-full overflow-hidden box-border"
       >
-        <div className="p-5 sm:p-6 bg-[var(--color-surface)] relative overflow-hidden group w-full h-full rounded-[20px] min-w-0">
+        <div className="p-5 sm:p-6 bg-[var(--color-surface)] relative overflow-hidden group w-full h-full rounded-[20px] min-w-0 box-border">
           <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-accent)]/5 rounded-full blur-2xl pointer-events-none" />
           
           <h3 className="text-base sm:text-lg font-bold font-mono text-[var(--color-text)] mb-4 flex items-center gap-2">
@@ -279,7 +279,7 @@ export default function EducationAndExtras({
               return (
                 <div
                   key={idx}
-                  className="p-3.5 sm:p-4 rounded-xl bg-[var(--color-surface-2)]/40 border border-[var(--color-border)]/60 flex items-start gap-3 transition-all duration-300 hover:border-[var(--color-accent)]/40 hover:bg-[var(--color-surface-2)] w-full min-w-0"
+                  className="p-3.5 sm:p-4 rounded-xl bg-[var(--color-surface-2)]/40 border border-[var(--color-border)]/60 flex items-start gap-3 transition-all duration-300 hover:border-[var(--color-accent)]/40 hover:bg-[var(--color-surface-2)] w-full min-w-0 box-border"
                 >
                   <span className="text-[var(--color-accent)] font-mono font-bold mt-0.5 flex items-center gap-1 shrink-0">
                     {isFirst && <Sparkles size={14} className="animate-pulse" />}
