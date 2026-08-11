@@ -179,7 +179,7 @@ export default function ReflectiveCard({
       <div className="reflective-sheen" />
       <div className="reflective-border" />
 
-      <div className="reflective-content h-full flex flex-col justify-between">
+      <div className="reflective-content">
         {children}
       </div>
     </div>
