@@ -21,10 +21,10 @@ interface GooeyNavProps {
 
 export default function GooeyNav({
   items,
-  particleCount = 15,
-  particleDistances = [90, 10],
+  particleCount = 14,
+  particleDistances = [70, 15],
   initialActiveIndex = 0,
-  animationTime = 1100, // Increased base time by ~500ms for a smoother, slower feel
+  animationTime = 850, // Slower base duration to make the gooey effect linger and remain visible longer
   timeVariance = 300,
   colors = [1, 2, 3, 1, 2, 3, 1, 4],
   className = "",
@@ -60,7 +60,7 @@ export default function GooeyNav({
         const startX = (Math.random() - 0.5) * 20;
         const startY = (Math.random() - 0.5) * 20;
 
-        const scale = 0.5 + Math.random() * 1;
+        const scale = 0.6 + Math.random() * 1.1;
         const rotate = (Math.random() - 0.5) * 360;
         const time = animationTime + (Math.random() - 0.5) * timeVariance;
 
