@@ -28,7 +28,7 @@ export default function Navbar({ links }: NavbarProps) {
     };
   }, [isOpen]);
 
-  // Separate Contact entirely so the navbar items fit perfectly without crowding
+  // Filter out contact to place it cleanly inside the main desktop navbar pill container
   const navLinksWithoutContact = links.filter(
     (link) => !link.label.toLowerCase().includes("contact")
   );
@@ -41,10 +41,10 @@ export default function Navbar({ links }: NavbarProps) {
             flex
             h-16
             w-full
-            max-w-6xl
+            max-w-5xl
             items-center
             justify-between
-            px-6
+            px-5
             rounded-full
             bg-[var(--color-surface)]/90
             backdrop-blur-md
@@ -53,7 +53,7 @@ export default function Navbar({ links }: NavbarProps) {
             border-[var(--color-border)]
             shadow-lg
             shadow-black/40
-            gap-6
+            gap-2
           "
         >
           {/* BRAND */}
@@ -62,7 +62,7 @@ export default function Navbar({ links }: NavbarProps) {
             onClick={() => setIsOpen(false)}
             className="
               font-mono
-              text-xl
+              text-lg
               font-extrabold
               tracking-wider
               text-[var(--color-text)]
@@ -75,34 +75,33 @@ export default function Navbar({ links }: NavbarProps) {
             AUKT.
           </a>
 
-          {/* DESKTOP NAV CONTAINER (GooeyNav items completely fitted and fluid) */}
-          <div className="hidden lg:flex items-center justify-center flex-1 max-w-xl mx-auto overflow-hidden">
-            <GooeyNav
-              items={navLinksWithoutContact}
-              particleCount={6}
-              particleDistances={[20, 3]}
-              initialActiveIndex={0}
-              animationTime={400}
-              timeVariance={150}
-              colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-            />
-          </div>
+          {/* DESKTOP NAV CONTAINER (Adjusted spacing and scaling to guarantee everything fits without clipping) */}
+          <div className="hidden lg:flex items-center gap-2 shrink-0">
+            <div className="scale-[0.88] origin-right">
+              <GooeyNav
+                items={navLinksWithoutContact}
+                particleCount={5}
+                particleDistances={[15, 2]}
+                initialActiveIndex={0}
+                animationTime={400}
+                timeVariance={150}
+                colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+              />
+            </div>
 
-          {/* SEPARATE DESKTOP CONTACT BUTTON (Ensures it never overlaps or crowds navigation items) */}
-          <div className="hidden lg:flex items-center shrink-0">
             <a
               href="#contact"
-              className="group flex items-center gap-2 px-5 py-2.5 bg-[var(--color-surface-2)] text-[var(--color-text)] font-mono text-xs font-semibold rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-all duration-300 shadow-sm"
+              className="group flex items-center gap-1.5 px-3.5 py-2 bg-[var(--color-surface-2)] text-[var(--color-text)] font-mono text-xs font-semibold rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-all duration-300 shadow-sm shrink-0"
             >
-              <Mail size={14} className="text-[var(--color-accent)] group-hover:scale-110 transition-transform" />
+              <Mail size={13} className="text-[var(--color-accent)] group-hover:scale-110 transition-transform" />
               <span>Contact</span>
             </a>
           </div>
 
-          {/* HAMBURGER BUTTON (Active on smaller screens where nav items would overflow) */}
+          {/* HAMBURGER BUTTON (Switches automatically on smaller screens to protect layout) */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors focus:outline-none shrink-0 ml-auto"
+            className="lg:hidden p-2 text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors focus:outline-none shrink-0"
             aria-label="Toggle Menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
