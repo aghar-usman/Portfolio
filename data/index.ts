@@ -2,8 +2,7 @@ export const profile = {
   name: "Aghar Usman K T",
   location: "Calicut, Kerala, India",
   roles: ["Developer", "Data Engineering Enthusiast"],
-  summary:
-    "Backend engineer interested in data engineering. Built APIs and pipelines during my internship. Strong in Python and SQL, learning PySpark and Snowflake. Looking for a data engineer role to grow my skills.",
+  summary: "Versatile developer and data engineer with hands-on experience building robust APIs and data pipelines. Proficient in Python, SQL, and modern software engineering practices, with expanding expertise in distributed data processing and warehousing. Passionate about designing scalable architectures and eager to contribute to data-intensive engineering teams."
 };
 
 export const contact = {
