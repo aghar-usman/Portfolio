@@ -29,12 +29,13 @@
 
 .gooey-nav-container {
   position: relative;
-  width: fit-content;
+  width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: visible;
   isolation: isolate;
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: flex-end;
   font-family: var(--font-mono);
 }
 
@@ -43,18 +44,21 @@
   position: relative;
   transform: translate3d(0, 0, 0.01px);
   z-index: 5;
+  width: 100%;
+  justify-content: flex-end;
 }
 
 .gooey-nav-container nav ul {
   display: flex;
-  gap: 2.5em;
+  gap: clamp(0.6rem, 1.2vw, 1.5rem);
   list-style: none;
-  padding: 0.5em 1.5em;
+  padding: 0.3em 0.6em;
   margin: 0;
   position: relative;
   z-index: 3;
   color: var(--color-text);
-  text-shadow: 0 1px 1px hsl(205deg 30% 10% / 0.2);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  align-items: center;
 }
 
 .gooey-nav-container nav ul li {
@@ -62,20 +66,32 @@
   position: relative;
   cursor: pointer;
   transition:
-    background-color 0.5s ease,
-    color 0.5s ease,
-    box-shadow 0.5s ease;
+    background-color 0.4s ease,
+    color 0.4s ease,
+    box-shadow 0.4s ease;
   box-shadow: 0 0 0.5px 1.5px transparent;
+  color: var(--color-text-muted);
+}
+
+.gooey-nav-container nav ul li:hover {
   color: var(--color-text);
 }
 
 .gooey-nav-container nav ul li a {
   display: inline-block;
-  padding: 0.8em 1.5em;
+  padding: 0.5em 0.85em;
+  font-size: 0.82rem;
   text-decoration: none;
   color: inherit;
   z-index: 4;
   position: relative;
+}
+
+@media (min-width: 1200px) {
+  .gooey-nav-container nav ul li a {
+    padding: 0.55em 1rem;
+    font-size: 0.88rem;
+  }
 }
 
 .gooey-nav-container nav ul li:focus-within:has(:focus-visible) {
@@ -118,19 +134,27 @@
 }
 
 .gooey-nav-container .effect.text {
-  color: var(--color-text);
-  transition: color 0.5s ease;
+  color: var(--color-text-muted);
+  transition: color 0.4s ease;
   z-index: 4;
   white-space: nowrap;
+  font-size: 0.82rem;
+}
+
+@media (min-width: 1200px) {
+  .gooey-nav-container .effect.text {
+    font-size: 0.88rem;
+  }
 }
 
 .gooey-nav-container .effect.text.active {
   color: var(--color-bg);
 }
 
+/* Gooey SVG/Filter effect matched precisely to your theme's dark surface and accent */
 .gooey-nav-container .effect.filter {
-  filter: blur(7px) contrast(100) blur(0);
-  mix-blend-mode: lighten;
+  filter: blur(6px) contrast(120) blur(0);
+  mix-blend-mode: normal;
   z-index: 1;
 }
 
@@ -150,90 +174,79 @@
 }
 
 .gooey-nav-container .effect.active::after {
-  animation: pill 1.5s ease both;
+  animation: pill 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes pill {
-  to {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
     transform: scale(1);
     opacity: 1;
   }
 }
 
+/* Theme color mappings for particles using your exact hex variables */
 .color-1 { --color: var(--color-accent); }
-.color-2 { --color: var(--color-text); }
-.color-3 { --color: var(--color-text-muted); }
-.color-4 { --color: var(--color-accent-dark); }
+.color-2 { --color: var(--color-accent-dark); }
+.color-3 { --color: var(--color-text); }
+.color-4 { --color: var(--color-surface-2); }
 
 .particle,
 .point {
   display: block;
   opacity: 0;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 100%;
   transform-origin: center;
 }
 
 .particle {
-  --time: 8s;
   position: absolute;
   top: calc(50% - 8px);
   left: calc(50% - 8px);
-  animation: particle var(--time) ease 1 -350ms;
+  animation: particle var(--time) cubic-bezier(0.25, 1, 0.5, 1) 1;
   pointer-events: none;
 }
 
 .point {
   background: var(--color, var(--color-accent));
   opacity: 1;
-  animation: point var(--time) ease 1 -350ms;
+  animation: point var(--time) cubic-bezier(0.25, 1, 0.5, 1) 1;
+  box-shadow: 0 0 8px var(--color-accent);
 }
 
 @keyframes particle {
   0% {
-    transform: rotate(0deg) translate(var(--start-x), var(--start-y));
+    transform: rotate(0deg) translate(var(--start-x), var(--start-y)) scale(0.5);
     opacity: 1;
-    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
   }
-  70% {
-    transform: rotate(calc(var(--rotate) * 0.5)) translate(calc(var(--end-x) * 1.2), calc(var(--end-y) * 1.2));
-    opacity: 1;
-    animation-timing-function: ease;
-  }
-  85% {
-    transform: rotate(calc(var(--rotate) * 0.66)) translate(var(--end-x), var(--end-y));
-    opacity: 1;
+  60% {
+    opacity: 0.8;
   }
   100% {
-    transform: rotate(calc(var(--rotate) * 1.2)) translate(calc(var(--end-x) * 0.5), calc(var(--end-y) * 0.5));
-    opacity: 1;
+    transform: rotate(var(--rotate)) translate(var(--end-x), var(--end-y)) scale(1.2);
+    opacity: 0;
   }
 }
 
 @keyframes point {
   0% {
-    transform: scale(0);
+    transform: scale(0.2);
     opacity: 0;
-    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
   }
-  25% {
-    transform: scale(calc(var(--scale) * 0.25));
-  }
-  38% {
-    opacity: 1;
-  }
-  65% {
-    transform: scale(var(--scale));
-    opacity: 1;
-    animation-timing-function: ease;
-  }
-  85% {
-    transform: scale(var(--scale));
+  30% {
     opacity: 1;
   }
   100% {
-    transform: scale(0);
+    transform: scale(var(--scale));
     opacity: 0;
   }
 }
