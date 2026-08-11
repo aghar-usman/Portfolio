@@ -42,14 +42,27 @@ export default function EducationAndExtras({
 }: EducationAndExtrasProps) {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [, startTransition] = useTransition();
-  const [isMobile, setIsMobile] = useState<boolean>(true); // Default true to prevent heavy mobile paint on initial SSR render
+  const [isMobile, setIsMobile] = useState<boolean>(true);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const spotlightRef = useRef<HTMLDivElement>(null);
 
-  // Defer heavy calculations and force fast mobile detection on initial paint
+  // Defer heavy mounting tasks using requestIdleCallback or a micro-timeout to instantly unblock main thread layout/paint
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
+    const handleInit = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsLoaded(true);
+    };
+
+    if (typeof window !== "undefined") {
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(handleInit, { timeout: 150 });
+      } else {
+        setTimeout(handleInit, 50);
+      }
+    }
+
     let ticking = false;
-    const checkMobile = () => {
+    const checkResize = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           setIsMobile(window.innerWidth < 768);
@@ -58,18 +71,17 @@ export default function EducationAndExtras({
         ticking = true;
       }
     };
-    window.addEventListener("resize", checkMobile, { passive: true });
-    return () => window.removeEventListener("resize", checkMobile);
+
+    window.addEventListener("resize", checkResize, { passive: true });
+    return () => window.removeEventListener("resize", checkResize);
   }, []);
 
-  // Use transition for non-blocking tab switches to guarantee zero input latency
   const handleTabChange = useCallback((tabIndex: number) => {
     startTransition(() => {
       setActiveTab(tabIndex);
     });
   }, []);
 
-  // Optimized lightweight mouse move with strict boundary guards
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (isMobile || !spotlightRef.current) return;
     const currentRef = spotlightRef.current;
@@ -93,10 +105,10 @@ export default function EducationAndExtras({
         <div
           ref={spotlightRef}
           onMouseMove={handleMouseMove}
-          className="lg:col-span-7 relative p-4 sm:p-8 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden group flex flex-col justify-between transition-colors duration-200 hover:border-[var(--color-accent)]/50 min-w-0 box-border"
+          className="lg:col-span-7 relative p-4 sm:p-8 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden group flex flex-col justify-between transition-colors duration-200 hover:border-[var(--color-accent)]/50 min-w-0 box-border will-change-transform"
         >
-          {/* Dynamic Spotlight Effect Layer (Completely unmounted on mobile for instant rendering) */}
-          {!isMobile && (
+          {/* Dynamic Spotlight Effect Layer (Completely eliminated until idle hydration for optimal scroll performance) */}
+          {isLoaded && !isMobile && (
             <div
               className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-0 will-change-[opacity]"
               style={{
@@ -153,7 +165,7 @@ export default function EducationAndExtras({
           </div>
         </div>
 
-        {/* Right Side: Reflective Card Module (Fully lightweight on mobile) */}
+        {/* Right Side: Reflective Card Module (Streamlined for immediate touch response) */}
         <div className="lg:col-span-5 flex flex-col gap-6 min-w-0 w-full">
           <ReflectiveCard
             className="w-full h-full shadow-xl"
