@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useRef } from "react";
 import { Renderer, Program, Mesh, Triangle } from "ogl";
 import "./GradientWaves.css";
@@ -171,26 +169,26 @@ type GradientWavesCtx = {
 const ctxMap = new WeakMap<HTMLDivElement, GradientWavesCtx>();
 
 const GradientWaves: React.FC<GradientWavesProps> = ({
-  horizonColor = "#131313",
-  waveColor = "#ff5a36",
-  crestColor = "#ff8c73",
-  speed = 0.35,
+  horizonColor = "#5227FF",
+  waveColor = "#FF9FFC",
+  crestColor = "#FFFFFF",
+  speed = 0.4,
   amplitude = 2.5,
   waveScale = 0.6,
   waveRatio = 0.9,
-  swell = 38,
-  turbulence = 22,
-  tilt = 1.08,
+  swell = 35,
+  turbulence = 20,
+  tilt = 1.11,
   zoom = 1.0,
   height = 5.5,
-  fogDepth = 18,
+  fogDepth = 15,
   detail = "medium",
-  brightness = 1.3,
-  opacity = 0.9,
+  brightness = 1.0,
+  opacity = 1.0,
   mouseInteraction = true,
-  parallaxStrength = 2.2,
+  parallaxStrength = 0.5,
   grain = true,
-  grainIntensity = 0.04,
+  grainIntensity = 0.05,
   className = "",
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
