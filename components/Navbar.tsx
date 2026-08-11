@@ -28,14 +28,14 @@ export default function Navbar({ links }: NavbarProps) {
     };
   }, [isOpen]);
 
-  // Filter out contact to place it cleanly inside the main desktop navbar pill container
+  // Separate Contact from other links so it can be cleanly placed as an independent button inside the pill
   const navLinksWithoutContact = links.filter(
     (link) => !link.label.toLowerCase().includes("contact")
   );
 
   return (
     <>
-      <header className="fixed top-4 inset-x-0 z-50 flex justify-center px-4 w-full">
+      <header className="fixed top-4 inset-x-0 z-50 flex justify-center px-4">
         <div
           className="
             flex
@@ -44,7 +44,8 @@ export default function Navbar({ links }: NavbarProps) {
             max-w-5xl
             items-center
             justify-between
-            px-5
+            px-4
+            sm:px-6
             rounded-full
             bg-[var(--color-surface)]/90
             backdrop-blur-md
@@ -54,6 +55,7 @@ export default function Navbar({ links }: NavbarProps) {
             shadow-lg
             shadow-black/40
             gap-2
+            overflow-visible
           "
         >
           {/* BRAND */}
@@ -63,6 +65,7 @@ export default function Navbar({ links }: NavbarProps) {
             className="
               font-mono
               text-lg
+              sm:text-xl
               font-extrabold
               tracking-wider
               text-[var(--color-text)]
@@ -75,16 +78,16 @@ export default function Navbar({ links }: NavbarProps) {
             AUKT.
           </a>
 
-          {/* DESKTOP NAV CONTAINER (Adjusted spacing and scaling to guarantee everything fits without clipping) */}
-          <div className="hidden lg:flex items-center gap-2 shrink-0">
-            <div className="scale-[0.88] origin-right">
+          {/* DESKTOP NAV CONTAINER */}
+          <div className="hidden md:flex items-center justify-end gap-2 flex-1 min-w-0 px-2 overflow-visible">
+            <div className="overflow-visible scale-90 lg:scale-100 origin-right">
               <GooeyNav
                 items={navLinksWithoutContact}
-                particleCount={5}
-                particleDistances={[15, 2]}
+                particleCount={14}
+                particleDistances={[60, 10]}
                 initialActiveIndex={0}
-                animationTime={400}
-                timeVariance={150}
+                animationTime={850}
+                timeVariance={250}
                 colors={[1, 2, 3, 1, 2, 3, 1, 4]}
               />
             </div>
@@ -93,15 +96,15 @@ export default function Navbar({ links }: NavbarProps) {
               href="#contact"
               className="group flex items-center gap-1.5 px-3.5 py-2 bg-[var(--color-surface-2)] text-[var(--color-text)] font-mono text-xs font-semibold rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-all duration-300 shadow-sm shrink-0"
             >
-              <Mail size={13} className="text-[var(--color-accent)] group-hover:scale-110 transition-transform" />
+              <Mail size={12} className="text-[var(--color-accent)] group-hover:scale-110 transition-transform" />
               <span>Contact</span>
             </a>
           </div>
 
-          {/* HAMBURGER BUTTON (Switches automatically on smaller screens to protect layout) */}
+          {/* MOBILE HAMBURGER BUTTON */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors focus:outline-none shrink-0"
+            className="md:hidden p-2 text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors focus:outline-none shrink-0"
             aria-label="Toggle Menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -109,15 +112,15 @@ export default function Navbar({ links }: NavbarProps) {
         </div>
       </header>
 
-      {/* FULLSCREEN OVERLAY MOBILE MENU */}
+      {/* MOBILE FULLSCREEN OVERLAY MENU */}
       <div
-        className={`fixed inset-0 z-40 bg-[var(--color-bg)]/95 backdrop-blur-xl flex flex-col justify-center items-center px-6 transition-all duration-300 overflow-y-auto lg:hidden ${
+        className={`fixed inset-0 z-40 bg-[var(--color-bg)]/95 backdrop-blur-xl flex flex-col justify-center items-center transition-all duration-300 md:hidden ${
           isOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         }`}
       >
-        <nav className="flex flex-col items-center gap-5 text-center w-full max-w-xs py-12 my-auto">
+        <nav className="flex flex-col items-center gap-6 text-center">
           {links.map((link, idx) => {
             const isContact = link.label.toLowerCase().includes("contact");
             return (
@@ -125,9 +128,9 @@ export default function Navbar({ links }: NavbarProps) {
                 key={idx}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`transition-colors py-2.5 flex items-center justify-center gap-2.5 w-full ${
+                className={`transition-colors py-2 flex items-center gap-2 ${
                   isContact
-                    ? "mt-4 px-6 py-3.5 bg-[var(--color-surface)] text-[var(--color-accent)] font-mono text-base font-bold rounded-xl border border-[var(--color-border)] hover:border-[var(--color-accent)] shadow-md"
+                    ? "mt-4 px-6 py-3 bg-[var(--color-surface)] text-[var(--color-accent)] font-mono text-base font-bold rounded-xl border border-[var(--color-border)] hover:border-[var(--color-accent)]"
                     : "text-2xl font-mono font-bold text-[var(--color-text)] hover:text-[var(--color-accent)]"
                 }`}
               >
