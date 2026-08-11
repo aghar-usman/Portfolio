@@ -16,6 +16,10 @@
   background: var(--card-bg, var(--color-surface));
   overflow: visible;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  touch-action: pan-y; /* Allows smooth vertical scrolling on mobile touch screens */
 }
 
 .border-glow-card::before,
@@ -147,10 +151,32 @@
     0 0 50px 2px var(--glow-color-10);
 }
 
+/* Fluid Layout & Responsive Sizing for Content */
 .border-glow-inner {
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: auto;
   z-index: 1;
+  padding: clamp(1rem, 2vw, 2rem); /* Fluid padding across screen sizes */
+  font-size: clamp(0.875rem, 0.5vw + 0.75rem, 1rem); /* Fluid base text scaling */
+}
+
+/* Scalable inner headings and text elements */
+.border-glow-inner h1, 
+.border-glow-inner h2, 
+.border-glow-inner h3 {
+  font-size: clamp(1.25rem, 2vw + 1rem, 2rem);
+  line-height: 1.2;
+}
+
+.border-glow-inner p {
+  font-size: clamp(0.875rem, 0.5vw + 0.75rem, 1.125rem);
+}
+
+/* Mobile Fallback: Ensures visibility on non-hover touch environments */
+@media (hover: none) and (pointer: coarse) {
+  .border-glow-card {
+    --edge-proximity: 40%;
+  }
 }
