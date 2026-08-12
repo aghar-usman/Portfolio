@@ -2,7 +2,7 @@ export const profile = {
   name: "Aghar Usman K T",
   location: "Calicut, Kerala, India",
   roles: ["Developer", "AI Enthusiast"],
-  summary: "Python developer with internship experience building production REST APIs, LLM-powered pipelines, and ETL data systems. Hands-on experience designing batch ETL pipelines and query optimization. Actively expanding depth in data engineering (PySpark, Databricks, Snowflake) and modern AI/ML workflows."
+  summary: "Developer with internship experience building production REST APIs, LLM-powered pipelines, and ETL data systems. Hands-on experience designing batch ETL pipelines and query optimization. Actively expanding depth in data engineering (PySpark, Databricks, Snowflake) and modern AI/ML workflows."
 };
 
 
