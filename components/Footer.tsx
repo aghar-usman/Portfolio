@@ -29,7 +29,7 @@ export default function Footer({ contact }: FooterProps) {
         {/* Heading & Email */}
         <div className="space-y-3 w-full min-w-0">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-mono text-[var(--color-text)] tracking-tight break-words px-2">
-            Let&apos;s build something <span className="text-[var(--color-accent)]">extraordinary</span>.
+            Let&apos;s build something <span className="text-[var(--color-accent)]">extraordinary</span> together.
           </h2>
           <p className="text-xs sm:text-sm font-mono text-[var(--color-text-muted)] flex items-center justify-center gap-2 flex-wrap px-2">
             <Mail size={14} className="text-[var(--color-accent)] shrink-0" />
