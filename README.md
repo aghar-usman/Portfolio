@@ -19,6 +19,6 @@ A modern, interactive developer portfolio built with **Next.js, React, TypeScrip
 
 ### 🎯 Purpose
 
-Designed and developed as a personal portfolio to showcase my work in **software engineering, backend development, AI/ML, cloud, and DevOps**.
+Designed and developed as a personal portfolio to showcase my work and growth across web development, AI agents machine learning, and Data Analytics/Data Science.
 
 Built from scratch with a focus on clean design, interactive experiences, and a professional developer presence.
