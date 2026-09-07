@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aghar Usman Kannanthodi — Data Engineer",
+  title: "Aghar Usman Kannanthodi ~ Portfolio",
   description:
     "Portfolio of Aghar Usman Kannanthodi, a backend developer building ETL pipelines and LLM-powered systems, growing into data engineering and AI engineering.",
 };
