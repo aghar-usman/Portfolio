@@ -10,11 +10,7 @@ export interface SkillGroup {
 }
 
 export const skillGroups: SkillGroup[] = [
-  {
-    label: "data engineering — in progress",
-    items: ["PySpark", "Databricks", "Snowflake", "ETL pipeline design", "Batch processing", "Data modeling"],
-  },
-  { label: "languages", items: ["Python", "SQL", "JavaScript"] },
+  { label: "languages", items: ["Python", "SQL", "JavaScript", "Java", "C"] },
   { label: "databases", items: ["PostgreSQL", "MSSQL", "MySQL", "SQLite", "pyodbc", "psycopg2"] },
   { label: "backend & apis", items: ["Flask", "FastAPI", "REST APIs", "Microservices", "Rate limiting"] },
   { label: "cloud & devops", items: ["GCP", "Docker", "Linux/Unix", "Git/GitHub", "CI/CD"] },
@@ -23,6 +19,10 @@ export const skillGroups: SkillGroup[] = [
     items: ["Ollama", "Llama 3", "Mistral", "BERT", "Transformers", "PyTorch", "TensorFlow", "Scikit-learn", "HuggingFace"],
   },
   { label: "data & tooling", items: ["Pandas", "NumPy", "NLTK", "spaCy", "TF-IDF", "FuzzyWuzzy", "OpenCV", "React.js"] },
+  {
+    label: "currently exploring",
+    items: ["Agentic AI", "Data Science", "Data Analytics"],
+  },
 ];
 
 interface SkillsProps {
@@ -68,7 +68,22 @@ const getSkillIcon = (skillName: string, className: string = "w-3.5 h-3.5") => {
       <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
     );
   }
-  if (name.includes('ai') || name.includes('ml') || name.includes('llama') || name.includes('pytorch') || name.includes('tensorflow') || name.includes('bert') || name.includes('transformers') || name.includes('ollama') || name.includes('mistral') || name.includes('huggingface') || name.includes('scikit')) {
+  if (
+    name.includes('ai') ||
+    name.includes('ml') ||
+    name.includes('llama') ||
+    name.includes('pytorch') ||
+    name.includes('tensorflow') ||
+    name.includes('bert') ||
+    name.includes('transformers') ||
+    name.includes('ollama') ||
+    name.includes('mistral') ||
+    name.includes('huggingface') ||
+    name.includes('scikit') ||
+    name.includes('agentic') ||
+    name.includes('data science') ||
+    name.includes('data analytics')
+  ) {
     return (
       <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 12L2.7 9.3"/><path d="M12 12v10"/></svg>
     );
@@ -519,11 +534,11 @@ export default function Skills({
   const shouldDisableAnimations = disableAnimations;
 
   const cardConfigs = [
-    { groups: [skills[1]] },
-    { groups: [skills[2]] },
-    { groups: [skills[5]] },
-    { groups: [skills[6], skills[0], skills[3]] },
-    { groups: [skills[4]] },
+    { groups: [skills[0]] },                          // languages
+    { groups: [skills[1]] },                           // databases
+    { groups: [skills[4]] },                            // ai/ml & nlp
+    { groups: [skills[5], skills[6], skills[2]] },       // data & tooling + currently exploring + backend & apis
+    { groups: [skills[3]] },                             // cloud & devops
   ];
 
   return (
