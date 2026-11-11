@@ -1,10 +1,10 @@
 export const profile = {
   name: "Aghar Usman K T",
   location: "Calicut, Kerala, India",
-  roles: ["Developer", "AI Enthusiast"],
-  summary: "Developer with internship experience building production REST APIs, LLM-powered pipelines, and ETL data systems. Hands-on experience designing batch ETL pipelines and query optimization. Actively expanding depth in data engineering (PySpark, Databricks, Snowflake) and modern AI/ML workflows."
+  roles: ["Next.js Developer", "Frontend Developer"],
+  summary:
+    "Junior Next.js developer who builds responsive, clean interfaces with Next.js, React and Tailwind CSS. After an internship building production REST APIs, I'm comfortable integrating APIs, handling loading and error states, and talking through data needs with backend teammates. I use Git daily, care about UI detail and clean, maintainable code, and enjoy turning designs into fast pages. I also build AI-powered features with LLMs, and I'm keen to learn from code reviews and grow within a frontend team.",
 };
-
 
 export const contact = {
   email: "agharusman529@gmail.com",
@@ -39,18 +39,24 @@ export interface SkillGroup {
 
 export const skillGroups: SkillGroup[] = [
   {
-    label: "data engineering — in progress",
-    items: ["PySpark", "Databricks", "Snowflake", "ETL pipeline design", "Batch processing", "Data modeling"],
+    label: "frontend",
+    items: ["Next.js", "React", "Tailwind CSS", "TypeScript", "JavaScript", "HTML", "CSS"],
   },
-  { label: "languages", items: ["Python", "SQL", "JavaScript"] },
-  { label: "databases", items: ["PostgreSQL", "MSSQL", "MySQL", "SQLite", "pyodbc", "psycopg2"] },
-  { label: "backend & apis", items: ["Flask", "FastAPI", "REST APIs", "Microservices", "Rate limiting"] },
-  { label: "cloud & devops", items: ["GCP", "Docker", "Linux/Unix", "Git/GitHub", "CI/CD"] },
   {
-    label: "ai / ml & nlp",
-    items: ["Ollama", "Llama 3", "Mistral", "BERT", "Transformers", "PyTorch", "TensorFlow", "Scikit-learn", "HuggingFace"],
+    label: "apis & integration",
+    items: ["REST APIs", "Flask", "FastAPI", "Token-based auth", "Rate limiting"],
   },
-  { label: "data & tooling", items: ["Pandas", "NumPy", "NLTK", "spaCy", "TF-IDF", "FuzzyWuzzy", "OpenCV", "React.js"] },
+  { label: "tools & workflow", items: ["Git/GitHub", "Docker", "CI/CD", "Linux/Unix", "Vercel"] },
+  { label: "languages", items: ["Python", "SQL", "JavaScript", "TypeScript"] },
+  { label: "databases", items: ["PostgreSQL", "MSSQL", "MySQL", "SQLite"] },
+  {
+    label: "ai / ml",
+    items: ["Ollama", "Llama 3", "Mistral", "HuggingFace", "TensorFlow", "Scikit-learn", "OpenCV"],
+  },
+  {
+    label: "currently exploring",
+    items: ["Agentic AI", "PySpark", "Databricks", "Snowflake"],
+  },
 ];
 
 export interface Certification {
@@ -79,15 +85,15 @@ export interface ExperienceEntry {
 
 export const experience: ExperienceEntry[] = [
   {
-    role: "Intern",
+    role: "Python Backend Intern",
     company: "Team Thai",
     location: "Calicut, Kerala",
     period: "Feb 2025 – May 2025",
     points: [
+      "Built a Flask REST API with a thread-pool executor for concurrent request handling, configurable pagination (10–500 rows), and CSV export, optimizing query response time by ~35% through caching and batch fetching.",
       "Designed and built a text-to-SQL chatbot using Llama 3 and Mistral (via Ollama) with a dual-model fallback architecture, 3-attempt retry logic, and thread-safe TTL caching to handle concurrent requests reliably.",
       "Engineered SQL-injection prevention with 7-pattern regex detection and SELECT-only enforcement, securing natural-language queries over an MSSQL sales database.",
-      "Built a Flask REST API with a thread-pool executor for concurrent request handling, configurable pagination (10–500 rows), and CSV export — optimized query response time by ~35% through caching and batch fetching.",
-      "Designed and implemented a PostgreSQL ETL pipeline for a 22-column customer schema — batch insertion (100 rows/batch), per-row retry logic, timestamp normalization, and automated failed-row reporting.",
+      "Designed and implemented a PostgreSQL ETL pipeline for a 22-column customer schema, with batch insertion (100 rows/batch), per-row retry logic, timestamp normalization, and automated failed-row reporting.",
     ],
   },
 ];
@@ -99,9 +105,22 @@ export interface ProjectEntry {
   points: string[];
   stack: string[];
   github?: string;
+  live?: string;
 }
 
 export const projects: ProjectEntry[] = [
+  {
+    name: "Personal Portfolio",
+    tagline: "Single-page developer portfolio built with Next.js and Tailwind CSS",
+    period: "2026",
+    points: [
+      "Built with Next.js and Tailwind CSS, with sections for stack, experience, projects and education rendered from one typed content config.",
+      "Added anchor-based navigation across all sections, plus resume download and contact links.",
+      "Deployed on Vercel.",
+    ],
+    stack: ["Next.js", "React", "Tailwind CSS", "TypeScript", "Vercel"],
+    live: "https://aghar-portfolio.vercel.app/",
+  },
   {
     name: "AgriLeaf Pro",
     tagline: "CNN-based plant disease detection with IoT integration",
