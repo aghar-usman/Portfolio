@@ -110,6 +110,19 @@ export interface ProjectEntry {
 
 export const projects: ProjectEntry[] = [
   {
+    name: "SU·EN Studio",
+    tagline: "Portfolio website for an architecture and design studio in Kerala and Bangalore",
+    period: "2026",
+    points: [
+      "Built the studio's website with Next.js (App Router) and TypeScript, with a project archive and dynamic project pages generated from one typed data file.",
+      "Created full-screen image galleries for residential and commercial projects, with page transitions and scroll-based animation using Framer Motion and GSAP.",
+      "Implemented a light and dark theme, a contact form, and a responsive layout that works from mobile to desktop.",
+      "Deployed on Vercel with automatic redeploys from GitHub.",
+    ],
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "GSAP", "Vercel"],
+    live: "https://suen-studio.vercel.app/",
+  },
+  {
     name: "Personal Portfolio",
     tagline: "Single-page developer portfolio built with Next.js and Tailwind CSS",
     period: "2026",
