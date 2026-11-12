@@ -1,9 +1,9 @@
 export const profile = {
   name: "Aghar Usman K T",
   location: "Calicut, Kerala, India",
-  roles: ["Next.js Developer", "Frontend Developer"],
+  roles: ["Developer"],
   summary:
-    "Junior Next.js developer who builds responsive, clean interfaces with Next.js, React and Tailwind CSS. After an internship building production REST APIs, I'm comfortable integrating APIs, handling loading and error states, and talking through data needs with backend teammates. I use Git daily, care about UI detail and clean, maintainable code, and enjoy turning designs into fast pages. I also build AI-powered features with LLMs, and I'm keen to learn from code reviews and grow within a frontend team.",
+    "Developer who builds responsive, clean interfaces with Next.js, React, and Tailwind CSS. After an internship building production REST APIs, I'm comfortable integrating APIs, handling loading and error states, and talking through data needs with backend teammates. I use Git daily, care about UI detail and clean, maintainable code, and enjoy turning designs into fast pages. I also build AI-powered features with LLMs, and I'm keen to learn from code reviews and grow within a  team.",
 };
 
 export const contact = {
