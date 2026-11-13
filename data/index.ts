@@ -113,7 +113,7 @@ export interface ExperienceEntry {
 
 export const experience: ExperienceEntry[] = [
   {
-    role: "Python Backend Intern",
+    role: "Intern",
     company: "Team Thai",
     location: "Calicut, Kerala",
     period: "Feb 2025 – May 2025",
