@@ -3,7 +3,7 @@ export const profile = {
   location: "Calicut, Kerala, India",
   roles: ["Developer"],
   summary:
-    "Developer who builds responsive, clean interfaces with Next.js, React, and Tailwind CSS. After an internship building production REST APIs, I'm comfortable integrating APIs, handling loading and error states, and talking through data needs with backend teammates. I use Git daily, care about UI detail and clean, maintainable code, and enjoy turning designs into fast pages. I also build AI-powered features with LLMs, and I'm keen to learn from code reviews and grow within a  team.",
+    "Developer who builds responsive, clean interfaces with Next.js, React, and Tailwind CSS, and the Python backend services behind them. After an internship building production REST APIs, ETL pipelines, and an LLM-powered Text-to-SQL assistant, I'm comfortable working across the stack: integrating APIs, handling loading and error states, and designing the data underneath. I use Git daily, care about UI detail and clean, maintainable code, and learn new tools quickly. I'm keen to learn from code reviews and grow within a team.",
 };
 
 export const contact = {
@@ -17,17 +17,15 @@ export const education = {
   school: "Malnad College of Engineering",
   location: "Hassan, Karnataka",
   degree: "B.E. in Information Science and Engineering",
-  detail: "CGPA 7.81 / 10",
+  detail: "CGPA 7.81 / 10 · First Class with Distinction",
   period: "Aug 2021 – May 2025",
   coursework: [
+    "Data Structures & Algorithms",
     "DBMS",
     "Operating Systems",
     "Computer Networks",
     "Software Engineering",
-    "Artificial Intelligence",
     "Machine Learning",
-    "Big Data Technologies",
-    "Data Science Using R",
     "Information Storage and Management",
   ],
 };
@@ -39,39 +37,69 @@ export interface SkillGroup {
 
 export const skillGroups: SkillGroup[] = [
   {
-    label: "frontend",
-    items: ["Next.js", "React", "Tailwind CSS", "TypeScript", "JavaScript", "HTML", "CSS"],
+    label: "front end",
+    items: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "JavaScript",
+      "HTML5",
+      "CSS3",
+      "Tailwind CSS",
+      "Framer Motion",
+      "GSAP",
+    ],
   },
   {
-    label: "apis & integration",
-    items: ["REST APIs", "Flask", "FastAPI", "Token-based auth", "Rate limiting"],
+    label: "backend & apis",
+    items: [
+      "Python",
+      "Flask",
+      "FastAPI",
+      "REST APIs",
+      "Token-based auth",
+      "Rate limiting",
+      "Java",
+      "C",
+    ],
   },
-  { label: "tools & workflow", items: ["Git/GitHub", "Docker", "CI/CD", "Linux/Unix", "Vercel"] },
-  { label: "languages", items: ["Python", "SQL", "JavaScript", "TypeScript"] },
-  { label: "databases", items: ["PostgreSQL", "MSSQL", "MySQL", "SQLite"] },
   {
-    label: "ai / ml",
-    items: ["Ollama", "Llama 3", "Mistral", "HuggingFace", "TensorFlow", "Scikit-learn", "OpenCV"],
+    label: "ai & llms",
+    items: [
+      "LLM Integration",
+      "Text-to-SQL",
+      "Prompt Engineering",
+      "Ollama",
+      "Llama 3",
+      "Mistral",
+      "Claude",
+      "HuggingFace",
+      "TensorFlow",
+      "PyTorch",
+      "OpenCV",
+    ],
   },
   {
-    label: "currently exploring",
-    items: ["Agentic AI", "PySpark", "Databricks", "Snowflake"],
+    label: "databases & data",
+    items: [
+      "PostgreSQL",
+      "MSSQL",
+      "MySQL",
+      "SQLite",
+      "SQL (Joins, CTEs, Subqueries)",
+      "ETL Pipelines",
+      "Pandas",
+      "NumPy",
+      "Data Validation",
+    ],
   },
-];
-
-export interface Certification {
-  name: string;
-  issuer: string;
-  badgeUrl?: string;
-  credentialUrl?: string;
-}
-
-export const certifications: Certification[] = [
   {
-    name: "Academy Accreditation - Databricks Fundamentals",
-    issuer: "Databricks Academy",
-    badgeUrl: "https://api.accredible.com/v1/frontend/credential_website_embed_image/badge/190902395",
-    credentialUrl: "https://www.credential.net/f1088c5a-d461-45b0-8edb-4ecd2c68fc85",
+    label: "tools & cloud",
+    items: ["Git/GitHub", "Docker", "Linux", "GCP", "CI/CD", "Vercel"],
+  },
+  {
+    label: "languages",
+    items: ["Python", "TypeScript", "JavaScript", "Java", "C", "SQL"],
   },
 ];
 
@@ -90,10 +118,10 @@ export const experience: ExperienceEntry[] = [
     location: "Calicut, Kerala",
     period: "Feb 2025 – May 2025",
     points: [
-      "Built a Flask REST API with a thread-pool executor for concurrent request handling, configurable pagination (10–500 rows), and CSV export, optimizing query response time by ~35% through caching and batch fetching.",
-      "Designed and built a text-to-SQL chatbot using Llama 3 and Mistral (via Ollama) with a dual-model fallback architecture, 3-attempt retry logic, and thread-safe TTL caching to handle concurrent requests reliably.",
-      "Engineered SQL-injection prevention with 7-pattern regex detection and SELECT-only enforcement, securing natural-language queries over an MSSQL sales database.",
-      "Designed and implemented a PostgreSQL ETL pipeline for a 22-column customer schema, with batch insertion (100 rows/batch), per-row retry logic, timestamp normalization, and automated failed-row reporting.",
+      "Built an AI Text-to-SQL assistant (Llama 3 and Mistral via Ollama) for an ERP, letting business users query an MSSQL sales database in plain English, with dual-model fallback, 3-attempt retry logic, and thread-safe TTL caching for reliability.",
+      "Secured the assistant with SELECT-only enforcement and 7-pattern SQL-injection detection to protect live business data.",
+      "Developed a Flask REST API with a thread-pool executor for concurrent requests, configurable pagination (10–500 rows), and CSV export, cutting response time by ~35% through caching and batch fetching.",
+      "Designed a PostgreSQL ETL pipeline for a 22-column schema, with batch loading (100 rows/batch), timestamp normalization, per-record retry, and automated failed-record reports.",
     ],
   },
 ];
@@ -143,7 +171,7 @@ export const projects: ProjectEntry[] = [
       "Built a Flask REST API with OpenCV image preprocessing, secure token-based authentication, and automated treatment-recommendation responses.",
       "Integrated a ThingSpeak IoT pipeline ingesting 6 real-time soil parameters with 7-day historical visualization.",
     ],
-    stack: ["TensorFlow", "Flask", "OpenCV", "ThingSpeak", "GCP"],
+    stack: ["Python", "TensorFlow", "Flask", "OpenCV", "ThingSpeak", "GCP"],
     github: "https://github.com/aghar-usman/Leaf-Disease-Detection-using-CNN",
   },
 ];
