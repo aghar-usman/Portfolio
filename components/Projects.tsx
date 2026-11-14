@@ -8,6 +8,7 @@ export interface ProjectEntry {
   points: string[];
   stack: string[];
   github?: string;
+  live?: string;
 }
 
 interface ProjectsProps {
@@ -38,8 +39,18 @@ export default function Projects({ projects }: ProjectsProps) {
               <div className="flex flex-col gap-6 relative z-10">
                 <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
                   <div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                       <h3 className="text-xl font-bold text-[var(--color-text)]">{project.name}</h3>
+                      {project.live && (
+                        <a 
+                          href={project.live} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-xs font-mono text-[var(--color-accent)] hover:underline"
+                        >
+                          [Live ↗]
+                        </a>
+                      )}
                       {project.github && (
                         <a 
                           href={project.github} 
