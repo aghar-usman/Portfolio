@@ -1,376 +1,71 @@
 "use client";
-
-import GradientWaves from "./GradientWaves/GradientWaves";
-import TextType from "./TextType/TextType";
-import FoldText from "./FoldText/FoldText";
+import { useEffect, useRef } from "react";
 
 interface HeroProps {
-  profile: {
-    name: string;
-    roles: string[];
-    summary: string | string[];
-  };
-
-  contact: {
-    resume: string;
-    github: string;
-    linkedin: string;
-  };
+  profile: { name: string; roles: string[]; summary: string | string[]; location?: string; headline?: string; intro?: string };
+  contact: { resume: string; github: string; linkedin: string };
 }
 
-/* GitHub official-style mark */
-function GitHubIcon() {
-  return (
-    <svg
-      width="19"
-      height="19"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.604-3.369-1.342-3.369-1.342-.455-1.157-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.091-.646.349-1.087.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0 1 12 6.844a9.56 9.56 0 0 1 2.504.337c1.909-1.294 2.748-1.025 2.748-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.335-.012 2.412-.012 2.74 0 .267.18.578.688.48A10.002 10.002 0 0 0 22 12C22 6.477 17.523 2 12 2Z"
-      />
-    </svg>
-  );
+function Arrow({ diagonal = false }: { diagonal?: boolean }) {
+  return <svg className="ah-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d={diagonal ? "M6 18 18 6M6 6h12v12" : "M4 12h15m-6-6 6 6-6 6"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>;
 }
 
-/* LinkedIn official brand glyph */
-function LinkedInIcon() {
-  return (
-    <svg
-      width="19"
-      height="19"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77Z" />
-    </svg>
-  );
-}
+const layers = [{ name: "Interface", tools: "React / Next.js" }, { name: "API", tools: "Python / Flask" }, { name: "Data", tools: "PostgreSQL / SQL" }];
 
 export default function Hero({ profile, contact }: HeroProps) {
+  const root = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const section = root.current;
+    if (!section || typeof Element.prototype.animate !== "function") return;
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (preference.matches) return;
+    // Native browser animation; no package, CDN or scroll listener.
+    const animations: Animation[] = [];
+    section.querySelectorAll<HTMLElement>("[data-hero-enter]").forEach((node, index) => {
+      animations.push(node.animate([{ opacity: 0, transform: "translateY(18px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 680, delay: Math.min(index * 65, 260), easing: "cubic-bezier(.22,1,.36,1)", fill: "backwards" }));
+    });
+    const diagram = section.querySelector<HTMLElement>(".ah-system");
+    if (diagram) animations.push(diagram.animate([{ transform: "scale(.98)" }, { transform: "scale(1)" }], { duration: 1000, easing: "cubic-bezier(.22,1,.36,1)" }));
+    const stop = () => { if (preference.matches) animations.forEach((animation) => animation.cancel()); };
+    preference.addEventListener("change", stop);
+    return () => { animations.forEach((animation) => animation.cancel()); preference.removeEventListener("change", stop); };
+  }, []);
+  const intro = profile.intro ?? (Array.isArray(profile.summary) ? profile.summary.join(" ") : profile.summary);
   return (
-    <section
-      id="about"
-      className="
-        relative
-        w-full
-        min-h-[700px]
-        overflow-hidden
-        bg-[var(--color-bg)]
-        flex
-        items-center
-        box-border
-      "
-    >
-      {/* Gradient Waves Background - Full coverage */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          zIndex: 0,
-          pointerEvents: "auto",
-        }}
-      >
-        <GradientWaves
-          horizonColor="#131313"
-          waveColor="#ff5a36"
-          crestColor="#ff8c73"
-          speed={0.35}
-          amplitude={3.2}
-          waveScale={0.75}
-          waveRatio={0.85}
-          swell={45}
-          turbulence={28}
-          tilt={0.95}
-          zoom={0.85}
-          height={6.5}
-          fogDepth={22}
-          brightness={1.3}
-          opacity={0.95}
-          mouseInteraction={true}
-          parallaxStrength={1.8}
-          grain={true}
-          grainIntensity={0.04}
-        />
-      </div>
-
-      {/* Dark overlay for readability */}
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          z-[1]
-          bg-black/30
-        "
-      />
-
-      {/* Bottom gradient fade into next section */}
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          z-[2]
-          bg-gradient-to-b
-          from-black/10
-          via-transparent
-          to-[var(--color-bg)]
-        "
-      />
-
-      {/* Hero content */}
-      <div
-        className="
-          relative
-          z-10
-          mx-auto
-          flex
-          w-full
-          max-w-4xl
-          flex-col
-          items-start
-          gap-8
-          px-4
-          sm:px-8
-          py-20
-          md:px-12
-          lg:px-16
-          pointer-events-none
-          box-border
-          min-w-0
-        "
-      >
-        {/* Name + roles */}
-        <div className="pointer-events-auto w-full min-w-0">
-          <div
-            className="
-              mb-6
-              overflow-visible
-              w-full
-              min-w-0
-            "
-          >
-            <FoldText
-              text={profile.name}
-              splitBy="char"
-              hinge="top"
-              duration={2}
-              stagger={0.055}
-              ease="power3.out"
-              perspective={700}
-              creaseShading={0.55}
-              fontSize="clamp(2rem, 7vw, 5rem)"
-              fontWeight={800}
-              color="var(--color-text)"
-            />
+    <section ref={root} id="about" className="ah-hero" data-enter aria-labelledby="ah-name">
+      <div className="ah-wrap">
+        <div className="ah-meta" data-hero-enter><span className="ah-occupation"><span className="ah-dot" aria-hidden="true" />{profile.roles.join(" / ") || "Developer"}</span>{profile.location && <span className="ah-location">{profile.location}</span>}</div>
+        <h1 id="ah-name" className="ah-name" data-hero-enter>{profile.name}<span className="ah-period">.</span></h1>
+        <div className="ah-main">
+          <div className="ah-copy">
+            <h2 className="ah-headline" data-hero-enter>{profile.headline ?? "Web interfaces. Python backends."}</h2>
+            <p className="ah-intro" data-hero-enter>{intro}</p>
+            <div className="ah-actions" data-hero-enter>
+              <a className="ah-button ah-primary" href="#projects">See my work <Arrow /></a>
+              {contact.resume && <a className="ah-button ah-secondary" href={contact.resume} target="_blank" rel="noopener noreferrer">View résumé <Arrow diagonal /></a>}
+            </div>
           </div>
-
-          {/* Roles */}
-          <div
-            className="
-              flex
-              flex-wrap
-              gap-2.5
-              font-mono
-              w-full
-              min-w-0
-            "
-          >
-            {profile.roles.map((role, index) => (
-              <span
-                key={`${role}-${index}`}
-                className="
-                  rounded-full
-                  border
-                  border-[var(--color-accent)]/30
-                  bg-[var(--color-surface)]/70
-                  px-3
-                  py-1
-                  text-xs
-                  sm:text-sm
-                  text-[var(--color-accent)]
-                  backdrop-blur-md
-                  truncate
-                  max-w-full
-                "
-              >
-                {role}
-              </span>
-            ))}
+          <div className="ah-system" role="group" aria-label="My development stack: interfaces, APIs and data">
+            <div className="ah-system-top"><span>Across the stack</span><span className="ah-system-symbol" aria-hidden="true">↳</span></div>
+            <ol className="ah-layers">{layers.map((layer, index) => <li className="ah-layer" key={layer.name}><span className="ah-index" aria-hidden="true">0{index + 1}</span><div className="ah-layer-content"><span className="ah-layer-name">{layer.name}</span><span className="ah-tools">{layer.tools}</span></div><span className="ah-node" aria-hidden="true" /></li>)}</ol>
           </div>
         </div>
-
-        {/* Summary */}
-        <div className="w-full pointer-events-auto min-w-0">
-          <TextType
-            text={profile.summary}
-            typingSpeed={100}
-            deletingSpeed={60}
-            pauseDuration={180000}
-            loop={true}
-            showCursor={true}
-            cursorCharacter="|"
-            cursorClassName="text-[var(--color-accent)]"
-            className="
-              font-mono
-              text-sm
-              sm:text-lg
-              font-medium
-              leading-relaxed
-              text-white
-              md:text-xl
-              break-words
-              w-full
-              min-w-0
-            "
-          />
-        </div>
-
-        {/* Buttons */}
-        <div
-          className="
-            mt-4
-            flex
-            flex-wrap
-            gap-3
-            sm:gap-4
-            font-mono
-            pointer-events-auto
-            w-full
-            min-w-0
-          "
-        >
-          {/* Resume */}
-          <a
-            href={contact.resume}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="
-              inline-flex
-              items-center
-              justify-center
-              rounded-lg
-              bg-[var(--color-accent)]
-              px-5
-              sm:px-6
-              py-3
-              text-sm
-              sm:text-base
-              font-semibold
-              text-[#000000]
-              shadow-lg
-              shadow-[var(--color-accent)]/20
-              transition-all
-              duration-300
-              hover:bg-[#ff704f]
-              hover:shadow-[var(--color-accent)]/35
-            "
-          >
-            View Resume
-          </a>
-
-          {/* GitHub */}
-          <a
-            href={contact.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub profile"
-            className="
-              group
-              inline-flex
-              items-center
-              justify-center
-              gap-2.5
-              rounded-lg
-              border
-              border-[var(--color-border)]
-              bg-[var(--color-surface)]/75
-              px-4
-              sm:px-5
-              py-3
-              text-sm
-              sm:text-base
-              text-[var(--color-text)]
-              backdrop-blur-md
-              transition-all
-              duration-300
-              hover:border-[var(--color-accent)]/60
-              hover:bg-[var(--color-surface-2)]
-              hover:text-[var(--color-accent)]
-            "
-          >
-            <span
-              className="
-                flex
-                items-center
-                justify-center
-                transition-transform
-                duration-300
-                group-hover:scale-110
-              "
-            >
-              <GitHubIcon />
-            </span>
-
-            <span>GitHub</span>
-          </a>
-
-          {/* LinkedIn */}
-          <a
-            href={contact.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn profile"
-            className="
-              group
-              inline-flex
-              items-center
-              justify-center
-              gap-2.5
-              rounded-lg
-              border
-              border-[var(--color-border)]
-              bg-[var(--color-surface)]/75
-              px-4
-              sm:px-5
-              py-3
-              text-sm
-              sm:text-base
-              text-[var(--color-text)]
-              backdrop-blur-md
-              transition-all
-              duration-300
-              hover:border-[var(--color-accent)]/60
-              hover:bg-[var(--color-surface-2)]
-              hover:text-[var(--color-accent)]
-            "
-          >
-            <span
-              className="
-                flex
-                items-center
-                justify-center
-                transition-transform
-                duration-300
-                group-hover:scale-110
-              "
-            >
-              <LinkedInIcon />
-            </span>
-
-            <span>LinkedIn</span>
-          </a>
-        </div>
+        <div className="ah-bottom" data-hero-enter><span className="ah-bottom-note">Frontend detail. Backend experience.</span><div className="ah-socials" aria-label="Social profiles">{contact.github && <a href={contact.github} target="_blank" rel="noopener noreferrer">GitHub <Arrow diagonal /></a>}{contact.linkedin && <a href={contact.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn <Arrow diagonal /></a>}</div></div>
       </div>
+      <style>{`
+.ah-hero{position:relative;isolation:isolate;box-sizing:border-box;background:var(--color-bg,#0c0d0c);color:var(--color-text,#f2f0e9);font-family:var(--font-sans,Arial,sans-serif);min-height:calc(100svh - var(--site-header-height,80px));display:flex;align-items:center;overflow:clip;scroll-margin-top:var(--site-header-height,80px)}
+.ah-hero *{box-sizing:border-box}.ah-wrap{width:min(100% - 96px,1248px);margin-inline:auto;padding-block:64px 28px}
+.ah-meta{display:flex;align-items:center;justify-content:space-between;gap:24px;font-family:var(--font-mono,monospace);font-size:12px;line-height:1.6;color:var(--color-text-muted,#a5a69d)}.ah-occupation{display:inline-flex;align-items:center;gap:10px;color:var(--color-text,#f2f0e9)}.ah-dot{width:7px;height:7px;flex:none;background:var(--color-accent,#ff744f);border-radius:50%}.ah-location{text-align:right}
+.ah-name{font-size:clamp(54px,8.25vw,118px);font-weight:500;letter-spacing:-.072em;line-height:1.08;margin:36px 0 48px;padding-bottom:40px;border-bottom:1px solid var(--color-border,#30322d);overflow-wrap:anywhere;text-wrap:balance}.ah-period{color:var(--color-accent,#ff744f)}
+.ah-main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr);align-items:start;gap:clamp(48px,8vw,120px)}.ah-headline{max-width:16ch;font-size:clamp(32px,3.3vw,46px);line-height:1.13;font-weight:500;letter-spacing:-.045em;text-wrap:balance;margin:0 0 22px}.ah-intro{max-width:49ch;font-size:16px;line-height:1.75;color:var(--color-text-muted,#a5a69d);margin:0;text-wrap:pretty}
+.ah-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px}.ah-button{min-height:50px;display:inline-flex;align-items:center;justify-content:center;gap:22px;padding:13px 20px;border:1px solid transparent;border-radius:4px;font-size:14px;font-weight:600;line-height:1.5;text-decoration:none;transition:background-color 150ms,border-color 150ms,color 150ms,transform 150ms}.ah-primary{background:var(--color-accent,#ff744f);color:#17110d}.ah-secondary{border-color:var(--color-border,#30322d);color:var(--color-text,#f2f0e9);background:transparent}.ah-arrow{flex:none;transition:transform 150ms}
+.ah-system{padding-top:2px;min-width:0}.ah-system-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:18px;color:var(--color-text-muted,#a5a69d);font-family:var(--font-mono,monospace);font-size:12px}.ah-system-symbol{color:var(--color-accent,#ff744f);font-size:25px;line-height:1}.ah-layers{list-style:none;margin:0;padding:0}.ah-layer{display:flex;align-items:center;gap:20px;position:relative;min-height:83px;border-top:1px solid var(--color-border,#30322d)}.ah-layer:last-child{border-bottom:1px solid var(--color-border,#30322d)}.ah-index{font-family:var(--font-mono,monospace);font-size:11px;color:var(--color-text-muted,#a5a69d)}.ah-layer-content{display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:14px;min-width:0}.ah-layer-name{font-size:21px;letter-spacing:-.035em}.ah-tools{font-family:var(--font-mono,monospace);font-size:10px;line-height:1.6;color:var(--color-text-muted,#a5a69d);text-align:right}.ah-node{width:7px;height:7px;background:var(--color-bg,#0c0d0c);border:1px solid var(--color-accent,#ff744f);border-radius:50%;position:relative;flex:none}.ah-layer:not(:last-child) .ah-node:after{content:"";position:absolute;width:1px;height:77px;background:var(--color-border,#30322d);top:6px;left:2px;z-index:-1}
+.ah-bottom{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:64px;padding-top:18px;border-top:1px solid var(--color-border,#30322d)}.ah-bottom-note{font-family:var(--font-mono,monospace);font-size:11px;line-height:1.6;color:var(--color-text-muted,#a5a69d)}.ah-socials{display:flex;align-items:center;gap:24px}.ah-socials a{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:var(--color-text-muted,#a5a69d);font-size:12px;text-decoration:underline;text-decoration-color:transparent;text-underline-offset:5px;transition:color 150ms,text-decoration-color 150ms}.ah-socials .ah-arrow{width:13px;height:13px}.ah-hero a:focus-visible{outline:2px solid var(--color-accent,#ff744f);outline-offset:5px}
+@media(hover:hover) and (pointer:fine){.ah-button:hover{transform:translateY(-1px)}.ah-primary:hover{background:var(--color-accent-hover,#ff8a6a)}.ah-secondary:hover{background:var(--color-surface,#151713);border-color:var(--color-text-muted,#a5a69d)}.ah-button:hover .ah-arrow,.ah-socials a:hover .ah-arrow{transform:translateX(3px)}.ah-socials a:hover{color:var(--color-text,#f2f0e9);text-decoration-color:currentColor}}.ah-button:active{transform:translateY(1px) scale(.985)}
+@media(max-width:1023px){.ah-wrap{width:calc(100% - 64px);padding-top:48px}.ah-main{gap:40px;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}.ah-layer-content{align-items:flex-start;flex-direction:column;gap:4px}.ah-tools{text-align:left}.ah-name{margin-bottom:36px}.ah-bottom{margin-top:48px}}
+@media(max-width:639px){.ah-wrap{width:calc(100% - 40px);padding-block:32px 16px}.ah-meta{font-size:10px;gap:16px;align-items:flex-start}.ah-location{max-width:17ch}.ah-name{font-size:clamp(48px,12vw,76px);letter-spacing:-.065em;margin:30px 0;padding-bottom:28px;max-width:100%}.ah-main{grid-template-columns:1fr;gap:36px}.ah-headline{font-size:34px;max-width:16ch;margin-bottom:16px}.ah-intro{font-size:15px;line-height:1.7}.ah-actions{gap:10px;margin-top:24px}.ah-button{width:100%;justify-content:space-between;min-height:48px}.ah-layer{min-height:66px}.ah-layer-content{flex-direction:row;align-items:baseline}.ah-layer-name{font-size:20px}.ah-tools{font-size:10px;text-align:right}.ah-layer:not(:last-child) .ah-node:after{height:60px}.ah-system-top{padding-bottom:14px}.ah-bottom{margin-top:32px;gap:8px;align-items:flex-start;flex-direction:column;padding-top:16px}.ah-bottom-note{font-size:10px}.ah-socials{gap:24px}.ah-socials a{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.ah-hero *,.ah-hero *:before,.ah-hero *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.ah-button:hover,.ah-button:active,.ah-hero a .ah-arrow{transform:none!important}}
+      `}</style>
     </section>
   );
 }
