@@ -2,7 +2,7 @@
 <div align="center">
 
 <a href="https://aghar-portfolio.vercel.app/">
-  <img src="docs/readme-banner.svg" width="100%" alt="Aghar Usman K T — Web interfaces. Python backends." />
+  <img src="readme-banner.svg" width="100%" alt="Aghar Usman K T — Web interfaces. Python backends." />
 </a>
 
 <a href="https://aghar-portfolio.vercel.app/">
@@ -169,7 +169,7 @@ A desktop capture around **1440 × 900** works well. Crop out browser chrome and
 <details>
 <summary><strong>Change the theme</strong></summary>
 
-![Portfolio color palette](docs/readme-palette.svg)
+![Portfolio color palette](readme-palette.svg)
 
 The shared tokens live in the global stylesheet:
 
