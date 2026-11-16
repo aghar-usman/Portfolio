@@ -1,172 +1,243 @@
-<!-- ═══════════════ HEADER ═══════════════ -->
+<!-- Portfolio README · Charcoal / warm white / orange -->
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:000000,50:131313,100:b23d1f&height=220&section=header&text=AUKT.&fontSize=72&fontColor=f5f1ea&fontAlignY=38&animation=fadeIn&desc=Personal%20Developer%20Portfolio&descSize=20&descAlignY=60&descColor=ff5a36" width="100%" alt="AUKT. portfolio header"/>
-
-<a href="https://aghar-portfolio.vercel.app">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=500&size=20&duration=3000&pause=1000&color=FF5A36&center=true&vCenter=true&width=780&height=50&lines=Next.js+%2B+React+%2B+TypeScript;Tailwind+CSS+%C2%B7+GSAP+%C2%B7+Vercel;One+typed+content+file+drives+every+section;Let%27s+build+something+extraordinary+together." alt="Typing SVG" />
+<a href="https://aghar-portfolio.vercel.app/">
+  <img src="docs/readme-banner.svg" width="100%" alt="Aghar Usman K T — Web interfaces. Python backends." />
 </a>
 
-<br/>
-
-[![Live Site](https://img.shields.io/badge/Live%20Site-aghar--portfolio.vercel.app-ff5a36?style=for-the-badge&logo=vercel&logoColor=000000&labelColor=131313)](https://aghar-portfolio.vercel.app)
-[![Resume](https://img.shields.io/badge/Resume-Download%20PDF-1c1c1c?style=for-the-badge&logo=adobeacrobatreader&logoColor=ff5a36&labelColor=131313)](https://aghar-portfolio.vercel.app/resume.pdf)
-
-<br/>
-
-![Next.js](https://img.shields.io/badge/Next.js-1c1c1c?style=flat-square&logo=nextdotjs&logoColor=f5f1ea&labelColor=131313)
-![React](https://img.shields.io/badge/React-1c1c1c?style=flat-square&logo=react&logoColor=ff5a36&labelColor=131313)
-![TypeScript](https://img.shields.io/badge/TypeScript-1c1c1c?style=flat-square&logo=typescript&logoColor=ff5a36&labelColor=131313)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-1c1c1c?style=flat-square&logo=tailwindcss&logoColor=ff5a36&labelColor=131313)
-![GSAP](https://img.shields.io/badge/GSAP-1c1c1c?style=flat-square&logo=greensock&logoColor=ff5a36&labelColor=131313)
-![Vercel](https://img.shields.io/badge/Vercel-1c1c1c?style=flat-square&logo=vercel&logoColor=f5f1ea&labelColor=131313)
-
-</div>
-
-<br/>
-
-<!-- ═══════════════ PREVIEW ═══════════════ -->
-<div align="center">
-
-<a href="https://aghar-portfolio.vercel.app">
-  <img src="https://image.thum.io/get/width/1200/https://aghar-portfolio.vercel.app" width="92%" alt="Portfolio preview" />
+<a href="https://aghar-portfolio.vercel.app/">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&amp;weight=500&amp;size=17&amp;duration=2600&amp;pause=1400&amp;color=FF744F&amp;center=true&amp;vCenter=true&amp;width=700&amp;height=52&amp;lines=Interfaces+up+front.+Python+underneath.;React+%2F+Next.js+%2F+TypeScript;Let%27s+build+something+extraordinary+together." width="700" alt="Interfaces up front. Python underneath. Let’s build something extraordinary together." />
 </a>
 
-<sub>Click the preview to open the live site.</sub>
+# Developer portfolio
+
+A single page for my projects, experience and the tools behind the work.  
+Built with **Next.js**, **React**, **TypeScript** and **Tailwind CSS**.
+
+[![View portfolio](https://img.shields.io/badge/View_Portfolio-%E2%86%97-ff744f?style=for-the-badge&logo=vercel&logoColor=17110d&labelColor=151713)](https://aghar-portfolio.vercel.app/)
+[![View résumé](https://img.shields.io/badge/View_R%C3%A9sum%C3%A9-PDF-f2f0e9?style=for-the-badge&labelColor=151713)](https://aghar-portfolio.vercel.app/resume.pdf)
+[![Get in touch](https://img.shields.io/badge/Get_in_touch-Email-ff744f?style=for-the-badge&labelColor=151713)](mailto:agharusman529@gmail.com)
+
+<br />
+
+![Next.js](https://img.shields.io/badge/Next.js-151713?style=flat-square&logo=nextdotjs&logoColor=f2f0e9)
+![React](https://img.shields.io/badge/React-151713?style=flat-square&logo=react&logoColor=61dafb)
+![TypeScript](https://img.shields.io/badge/TypeScript-151713?style=flat-square&logo=typescript&logoColor=3178c6)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-151713?style=flat-square&logo=tailwindcss&logoColor=06b6d4)
+![Vercel](https://img.shields.io/badge/Vercel-151713?style=flat-square&logo=vercel&logoColor=f2f0e9)
+
+<br />
+
+**[Experience](#the-experience) · [Projects](#selected-projects) · [Setup](#run-locally) · [Customization](#make-it-yours)**
 
 </div>
 
-<br/>
+<!-- Add a real portfolio screenshot here when available. -->
 
-<!-- ═══════════════ ABOUT ═══════════════ -->
-## about
+---
+## The experience
 
-A modern, interactive developer portfolio built from scratch with **Next.js, React, TypeScript, Tailwind CSS and GSAP**. It presents my stack, experience, projects and education as a single-page site, with a clean dark design and smooth motion.
+**01 / Explore the page**
 
-It's built to show my work across **front end, backend and AI**, with a focus on clean design, interactive experiences and a professional developer presence.
+A charcoal canvas, warm typography and orange details carry through the whole page. Motion responds to a purpose: navigating the work, exploring the stack, or making contact.
 
-<br/>
+| Section | What happens |
+| :--- | :--- |
+| **Introduction** | A staged entrance introduces the name, followed by the work and stack. Orange contour lines bend around the pointer, then settle. |
+| **Navigation** | A sticky header tracks the current section and document progress. Mobile navigation opens into a full-screen menu. |
+| **Stack** | A scroll-linked heading highlight leads into a responsive grid of skill groups. The lists stay visible. |
+| **Experience** | A timeline-style layout pairs role details with complete, numbered contributions. |
+| **Projects** | Project links, technology lists and expandable implementation details. Optional screenshots use real supplied images. |
+| **Background** | Education, coursework, languages and achievements, with certifications shown when supplied. |
+| **Contact** | Email, clipboard copying, professional profiles, résumé access and a return to the introduction. |
 
-<!-- ═══════════════ HIGHLIGHTS ═══════════════ -->
-## highlights
+<details>
+<summary><strong>Try the page compass</strong></summary>
 
-- **Single-page layout** with anchor navigation across `about`, `stack`, `experience`, `projects`, `education` and `contact`
-- **Interactive hero section** with direct links to resume, GitHub and LinkedIn
-- **Animated skills showcase** grouped by front end, backend & APIs, AI & LLMs, databases, and tools
-- **Typed content config:** every section renders from one TypeScript data file, so updating the site means editing data, not components
-- **GSAP-powered animations** and interactions, with a typing and caret effect on text
-- **Responsive** from mobile to desktop
-- **Accessible motion:** animations respect `prefers-reduced-motion`
-- **Reusable React components** structured for performance and maintainability
-- **Auto-deployed on Vercel** from GitHub
+The floating control ties the sections together:
 
-<br/>
+1. Scroll to watch the orange ring track your progress.
+2. Open the dial to see the section map.
+3. Choose a section or use **Previous** and **Next**.
+4. Press **Escape** to close the guide.
 
-<!-- ═══════════════ TECH STACK ═══════════════ -->
-## stack
+On smaller screens, the control becomes a compact numbered dial. Navigation uses native browser scrolling and moves keyboard focus to the destination heading.
 
-| Layer | Tools |
-|:--|:--|
-| **Framework** | Next.js (App Router), React |
-| **Language** | TypeScript, JavaScript |
-| **Styling** | Tailwind CSS (v4, `@theme` tokens), CSS |
-| **Animation** | GSAP |
-| **Icons** | React Icons |
-| **Fonts** | Inter, JetBrains Mono via `next/font/google` |
-| **Hosting** | Vercel |
+</details>
 
-<br/>
+<details>
+<summary><strong>Motion, keyboard and accessibility</strong></summary>
 
-<!-- ═══════════════ DESIGN SYSTEM ═══════════════ -->
-## design system
+- Reduced-motion preferences disable the moving background, scroll progress stroke and animated transitions.
+- Touch screens receive a static contour background.
+- A skip link leads directly to the main content.
+- The mobile menu supports Escape, keyboard focus containment and focus restoration.
+- Project disclosures use native HTML `<details>` controls.
+- Copy-email feedback is announced through a polite live region; success appears only after the clipboard write succeeds.
+- The page guide is non-modal and leaves normal page navigation available.
 
-The look is a near-black canvas with a single orange accent, defined once as Tailwind theme tokens in `globals.css`.
+These are implementation choices, rather than a claim of formal accessibility conformance.
 
-<div align="center">
+</details>
 
-| Token | Value | Used for |
-|:--|:--:|:--|
-| `--color-bg` | ![#000000](https://img.shields.io/badge/-%23000000-000000?style=flat-square) | Page background |
-| `--color-surface` | ![#131313](https://img.shields.io/badge/-%23131313-131313?style=flat-square) | Cards and panels |
-| `--color-surface-2` | ![#1c1c1c](https://img.shields.io/badge/-%231c1c1c-1c1c1c?style=flat-square) | Raised surfaces |
-| `--color-border` | ![#2a2a2a](https://img.shields.io/badge/-%232a2a2a-2a2a2a?style=flat-square) | Dividers and outlines |
-| `--color-accent` | ![#ff5a36](https://img.shields.io/badge/-%23ff5a36-ff5a36?style=flat-square) | Links, highlights, caret |
-| `--color-accent-dark` | ![#b23d1f](https://img.shields.io/badge/-%23b23d1f-b23d1f?style=flat-square) | Hover and depth |
-| `--color-text` | ![#f5f1ea](https://img.shields.io/badge/-%23f5f1ea-f5f1ea?style=flat-square) | Body text |
-| `--color-text-muted` | ![#8a8a85](https://img.shields.io/badge/-%238a8a85-8a8a85?style=flat-square) | Secondary text |
+## Selected projects
 
-</div>
+**02 / Work in focus**
 
-**Typography:** `JetBrains Mono` for navigation, labels and headings, and `Inter` for body text.
+### SU·EN Studio
 
-<br/>
+An architecture and design studio website with a project archive, individual project pages, full-screen galleries and theme switching.
 
-<!-- ═══════════════ GETTING STARTED ═══════════════ -->
-## getting started
+`Next.js` `TypeScript` `Tailwind CSS` `Framer Motion` `GSAP` `Vercel`
+
+**[Visit the website ↗](https://suen-studio.vercel.app/)**
+
+### Personal Portfolio
+
+This portfolio brings the stack, experience, projects and education into one page, driven by a shared content configuration.
+
+`Next.js` `React` `TypeScript` `Tailwind CSS`
+
+**[Visit the portfolio ↗](https://aghar-portfolio.vercel.app/)**
+
+### AgriLeaf Pro
+
+Plant disease detection combining a CNN, a Flask API, OpenCV preprocessing and a ThingSpeak pipeline for soil data.
+
+`Python` `TensorFlow` `Flask` `OpenCV` `ThingSpeak` `GCP`
+
+**[View source ↗](https://github.com/aghar-usman/Leaf-Disease-Detection-using-CNN)**
+
+## Run locally
+
+**03 / Start building**
+
+From the repository root, with Node.js and npm installed:
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/aghar-usman/<repo-name>.git
-cd <repo-name>
-
-# 2. Install dependencies
 npm install
-
-# 3. Start the dev server
 npm run dev
 ```
 
-Then open [http://localhost:3000](http://localhost:3000).
+Open [localhost:3000](http://localhost:3000), or the address printed by Next.js.
+
+For a production build:
 
 ```bash
-# Production build
 npm run build
-npm start
+npm run start
 ```
 
-<br/>
+These commands assume the standard Next.js scripts in `package.json`. Use the repository’s lockfile and package manager if they differ.
 
-<!-- ═══════════════ CUSTOMIZE ═══════════════ -->
-## customize
+## Make it yours
 
-All content lives in one typed file, `index.ts`:
+**04 / Content & design**
 
-| Export | Controls |
-|:--|:--|
-| `profile` | Name, location, role, summary |
-| `contact` | Email, GitHub, LinkedIn, resume path |
-| `skillGroups` | The stack section |
-| `experience` | Work experience entries |
-| `projects` | Project cards, with optional `live` and `github` links |
-| `education` | Degree, CGPA, coursework |
-| `achievements` / `languages` | Milestones and spoken languages |
-| `navLinks` | Navbar anchors |
+### Content
 
-Drop your resume into `public/resume.pdf` and the **View Resume** button picks it up.
+The `@/data` module supplies the profile, contacts, skill groups, experience, projects, education, certifications, achievements, languages and navigation links.
 
-<br/>
+Update that content first. Keep Skills connected to the shared configuration:
 
-<!-- ═══════════════ DEPLOY ═══════════════ -->
-## deploy
+```tsx
+<Skills skills={skillGroups} />
+```
 
-The site is deployed on **Vercel**. Pushing to the main branch on GitHub triggers an automatic redeploy.
+<details>
+<summary><strong>Add a project screenshot</strong></summary>
 
-<br/>
+Place a real screenshot in `public/images/`, then add this field to its project entry:
 
-<!-- ═══════════════ CLOSING ═══════════════ -->
+```ts
+screenshot: {
+  src: "/images/suen-studio.webp",
+  alt: "SU·EN Studio homepage showing the architecture project gallery",
+},
+```
+
+If the content module has its own `ProjectEntry` interface, add:
+
+```ts
+screenshot?: { src: string; alt: string };
+```
+
+A desktop capture around **1440 × 900** works well. Crop out browser chrome and private information. Screenshots are optional; projects without them render without empty image frames.
+
+</details>
+
+<details>
+<summary><strong>Change the theme</strong></summary>
+
+![Portfolio color palette](docs/readme-palette.svg)
+
+The shared tokens live in the global stylesheet:
+
+| Token | Value | Purpose |
+| :--- | :--- | :--- |
+| `--color-bg` | `#0c0d0c` | Main charcoal background |
+| `--color-surface` | `#151713` | Alternating sections and controls |
+| `--color-surface-2` | `#20231d` | Secondary surfaces |
+| `--color-border` | `#30322d` | Dividers and outlines |
+| `--color-accent` | `#ff744f` | Orange actions and highlights |
+| `--color-text` | `#f2f0e9` | Warm primary text |
+| `--color-text-muted` | `#a5a69d` | Supporting text |
+
+Inter and JetBrains Mono are preferred when already loaded; system fonts provide fallbacks. Set `--site-header-height` to the actual navbar height; the default is `80px`.
+
+</details>
+
+<details>
+<summary><strong>Understand the layout</strong></summary>
+
+```text
+Home
+├── Navbar
+├── main
+│   ├── Hero
+│   ├── Skills
+│   ├── Experience
+│   ├── Projects
+│   └── EducationAndExtras
+├── Footer / Contact
+└── PageGuide
+```
+
+Each section owns its maximum width, responsive gutters and vertical spacing. The page wrapper stays full-width, so alternating backgrounds reach the viewport edges. Avoid adding another narrow container or large gaps around these sections.
+
+The current interaction layer uses native browser APIs and React. Motion libraries listed for showcased projects describe those projects; the redesigned portfolio controls do not require installing a new animation package.
+
+</details>
+
+## Before publishing
+
+- [ ] Confirm all contact, project and credential URLs.
+- [ ] Place the résumé at `public/resume.pdf`, or update its URL.
+- [ ] Check the page at desktop, tablet and mobile widths.
+- [ ] Test keyboard navigation, menu closing and section destinations.
+- [ ] Test reduced motion and clipboard success/failure.
+- [ ] Check screenshots for readable content and private information.
+- [ ] Run the production build and review the built site.
+
+---
+
 <div align="center">
 
-## Let's build something extraordinary together.
+### Let’s build something extraordinary together.
 
-[![Portfolio](https://img.shields.io/badge/Live%20Site-aghar--portfolio.vercel.app-ff5a36?style=for-the-badge&labelColor=131313)](https://aghar-portfolio.vercel.app)
-[![GitHub](https://img.shields.io/badge/GitHub-aghar--usman-1c1c1c?style=for-the-badge&logo=github&logoColor=ff5a36&labelColor=131313)](https://github.com/aghar-usman)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-1c1c1c?style=for-the-badge&logo=linkedin&logoColor=ff5a36&labelColor=131313)](https://linkedin.com/in/aghar-usmankt)
-[![Email](https://img.shields.io/badge/Email-Say%20Hello-1c1c1c?style=for-the-badge&logo=gmail&logoColor=ff5a36&labelColor=131313)](mailto:agharusman529@gmail.com)
+Have a development role or a website project in mind?  
+I’d like to hear about it.
 
-<br/>
+[![Email](https://img.shields.io/badge/Email-Say_hello-ff744f?style=for-the-badge&logo=gmail&logoColor=17110d&labelColor=151713)](mailto:agharusman529@gmail.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-f2f0e9?style=for-the-badge&labelColor=151713)](https://linkedin.com/in/aghar-usmankt)
+[![GitHub](https://img.shields.io/badge/GitHub-aghar--usman-f2f0e9?style=for-the-badge&logo=github&logoColor=f2f0e9&labelColor=151713)](https://github.com/aghar-usman)
 
-<sub>© 2026 · Engineered with precision. · Designed with ✦ Next.js & Tailwind</sub>
+<br />
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:b23d1f,50:131313,100:000000&height=110&section=footer" width="100%" alt="footer" />
+<sub>Aghar Usman K T · Calicut, Kerala, India</sub>
+
+[Back to top ↑](#developer-portfolio)
+
+<img src="https://capsule-render.vercel.app/api?type=waving&amp;color=0:0c0d0c,60:151713,100:ff744f&amp;height=90&amp;section=footer" width="100%" alt="" />
 
 </div>
