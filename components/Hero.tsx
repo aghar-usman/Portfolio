@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { AnimatePresence, MotionConfig, motion, stagger, useAnimate, useReducedMotion } from "motion/react";
 
 interface HeroProps {
   profile: { name: string; roles: string[]; summary: string | string[]; location?: string; headline?: string; intro?: string };
@@ -10,7 +11,51 @@ function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return <svg className="ah-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d={diagonal ? "M6 18 18 6M6 6h12v12" : "M4 12h15m-6-6 6 6-6 6"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>;
 }
 
-const layers = [{ name: "Interface", tools: "React / Next.js" }, { name: "API", tools: "Python / Flask" }, { name: "Data", tools: "PostgreSQL / SQL" }];
+
+const disciplines = [
+  { label: "Interface", tools: "React · Next.js", title: "The part people use.", body: "Responsive pages, project galleries and navigation built with React, Next.js and TypeScript." },
+  { label: "API", tools: "Python · Flask", title: "The services behind it.", body: "Python APIs with concurrent request handling, pagination, CSV export and SQL query safeguards." },
+  { label: "Data", tools: "PostgreSQL · SQL", title: "The data underneath.", body: "SQL databases and ETL pipelines with batch loading, timestamp normalization and per-record retries." },
+];
+
+function StackExplorer() {
+  const [active, setActive] = useState(0);
+  const id = useId();
+  const reduced = useReducedMotion();
+  function onKey(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    let next = index;
+    if (event.key === "ArrowRight") next = (index + 1) % disciplines.length;
+    else if (event.key === "ArrowLeft") next = (index + disciplines.length - 1) % disciplines.length;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = disciplines.length - 1;
+    else return;
+    event.preventDefault();
+    setActive(next);
+    event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>("button")[next]?.focus();
+  }
+  return (
+    <div className="ah-explorer">
+      <div className="ah-explorer-heading"><span>Explore my stack</span><span aria-hidden="true">↳</span></div>
+      <div className="ah-tabs" role="tablist" aria-label="Development disciplines">{disciplines.map((item, index) => <button key={item.label} id={id + "-tab-" + index} type="button" role="tab" aria-selected={active === index} aria-controls={id + "-panel"} tabIndex={active === index ? 0 : -1} onClick={() => setActive(index)} onKeyDown={(event) => onKey(event, index)}><span className="ah-tab-number">0{index + 1}</span>{item.label}<span className="ah-tab-line" /></button>)}</div>
+      <div id={id + "-panel"} role="tabpanel" aria-labelledby={id + "-tab-" + active} tabIndex={0} className="ah-explorer-panel">
+        <svg className="ah-diagram" viewBox="0 0 480 160" fill="none" aria-hidden="true">
+          <path d="M130 78H180M300 78H350" className="ah-wire" />
+          <path d="M70 44V24H410V44" className="ah-wire ah-return-wire" />
+          {disciplines.map((item, index) => <g key={item.label}>
+            <rect x={10 + index * 170} y="44" width="120" height="68" rx="4" className={active === index ? "ah-diagram-node ah-diagram-active" : "ah-diagram-node"} />
+            <text x={70 + index * 170} y="74" textAnchor="middle" className="ah-diagram-name">{["React", "Flask", "SQL"][index]}</text>
+            <text x={70 + index * 170} y="94" textAnchor="middle" className="ah-diagram-sub">{item.label}</text>
+            <motion.circle cx={70 + index * 170} cy="130" r="3" initial={false} animate={{ opacity: active === index ? 1 : .18 }} transition={{ duration: reduced ? 0 : .18 }} fill="var(--color-accent, #ff744f)" />
+          </g>)}
+        </svg>
+        <div className="ah-explorer-copy"><AnimatePresence mode="wait" initial={false}><motion.div key={active} initial={{ opacity: reduced ? 1 : .45, y: reduced ? 0 : 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: reduced ? 1 : .45 }} transition={{ duration: reduced ? 0 : .12 }}>
+          <p className="ah-explorer-tools">{disciplines[active].tools}</p><h3>{disciplines[active].title}</h3><p className="ah-explorer-description">{disciplines[active].body}</p>
+        </motion.div></AnimatePresence></div>
+      </div>
+    </div>
+  );
+}
+
 
 
 /** Pointer-driven canvas, rendered locally. No perpetual animation loop. */
@@ -100,26 +145,17 @@ function ContourBackground() {
 }
 
 export default function Hero({ profile, contact }: HeroProps) {
-  const root = useRef<HTMLElement>(null);
+  const [scope, animate] = useAnimate<HTMLElement>();
+  const reduced = useReducedMotion();
   useEffect(() => {
-    const section = root.current;
-    if (!section || typeof Element.prototype.animate !== "function") return;
-    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (preference.matches) return;
-    // Native browser animation; no package, CDN or scroll listener.
-    const animations: Animation[] = [];
-    section.querySelectorAll<HTMLElement>("[data-hero-enter]").forEach((node, index) => {
-      animations.push(node.animate([{ opacity: 0, transform: "translateY(18px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 680, delay: Math.min(index * 65, 260), easing: "cubic-bezier(.22,1,.36,1)", fill: "backwards" }));
-    });
-    const diagram = section.querySelector<HTMLElement>(".ah-system");
-    if (diagram) animations.push(diagram.animate([{ transform: "scale(.98)" }, { transform: "scale(1)" }], { duration: 1000, easing: "cubic-bezier(.22,1,.36,1)" }));
-    const stop = () => { if (preference.matches) animations.forEach((animation) => animation.cancel()); };
-    preference.addEventListener("change", stop);
-    return () => { animations.forEach((animation) => animation.cancel()); preference.removeEventListener("change", stop); };
-  }, []);
+    if (!scope.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const controls = animate("[data-hero-enter]", { opacity: [0, 1], y: [14, 0] }, { duration: .62, delay: stagger(.055), ease: [.22, 1, .36, 1] });
+    return () => { controls.stop(); };
+  }, [animate, scope, reduced]);
   const intro = profile.intro ?? (Array.isArray(profile.summary) ? profile.summary.join(" ") : profile.summary);
   return (
-    <section ref={root} id="about" className="ah-hero" data-enter aria-labelledby="ah-name">
+    <MotionConfig reducedMotion="user">
+    <section ref={scope} id="about" className="ah-hero" data-enter aria-labelledby="ah-name">
       <ContourBackground />
       <div className="ah-wrap">
         <div className="ah-meta" data-hero-enter><span className="ah-occupation"><span className="ah-dot" aria-hidden="true" />{profile.roles.join(" / ") || "Developer"}</span>{profile.location && <span className="ah-location">{profile.location}</span>}</div>
@@ -133,10 +169,7 @@ export default function Hero({ profile, contact }: HeroProps) {
               {contact.resume && <a className="ah-button ah-secondary" href={contact.resume} target="_blank" rel="noopener noreferrer">View résumé <Arrow diagonal /></a>}
             </div>
           </div>
-          <div className="ah-system" role="group" aria-label="My development stack: interfaces, APIs and data">
-            <div className="ah-system-top"><span>Across the stack</span><span className="ah-system-symbol" aria-hidden="true">↳</span></div>
-            <ol className="ah-layers">{layers.map((layer, index) => <li className="ah-layer" key={layer.name}><span className="ah-index" aria-hidden="true">0{index + 1}</span><div className="ah-layer-content"><span className="ah-layer-name">{layer.name}</span><span className="ah-tools">{layer.tools}</span></div><span className="ah-node" aria-hidden="true" /></li>)}</ol>
-          </div>
+          <StackExplorer />
         </div>
         <div className="ah-bottom" data-hero-enter><span className="ah-bottom-note">Frontend detail. Backend experience.</span><div className="ah-socials" aria-label="Social profiles">{contact.github && <a href={contact.github} target="_blank" rel="noopener noreferrer">GitHub <Arrow diagonal /></a>}{contact.linkedin && <a href={contact.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn <Arrow diagonal /></a>}</div></div>
       </div>
@@ -153,6 +186,12 @@ export default function Hero({ profile, contact }: HeroProps) {
 @media(max-width:1023px){.ah-wrap{width:calc(100% - 64px);padding-top:48px}.ah-main{gap:40px;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}.ah-layer-content{align-items:flex-start;flex-direction:column;gap:4px}.ah-tools{text-align:left}.ah-name{margin-bottom:36px}.ah-bottom{margin-top:48px}}
 @media(max-width:639px){.ah-contours{opacity:.5;mask-image:linear-gradient(180deg,transparent 40%,#000);-webkit-mask-image:linear-gradient(180deg,transparent 40%,#000)}.ah-wrap{width:calc(100% - 40px);padding-block:32px 16px}.ah-meta{font-size:10px;gap:16px;align-items:flex-start}.ah-location{max-width:17ch}.ah-name{font-size:clamp(48px,12vw,76px);letter-spacing:-.065em;margin:30px 0;padding-bottom:28px;max-width:100%}.ah-main{grid-template-columns:1fr;gap:36px}.ah-headline{font-size:34px;max-width:16ch;margin-bottom:16px}.ah-intro{font-size:15px;line-height:1.7}.ah-actions{gap:10px;margin-top:24px}.ah-button{width:100%;justify-content:space-between;min-height:48px}.ah-layer{min-height:66px}.ah-layer-content{flex-direction:row;align-items:baseline}.ah-layer-name{font-size:20px}.ah-tools{font-size:10px;text-align:right}.ah-layer:not(:last-child) .ah-node:after{height:60px}.ah-system-top{padding-bottom:14px}.ah-bottom{margin-top:32px;gap:8px;align-items:flex-start;flex-direction:column;padding-top:16px}.ah-bottom-note{font-size:10px}.ah-socials{gap:24px}.ah-socials a{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.ah-hero *,.ah-hero *:before,.ah-hero *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.ah-button:hover,.ah-button:active,.ah-hero a .ah-arrow{transform:none!important}}
+
+.ah-explorer{border-top:1px solid var(--color-border,#30322d);min-width:0;padding-top:18px}.ah-explorer-heading{display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono,monospace);font-size:11px;line-height:1.7;color:var(--color-text-muted,#a5a69d);margin-bottom:22px}.ah-explorer-heading>span:last-child{font-size:23px;color:var(--color-accent,#ff744f)}.ah-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.ah-tabs button{position:relative;display:flex;align-items:center;gap:9px;min-height:48px;text-align:left;padding:0 0 13px;background:none;border:0;color:var(--color-text-muted,#a5a69d);font:inherit;font-size:13px;cursor:pointer;transition:color 150ms}.ah-tab-number{font-family:var(--font-mono,monospace);font-size:9px;opacity:.7}.ah-tab-line{position:absolute;inset-inline:0;bottom:0;height:2px;background:var(--color-border,#30322d)}.ah-tab-line:after{content:"";position:absolute;inset:0;background:var(--color-accent,#ff744f);transform:scaleX(0);transform-origin:left;transition:transform 180ms cubic-bezier(.2,.8,.2,1)}.ah-tabs button[aria-selected="true"]{color:var(--color-text,#f2f0e9)}.ah-tabs button[aria-selected="true"] .ah-tab-line:after{transform:scaleX(1)}.ah-diagram{display:block;width:100%;height:auto;margin-top:8px}.ah-wire{stroke:var(--color-border,#30322d);stroke-width:1}.ah-return-wire{stroke-dasharray:3 5;opacity:.6}.ah-diagram-node{fill:var(--color-surface,#151713);stroke:var(--color-border,#30322d);transition:stroke 160ms,fill 160ms}.ah-diagram-active{stroke:var(--color-accent,#ff744f);fill:var(--color-surface-2,#20231d)}.ah-diagram-name{fill:var(--color-text,#f2f0e9);font-family:var(--font-sans,Arial,sans-serif);font-size:18px;letter-spacing:-.5px}.ah-diagram-sub{fill:var(--color-text-muted,#a5a69d);font-family:var(--font-mono,monospace);font-size:10px}.ah-explorer-copy{min-height:164px;padding-top:8px}.ah-explorer-tools{font-family:var(--font-mono,monospace);font-size:10px;line-height:1.7;color:var(--color-accent,#ff744f);margin:0 0 10px}.ah-explorer-copy h3{font-size:22px;font-weight:500;letter-spacing:-.04em;line-height:1.25;margin:0 0 10px}.ah-explorer-description{font-size:13px;color:var(--color-text-muted,#a5a69d);line-height:1.8;margin:0;max-width:43ch}.ah-hero button:focus-visible,.ah-explorer-panel:focus-visible{outline:2px solid var(--color-accent,#ff744f);outline-offset:5px}.ah-name{font-size:clamp(54px,8vw,112px);margin-bottom:40px;padding-bottom:32px}.ah-main{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(48px,6vw,96px)}.ah-bottom{margin-top:36px}.ah-contours{opacity:.65}
+@media(hover:hover) and (pointer:fine){.ah-tabs button:hover{color:var(--color-accent,#ff744f)}}
+@media(max-width:1023px){.ah-main{gap:36px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.ah-tabs{gap:10px}.ah-tabs button{font-size:12px;gap:6px}.ah-explorer-copy{min-height:190px}}
+@media(max-width:639px){.ah-name{font-size:clamp(48px,12vw,76px);margin-bottom:30px;padding-bottom:28px}.ah-main{grid-template-columns:minmax(0,1fr);gap:32px}.ah-explorer-copy{min-height:170px}.ah-tabs button{font-size:13px}.ah-diagram{max-width:440px;margin-inline:auto}.ah-explorer-description{font-size:13px}.ah-bottom{margin-top:28px}}
+
       `}</style>
     </section>
   );
