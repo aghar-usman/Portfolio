@@ -1,9 +1,12 @@
 export const profile = {
   name: "Aghar Usman K T",
   location: "Calicut, Kerala, India",
-  roles: ["Developer"],
+  roles: ["Full-stack developer"],
+  headline: "Web interfaces. Python backends.",
+  intro:
+    "I build responsive websites with React and Next.js, and the Python APIs and data pipelines behind them.",
   summary:
-    "Developer who builds responsive, clean interfaces with Next.js, React, and Tailwind CSS, and the Python backend services behind them. After an internship building production REST APIs, ETL pipelines, and an LLM-powered Text-to-SQL assistant, I'm comfortable working across the stack: integrating APIs, handling loading and error states, and designing the data underneath. I use Git daily, care about UI detail and clean, maintainable code, and learn new tools quickly. I'm keen to learn from code reviews and grow within a team.",
+    "I build responsive interfaces with React, Next.js and Tailwind CSS, backed by Python APIs and SQL databases. During my internship at Team Thai, I worked on production REST APIs, ETL pipelines and an LLM-powered Text-to-SQL assistant. I care about the details on screen and the data behind them, and I’m looking to grow within a development team.",
 };
 
 export const contact = {
