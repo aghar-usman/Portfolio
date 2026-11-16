@@ -4,9 +4,9 @@ export const profile = {
   roles: ["Full-stack developer"],
   headline: "Web interfaces. Python backends.",
   intro:
-    "I build responsive websites with React and Next.js, and the Python APIs and data pipelines behind them.",
+    "I’m a full-stack developer in Calicut, Kerala. I build Next.js websites, React interfaces and Python APIs, with SQL databases behind them.",
   summary:
-    "I build responsive interfaces with React, Next.js and Tailwind CSS, backed by Python APIs and SQL databases. During my internship at Team Thai, I worked on production REST APIs, ETL pipelines and an LLM-powered Text-to-SQL assistant. I care about the details on screen and the data behind them, and I’m looking to grow within a development team.",
+    "I’m Aghar Usman K T, a full-stack developer based in Calicut, Kerala. I build responsive websites with Next.js, React and TypeScript, and backend services with Python, Flask and SQL. My work includes an architecture studio website, production REST APIs, PostgreSQL ETL pipelines and an LLM-powered Text-to-SQL assistant. I’m interested in development roles where I can contribute across the stack and grow through code reviews and collaboration.",
 };
 
 export const contact = {
@@ -132,10 +132,10 @@ export const experience: ExperienceEntry[] = [
     location: "Calicut, Kerala",
     period: "Feb 2025 – May 2025",
     points: [
-      "Built an AI Text-to-SQL assistant (Llama 3 and Mistral via Ollama) for an ERP, letting business users query an MSSQL sales database in plain English, with dual-model fallback, 3-attempt retry logic, and thread-safe TTL caching for reliability.",
-      "Secured the assistant with SELECT-only enforcement and 7-pattern SQL-injection detection to protect live business data.",
-      "Developed a Flask REST API with a thread-pool executor for concurrent requests, configurable pagination (10–500 rows), and CSV export, cutting response time by ~35% through caching and batch fetching.",
-      "Designed a PostgreSQL ETL pipeline for a 22-column schema, with batch loading (100 rows/batch), timestamp normalization, per-record retry, and automated failed-record reports.",
+      "Built an ERP Text-to-SQL assistant that let business users query an MSSQL sales database in plain English, using Llama 3 and Mistral through Ollama. Added model fallback, three-attempt retries and thread-safe TTL caching.",
+      "Restricted generated queries to SELECT statements and added seven-pattern SQL-injection detection to reduce the risk of unsafe database access.",
+      "Developed a Flask REST API with concurrent request handling, configurable pagination and CSV export. Reduced response time by approximately 35% through caching and batch fetching.",
+      "Built a PostgreSQL ETL pipeline for a 22-column schema, with 100-row batch loading, timestamp normalization, per-record retries and automated failed-record reports.",
     ],
   },
 ];
@@ -148,15 +148,16 @@ export interface ProjectEntry {
   stack: string[];
   github?: string;
   live?: string;
+  screenshot?: { src: string; alt: string };
 }
 
 export const projects: ProjectEntry[] = [
   {
     name: "SU·EN Studio",
-    tagline: "Portfolio website for an architecture and design studio in Kerala and Bangalore",
+    tagline: "Next.js website for an architecture and design studio in Kerala and Bangalore",
     period: "2026",
     points: [
-      "Built the studio's website with Next.js (App Router) and TypeScript, with a project archive and dynamic project pages generated from one typed data file.",
+      "Built a responsive architecture studio website with Next.js and TypeScript. A typed content file powers the project archive and individual project pages.",
       "Created full-screen image galleries for residential and commercial projects, with page transitions and scroll-based animation using Framer Motion and GSAP.",
       "Implemented a light and dark theme, a contact form, and a responsive layout that works from mobile to desktop.",
       "Deployed on Vercel with automatic redeploys from GitHub.",
@@ -166,11 +167,11 @@ export const projects: ProjectEntry[] = [
   },
   {
     name: "Personal Portfolio",
-    tagline: "Single-page developer portfolio built with Next.js and Tailwind CSS",
+    tagline: "An interactive developer portfolio with Next.js, TypeScript and Tailwind CSS",
     period: "2026",
     points: [
       "Built with Next.js and Tailwind CSS, with sections for stack, experience, projects and education rendered from one typed content config.",
-      "Added anchor-based navigation across all sections, plus resume download and contact links.",
+      "Added section navigation, an interactive stack explorer, a floating page guide and a copy-email contact action.",
       "Deployed on Vercel.",
     ],
     stack: ["Next.js", "React", "Tailwind CSS", "TypeScript", "Vercel"],
@@ -178,7 +179,7 @@ export const projects: ProjectEntry[] = [
   },
   {
     name: "AgriLeaf Pro",
-    tagline: "CNN-based plant disease detection with IoT integration",
+    tagline: "Plant disease detection with TensorFlow, a Flask API and IoT soil data",
     period: "2024 – 2025",
     points: [
       "Designed and trained a 5-layer CNN classifying 19 plant diseases across 4 crops, achieving 85%+ accuracy with sub-100ms inference on test hardware.",
@@ -191,7 +192,7 @@ export const projects: ProjectEntry[] = [
 ];
 
 export const achievements = [
-  "State-level hackathon — 2nd place: led a 4-member team in a 6-hour hackathon, owned backend architecture, coordinated the task split, and delivered a working product under time pressure.",
+  "Placed second in a state-level hackathon, leading a four-person team through a six-hour build. Owned the backend architecture, coordinated tasks and delivered a working product.",
 ];
 
 export const languages = [
