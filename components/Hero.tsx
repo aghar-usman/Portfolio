@@ -194,5 +194,6 @@ export default function Hero({ profile, contact }: HeroProps) {
 
       `}</style>
     </section>
+    </MotionConfig>
   );
 }
