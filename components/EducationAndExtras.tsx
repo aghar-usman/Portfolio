@@ -1,10 +1,4 @@
-"use client";
-
-import React, { useRef, useState, useEffect, useCallback, useTransition } from "react";
 import Image from "next/image";
-import ReflectiveCard from "./ReflectiveCard/ReflectiveCard";
-import StarBorder from "./StarBorder/StarBorder";
-import { Award, ExternalLink, Trophy, GraduationCap, Languages, ShieldCheck, BookOpen, Sparkles } from "lucide-react";
 
 export interface Education {
   school: string;
@@ -14,19 +8,8 @@ export interface Education {
   period: string;
   coursework: string[];
 }
-
-export interface Certification {
-  name: string;
-  issuer: string;
-  badgeUrl?: string;
-  credentialUrl?: string;
-}
-
-export interface Language {
-  name: string;
-  level: string;
-}
-
+export interface Certification { name: string; issuer: string; badgeUrl?: string; credentialUrl?: string }
+export interface Language { name: string; level: string }
 export interface EducationAndExtrasProps {
   education: Education;
   certifications: Certification[];
@@ -34,293 +17,40 @@ export interface EducationAndExtrasProps {
   languages: Language[];
 }
 
-export default function EducationAndExtras({
-  education,
-  certifications,
-  achievements,
-  languages,
-}: EducationAndExtrasProps) {
-  const [activeTab, setActiveTab] = useState<number>(0);
-  const [isPending, startTransition] = useTransition();
-  const [isMobile, setIsMobile] = useState<boolean>(true);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const spotlightRef = useRef<HTMLDivElement>(null);
+function Arrow() {
+  return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>;
+}
 
-  useEffect(() => {
-    const handleInit = () => {
-      setIsMobile(window.innerWidth < 768);
-      setIsLoaded(true);
-    };
-
-    if (typeof window !== "undefined") {
-      if ("requestIdleCallback" in window) {
-        window.requestIdleCallback(handleInit, { timeout: 150 });
-      } else {
-        setTimeout(handleInit, 50);
-      }
-    }
-
-    let ticking = false;
-    const checkResize = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setIsMobile(window.innerWidth < 768);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("resize", checkResize, { passive: true });
-    return () => window.removeEventListener("resize", checkResize);
-  }, []);
-
-  const handleTabChange = useCallback((tabIndex: number) => {
-    startTransition(() => {
-      setActiveTab(tabIndex);
-    });
-  }, []);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (isMobile || !spotlightRef.current) return;
-    const currentRef = spotlightRef.current;
-    window.requestAnimationFrame(() => {
-      const rect = currentRef.getBoundingClientRect();
-      currentRef.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
-      currentRef.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
-    });
-  }, [isMobile]);
-
+export default function EducationAndExtras({ education, certifications, achievements, languages }: EducationAndExtrasProps) {
   return (
-    <section id="education" className="py-12 sm:py-16 flex flex-col gap-8 sm:gap-12 w-full max-w-full overflow-hidden box-border">
-      <h2 className="text-2xl sm:text-3xl font-bold font-mono text-[var(--color-text)]">
-        education & credentials
-      </h2>
+    <section id="education" className="ax-section" aria-labelledby="ax-title">
+      <div className="ax-wrap">
+        <div className="ax-label"><span>04 /</span>Background<i aria-hidden="true" /></div>
+        <div className="ax-heading-row"><h2 id="ax-title">Education<br /><span>&amp; beyond.</span></h2><p>My academic background<br className="ax-desktop-break" /> and the experience around it.</p></div>
 
-      {/* Main Grid: Education & Interactive Credentials Module */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full min-w-0">
-        
-        {/* Left Side: Education Terminal Card */}
-        <div
-          ref={spotlightRef}
-          onMouseMove={handleMouseMove}
-          className="lg:col-span-7 relative p-4 sm:p-8 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden group flex flex-col justify-between transition-colors duration-200 hover:border-[var(--color-accent)]/50 min-w-0 box-border will-change-transform"
-        >
-          {isLoaded && !isMobile && (
-            <div
-              className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-0 will-change-[opacity]"
-              style={{
-                background:
-                  "radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(255, 90, 54, 0.08), transparent 80%)",
-              }}
-            />
-          )}
+        <div className={languages.length ? "ax-main" : "ax-main ax-main-single"}>
+          <article className="ax-education" aria-labelledby="ax-school">
+            <div className="ax-meta"><span>Education</span><span>{education.period}</span></div>
+            <h3 id="ax-school">{education.school}</h3>
+            <p className="ax-degree">{education.degree}</p>
+            <p className="ax-location">{education.location}</p>
+            {education.detail && <p className="ax-result"><span className="ax-result-mark" aria-hidden="true" />{education.detail}</p>}
+            {education.coursework.length > 0 && <div className="ax-coursework"><h4>Coursework</h4><ul>{education.coursework.map((course, index) => <li key={course + index}>{course}</li>)}</ul></div>}
+          </article>
 
-          <div className="relative z-10 flex flex-col gap-5 sm:gap-6 min-w-0">
-            <div className="flex flex-wrap items-center justify-between gap-2.5 min-w-0">
-              <span className="text-[11px] sm:text-xs font-mono px-3 py-1 bg-[var(--color-surface-2)] text-[var(--color-accent)] rounded-full border border-[var(--color-border)] truncate max-w-full">
-                {education.period}
-              </span>
-              <span className="text-[11px] sm:text-xs font-mono text-[var(--color-text-muted)] truncate max-w-full">
-                {education.location}
-              </span>
-            </div>
-
-            <div className="min-w-0">
-              <h3 className="text-lg sm:text-2xl font-bold text-[var(--color-text)] tracking-tight flex items-start sm:items-center gap-2.5 break-words">
-                <GraduationCap className="text-[var(--color-accent)] shrink-0 mt-1 sm:mt-0" size={24} />
-                <span className="break-words">{education.degree}</span>
-              </h3>
-              <p className="text-[var(--color-accent)] font-mono text-xs sm:text-sm mt-1.5 break-words">
-                {education.school}
-              </p>
-            </div>
-
-            <div className="min-w-0">
-              <p className="text-[11px] sm:text-xs font-mono text-[var(--color-text-muted)] uppercase tracking-wider mb-2.5 sm:mb-3">
-                Curriculum & Coursework
-              </p>
-              <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                {education.coursework.map((course: string, idx: number) => (
-                  <span
-                    key={idx}
-                    className="text-[11px] sm:text-xs font-mono px-2.5 sm:px-3 py-1 sm:py-1.5 bg-[var(--color-surface-2)] text-[var(--color-text)] rounded-lg border border-[var(--color-border)] font-medium flex items-center gap-1.5 max-w-full truncate"
-                  >
-                    <BookOpen size={11} className="text-[var(--color-accent)] shrink-0" />
-                    <span className="truncate">{course}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="relative z-10 pt-5 sm:pt-6 mt-5 sm:mt-6 border-t border-[var(--color-border)] flex flex-wrap items-center justify-between gap-2.5 text-[11px] sm:text-xs font-mono min-w-0">
-            <span className="text-[var(--color-text)] font-semibold break-words">{education.detail}</span>
-            <span className="flex items-center gap-1.5 font-bold shrink-0">
-              <span className="text-[var(--color-text-muted)]">status:</span>
-              <span className="text-[var(--color-accent)]">GRADUATED • DISTINCTION</span>
-            </span>
-          </div>
+          {languages.length > 0 && <aside className="ax-languages" aria-labelledby="ax-languages-title"><div className="ax-aside-heading"><h3 id="ax-languages-title">Languages</h3><span aria-hidden="true">↳</span></div><dl>{languages.map((language, index) => <div key={language.name + index}><dt>{language.name}</dt><dd>{language.level}</dd></div>)}</dl></aside>}
         </div>
 
-        {/* Right Side: Reflective Card Module with Instant Non-Blocking Tab Switching */}
-        <div className="lg:col-span-5 flex flex-col gap-6 min-w-0 w-full">
-          <ReflectiveCard
-            className="w-full h-full shadow-xl"
-            blurStrength={isMobile ? 0 : 2}
-            metalness={isMobile ? 0 : 0.8}
-            roughness={0.2}
-            displacementStrength={isMobile ? 0 : 10}
-            noiseScale={1.2}
-            specularConstant={2.0}
-            grayscale={0.4}
-            glassDistortion={isMobile ? 0 : 4}
-            overlayColor="rgba(13, 13, 13, 0.85)"
-            color="#f5f1ea"
-            style={{ width: '100%', height: '100%', minHeight: isMobile ? 'auto' : '480px' }}
-          >
-            <div className="flex flex-col h-full justify-between min-w-0 w-full">
-              <div className="w-full min-w-0">
-                {/* Tab Switcher Headers */}
-                <div className="flex items-center gap-2 p-1 bg-black/50 backdrop-blur-sm rounded-xl border border-[var(--color-border)] mb-5 sm:mb-6 font-mono text-[11px] sm:text-xs shadow-inner">
-                  <button
-                    onClick={() => handleTabChange(0)}
-                    className={`flex-1 py-2 px-2 sm:px-3 rounded-lg transition-colors flex items-center justify-center gap-1.5 truncate ${
-                      activeTab === 0
-                        ? "bg-[var(--color-surface)] text-[var(--color-accent)] font-bold shadow-sm border border-[var(--color-border)]"
-                        : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
-                    }`}
-                  >
-                    <ShieldCheck size={13} className="shrink-0" />
-                    <span className="truncate">Certifications ({certifications.length})</span>
-                  </button>
-                  <button
-                    onClick={() => handleTabChange(1)}
-                    className={`flex-1 py-2 px-2 sm:px-3 rounded-lg transition-colors flex items-center justify-center gap-1.5 truncate ${
-                      activeTab === 1
-                        ? "bg-[var(--color-surface)] text-[var(--color-accent)] font-bold shadow-sm border border-[var(--color-border)]"
-                        : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
-                    }`}
-                  >
-                    <Languages size={13} className="shrink-0" />
-                    <span className="truncate">Languages ({languages.length})</span>
-                  </button>
-                </div>
+        {achievements.length > 0 && <div className="ax-achievements" aria-labelledby="ax-achievements-title"><div className="ax-block-title"><span className="ax-small-index" aria-hidden="true">↳</span><h3 id="ax-achievements-title">Achievements</h3></div><ol>{achievements.map((achievement, index) => <li key={index}><span className="ax-achievement-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><p>{achievement}</p></li>)}</ol></div>}
 
-                {/* Content Panel Container with Concurrent Transition Rendering */}
-                <div className={`w-full min-w-0 transition-opacity duration-150 ${isPending ? "opacity-60" : "opacity-100"}`}>
-                  {activeTab === 0 ? (
-                    <div className="space-y-2.5 sm:space-y-3 w-full min-w-0">
-                      {certifications.map((cert: Certification, idx: number) => {
-                        const content = (
-                          <div className="flex items-center gap-3 sm:gap-4 group/cert w-full min-w-0">
-                            {cert.badgeUrl ? (
-                              <div className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-xl border border-[var(--color-border)] bg-black/50 p-1.5 sm:p-2 shrink-0 shadow-sm overflow-hidden">
-                                <Image
-                                  src={cert.badgeUrl}
-                                  alt={`${cert.name} badge`}
-                                  fill
-                                  sizes="64px"
-                                  loading="lazy"
-                                  className="object-contain p-1"
-                                />
-                              </div>
-                            ) : (
-                              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl border border-[var(--color-border)] bg-black/50 flex items-center justify-center shrink-0 text-[var(--color-accent)]">
-                                <Award size={22} />
-                              </div>
-                            )}
-                            <div className="flex-1 min-w-0">
-                              <p className="font-semibold text-xs sm:text-sm text-[var(--color-text)] group-hover/cert:text-[var(--color-accent)] transition-colors leading-snug break-words">
-                                {cert.name}
-                              </p>
-                              <p className="text-[11px] sm:text-xs font-mono text-[var(--color-text-muted)] mt-1 flex items-center gap-1 flex-wrap">
-                                <span className="truncate">{cert.issuer}</span>
-                                {cert.credentialUrl && <ExternalLink size={11} className="inline opacity-70 shrink-0" />}
-                              </p>
-                            </div>
-                          </div>
-                        );
-
-                        return cert.credentialUrl ? (
-                          <a
-                            key={idx}
-                            href={cert.credentialUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block p-3 sm:p-3.5 rounded-xl transition-colors bg-black/30 backdrop-blur-sm hover:bg-black/50 border border-[var(--color-border)]/60 hover:border-[var(--color-accent)]/50 shadow-sm w-full min-w-0 box-border"
-                          >
-                            {content}
-                          </a>
-                        ) : (
-                          <div key={idx} className="p-3 sm:p-3.5 rounded-xl bg-black/30 backdrop-blur-sm border border-[var(--color-border)]/60 shadow-sm w-full min-w-0 box-border">
-                            {content}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 gap-2.5 w-full min-w-0">
-                      {languages.map((lang: Language, idx: number) => (
-                        <div
-                          key={idx}
-                          className="flex items-center justify-between p-3 rounded-xl bg-black/30 backdrop-blur-sm border border-[var(--color-border)]/60 shadow-sm w-full min-w-0 gap-2 box-border"
-                        >
-                          <span className="text-xs sm:text-sm font-mono text-[var(--color-text)] font-medium flex items-center gap-2 truncate min-w-0">
-                            <Languages size={13} className="text-[var(--color-accent)] shrink-0" />
-                            <span className="truncate">{lang.name}</span>
-                          </span>
-                          <span className="text-[11px] sm:text-xs font-mono px-2 py-1 bg-black/50 text-[var(--color-accent)] rounded border border-[var(--color-border)] shrink-0">
-                            {lang.level}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </ReflectiveCard>
-        </div>
+        {certifications.length > 0 && <div className="ax-certifications" aria-labelledby="ax-certifications-title"><div className="ax-block-title"><span className="ax-small-index" aria-hidden="true">↳</span><h3 id="ax-certifications-title">Certifications</h3></div><ul className="ax-certs-list">{certifications.map((certification, index) => {
+          const content = <>{certification.badgeUrl && <Image className="ax-badge" src={certification.badgeUrl} alt="" width={48} height={48} unoptimized loading="lazy" />}<span className="ax-cert-copy"><span className="ax-cert-name">{certification.name}</span><span className="ax-issuer">{certification.issuer}</span></span>{certification.credentialUrl && <Arrow />}</>;
+          return <li key={certification.name + index}>{certification.credentialUrl ? <a className="ax-cert ax-cert-linked" href={certification.credentialUrl} target="_blank" rel="noopener noreferrer" aria-label={"View " + certification.name + " credential (opens in a new tab)"}>{content}</a> : <div className="ax-cert">{content}</div>}</li>;
+        })}</ul></div>}
       </div>
-
-      {/* Bottom Full-Width Strip: Achievements Card */}
-      <StarBorder
-        as="div"
-        color="var(--color-accent)"
-        speed="6s"
-        thickness={2}
-        className="w-full rounded-[22px] bg-[var(--color-surface)] max-w-full overflow-hidden box-border"
-      >
-        <div className="p-4 sm:p-6 bg-[var(--color-surface)] relative overflow-hidden group w-full h-full rounded-[20px] min-w-0 box-border">
-          <div className="absolute top-0 right-0 w-28 h-28 bg-[var(--color-accent)]/5 rounded-full blur-2xl pointer-events-none" />
-          
-          <h3 className="text-sm sm:text-lg font-bold font-mono text-[var(--color-text)] mb-3.5 sm:mb-4 flex items-center gap-2">
-            <Trophy size={16} className="text-[var(--color-accent)] shrink-0" />
-            <span className="truncate">Key Achievements & Milestones</span>
-          </h3>
-          
-          <div className="grid grid-cols-1 gap-2.5 sm:gap-3 w-full min-w-0">
-            {achievements.map((item: string, idx: number) => {
-              const isFirst = idx === 0;
-              return (
-                <div
-                  key={idx}
-                  className="p-3 sm:p-4 rounded-xl bg-[var(--color-surface-2)]/40 border border-[var(--color-border)]/60 flex items-start gap-3 transition-colors duration-200 hover:border-[var(--color-accent)]/40 hover:bg-[var(--color-surface-2)] w-full min-w-0 box-border"
-                >
-                  <span className="text-[var(--color-accent)] font-mono font-bold text-xs sm:text-sm mt-0.5 flex items-center gap-1 shrink-0">
-                    {isFirst && <Sparkles size={13} className="animate-pulse" />}
-                    #0{idx + 1}
-                  </span>
-                  <p className="text-[var(--color-text-muted)] text-[11px] sm:text-sm leading-relaxed break-words min-w-0 flex-1">
-                    {item}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </StarBorder>
+      <style>{EXTRAS_CSS}</style>
     </section>
   );
 }
+
+const EXTRAS_CSS = "\n.ax-section{position:relative;box-sizing:border-box;background:var(--color-surface,#151713);color:var(--color-text,#f2f0e9);font-family:var(--font-sans,Arial,sans-serif);padding-block:72px 56px;min-height:calc(100svh - var(--site-header-height,80px));scroll-margin-top:var(--site-header-height,80px)}.ax-section *{box-sizing:border-box}.ax-wrap{width:min(100% - 96px,1248px);margin-inline:auto}.ax-label{display:flex;align-items:center;gap:12px;font-family:var(--font-mono,monospace);font-size:12px;line-height:1.6;color:var(--color-text-muted,#a5a69d);margin-bottom:32px}.ax-label>span{color:var(--color-accent,#ff744f)}.ax-label i{display:block;width:64px;height:1px;margin-left:6px;background:var(--color-border,#30322d)}.ax-heading-row{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;padding-bottom:48px}.ax-heading-row h2{font-size:clamp(40px,4.4vw,62px);font-weight:500;letter-spacing:-.055em;line-height:1.08;margin:0;text-wrap:balance}.ax-heading-row h2>span{color:var(--color-text-muted,#a5a69d)}.ax-heading-row>p{font-size:15px;line-height:1.75;color:var(--color-text-muted,#a5a69d);margin:0 0 4px;max-width:32ch}.ax-main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:clamp(40px,7vw,112px);align-items:start}.ax-main-single{grid-template-columns:minmax(0,1fr)}.ax-education,.ax-languages{min-width:0;border-top:1px solid var(--color-border,#30322d);padding-top:24px}.ax-meta{display:flex;align-items:baseline;justify-content:space-between;gap:20px;font-family:var(--font-mono,monospace);font-size:11px;line-height:1.7;color:var(--color-text-muted,#a5a69d);margin-bottom:24px}.ax-meta>span:first-child{color:var(--color-accent,#ff744f)}.ax-meta>span:last-child{text-align:right}.ax-education h3{margin:0 0 14px;max-width:23ch;font-size:clamp(26px,2.7vw,38px);font-weight:500;letter-spacing:-.045em;line-height:1.15;text-wrap:balance;overflow-wrap:anywhere}.ax-degree{font-size:16px;line-height:1.7;margin:0 0 8px}.ax-location{font-family:var(--font-mono,monospace);font-size:11px;line-height:1.7;color:var(--color-text-muted,#a5a69d);margin:0}.ax-result{display:flex;align-items:flex-start;gap:12px;padding-block:20px;margin:20px 0 0;border-block:1px solid var(--color-border,#30322d);font-size:13px;line-height:1.7;color:var(--color-text,#f2f0e9)}.ax-result-mark{width:6px;height:6px;flex:none;background:var(--color-accent,#ff744f);border-radius:50%;margin-top:8px}.ax-coursework{margin-top:24px}.ax-coursework h4{font-size:11px;font-family:var(--font-mono,monospace);font-weight:400;color:var(--color-text-muted,#a5a69d);margin:0 0 16px;line-height:1.7}.ax-coursework ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 24px;list-style:none;padding:0;margin:0}.ax-coursework li{padding-left:13px;position:relative;font-size:12px;line-height:1.75;color:var(--color-text-muted,#a5a69d);overflow-wrap:anywhere}.ax-coursework li:before{content:\"\";position:absolute;width:3px;height:3px;left:0;top:9px;background:var(--color-accent,#ff744f)}.ax-aside-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:26px}.ax-aside-heading h3{font-size:20px;font-weight:500;letter-spacing:-.035em;line-height:1.4;margin:0}.ax-aside-heading>span{color:var(--color-accent,#ff744f);font-size:24px;line-height:1}.ax-languages dl{padding:0;margin:0}.ax-languages dl>div{display:flex;align-items:baseline;justify-content:space-between;gap:20px;border-top:1px solid var(--color-border,#30322d);padding-block:18px}.ax-languages dt{font-size:15px;line-height:1.6;overflow-wrap:anywhere}.ax-languages dd{margin:0;font-family:var(--font-mono,monospace);font-size:10px;line-height:1.7;color:var(--color-text-muted,#a5a69d);text-align:right;overflow-wrap:anywhere}.ax-achievements,.ax-certifications{margin-top:40px;border-top:1px solid var(--color-border,#30322d);padding-top:26px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:64px}.ax-block-title{display:flex;align-items:baseline;gap:14px}.ax-block-title h3{font-size:20px;line-height:1.4;font-weight:500;letter-spacing:-.035em;margin:0}.ax-small-index{font-size:20px;color:var(--color-accent,#ff744f)}.ax-achievements ol{list-style:none;padding:0;margin:0;display:grid;gap:20px}.ax-achievements li{display:grid;grid-template-columns:20px minmax(0,1fr);gap:18px}.ax-achievement-index{font-family:var(--font-mono,monospace);font-size:10px;line-height:1.8;color:var(--color-accent,#ff744f);padding-top:4px}.ax-achievements p{font-size:15px;line-height:1.8;margin:0;color:var(--color-text,#f2f0e9);overflow-wrap:anywhere;text-wrap:pretty}.ax-certs-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.ax-cert{min-width:0;display:flex;align-items:center;gap:14px;height:100%;min-height:76px;padding:16px;border:1px solid var(--color-border,#30322d);border-radius:4px;color:inherit;text-decoration:none;background:var(--color-bg,#0c0d0c)}.ax-cert-linked{transition:transform 150ms,border-color 150ms}.ax-cert-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:6px}.ax-cert-name{font-size:13px;line-height:1.6;overflow-wrap:anywhere}.ax-issuer{font-family:var(--font-mono,monospace);font-size:10px;line-height:1.7;color:var(--color-text-muted,#a5a69d);overflow-wrap:anywhere}.ax-badge{width:40px;height:40px;object-fit:contain;flex:none}.ax-cert svg{width:16px;height:16px;flex:none;color:var(--color-accent,#ff744f);transition:transform 150ms}.ax-cert-linked:focus-visible{outline:2px solid var(--color-accent,#ff744f);outline-offset:4px}\n@media(hover:hover) and (pointer:fine){.ax-cert-linked:hover{transform:translateY(-2px);border-color:var(--color-text-muted,#a5a69d)}.ax-cert-linked:hover svg{transform:translateX(3px)}}.ax-cert-linked:active{transform:translateY(1px)}\n@media(max-width:1023px){.ax-wrap{width:calc(100% - 64px)}.ax-section{padding-top:56px}.ax-heading-row{gap:32px;padding-bottom:40px}.ax-heading-row h2{font-size:48px}.ax-heading-row>p{font-size:14px;max-width:26ch}.ax-desktop-break{display:none}.ax-main{gap:32px;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}.ax-main-single{grid-template-columns:minmax(0,1fr)}.ax-coursework ul{grid-template-columns:minmax(0,1fr)}.ax-achievements,.ax-certifications{gap:32px}.ax-certs-list{grid-template-columns:minmax(0,1fr)}}\n@media(max-width:639px){.ax-wrap{width:calc(100% - 40px)}.ax-section{padding-block:40px 32px}.ax-label{margin-bottom:24px;font-size:11px}.ax-heading-row{flex-direction:column;align-items:flex-start;gap:20px;padding-bottom:32px}.ax-heading-row h2{font-size:42px}.ax-heading-row>p{font-size:14px;max-width:32ch}.ax-main{grid-template-columns:minmax(0,1fr);gap:32px}.ax-education h3{font-size:30px}.ax-degree{font-size:15px}.ax-meta{font-size:10px;gap:12px}.ax-result{font-size:12px}.ax-aside-heading{margin-bottom:20px}.ax-languages dl>div{padding-block:16px}.ax-achievements,.ax-certifications{grid-template-columns:minmax(0,1fr);gap:24px;margin-top:32px;padding-top:24px}.ax-achievements p{font-size:14px}.ax-achievements li{gap:12px}}\n@media(prefers-reduced-motion:reduce){.ax-cert-linked,.ax-cert svg{transition:none}.ax-cert-linked:hover,.ax-cert-linked:active,.ax-cert-linked:hover svg{transform:none}}\n";
