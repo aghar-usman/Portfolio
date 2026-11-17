@@ -24,6 +24,8 @@ Built with **Next.js**, **React**, **TypeScript** and **Tailwind CSS**.
 ![React](https://img.shields.io/badge/React-151713?style=flat-square&logo=react&logoColor=61dafb)
 ![TypeScript](https://img.shields.io/badge/TypeScript-151713?style=flat-square&logo=typescript&logoColor=3178c6)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-151713?style=flat-square&logo=tailwindcss&logoColor=06b6d4)
+![Motion](https://img.shields.io/badge/Motion-151713?style=flat-square&labelColor=151713&color=ff744f)
+![GSAP](https://img.shields.io/badge/GSAP-151713?style=flat-square&labelColor=151713&color=ff744f)
 ![Vercel](https://img.shields.io/badge/Vercel-151713?style=flat-square&logo=vercel&logoColor=f2f0e9)
 
 <br />
@@ -32,7 +34,13 @@ Built with **Next.js**, **React**, **TypeScript** and **Tailwind CSS**.
 
 </div>
 
-<!-- Add a real portfolio screenshot here when available. -->
+## Live preview
+
+[![Screenshot of Aghar Usman’s developer portfolio](https://image.thum.io/get/width/1200/crop/750/noanimate/https://aghar-portfolio.vercel.app/)](https://aghar-portfolio.vercel.app/)
+
+**[Open the portfolio ↗](https://aghar-portfolio.vercel.app/)**
+
+<sub>Automatic screenshot via <a href="https://www.thum.io/">Thum.io</a>. No screenshot file is stored in this repository. The preview may be cached or temporarily unavailable; the live-site link always remains available.</sub>
 
 ---
 ## The experience
@@ -43,12 +51,12 @@ A charcoal canvas, warm typography and orange details carry through the whole pa
 
 | Section | What happens |
 | :--- | :--- |
-| **Introduction** | A staged entrance introduces the name, followed by the work and stack. Orange contour lines bend around the pointer, then settle. |
+| **Introduction** | A focused headline sits beside an interactive UI / API / SQL scope. GSAP supplies the ambient orbit; Motion connects the visual to native scrolling. |
 | **Navigation** | A sticky header tracks the current section and document progress. Mobile navigation opens into a full-screen menu. |
-| **Stack** | A scroll-linked heading highlight leads into a responsive grid of skill groups. The lists stay visible. |
-| **Experience** | A timeline-style layout pairs role details with complete, numbered contributions. |
-| **Projects** | Project links, technology lists and expandable implementation details. Optional screenshots use real supplied images. |
-| **Background** | Education, coursework, languages and achievements, with certifications shown when supplied. |
+| **Stack** | Visual tool cards pair larger technology names with real brand icons. Additional tools expand with a short Motion stagger. |
+| **Experience** | A timeline pairs roles with contributions. An animated backend-flow diagram has Pause/Play controls, with additional contributions available on demand. |
+| **Projects** | Image-led previews preserve their proportions and expand into a larger modal. Live/source links and implementation details stay easy to reach. |
+| **Background** | A cream academic panel contrasts with the dark page, alongside languages, achievements and optional certifications. The college emblem is served locally. |
 | **Contact** | Email, clipboard copying, professional profiles, résumé access and a return to the introduction. |
 
 <details>
@@ -61,18 +69,19 @@ The floating control ties the sections together:
 3. Choose a section or use **Previous** and **Next**.
 4. Press **Escape** to close the guide.
 
-On smaller screens, the control becomes a compact numbered dial. Navigation uses native browser scrolling and moves keyboard focus to the destination heading.
+The control is a compact numbered dial. It stays hidden over the hero and contact section so it does not cover their controls, and appears through the middle sections. Navigation uses native browser scrolling and moves keyboard focus to the destination heading.
 
 </details>
 
 <details>
 <summary><strong>Motion, keyboard and accessibility</strong></summary>
 
-- Reduced-motion preferences disable the moving background, scroll progress stroke and animated transitions.
-- Touch screens receive a static contour background.
+- Reduced-motion preferences disable the ambient orbit, sticky hero sequence, flow animations and animated transitions.
+- Smaller viewports use an unpinned hero with manual UI / API / SQL controls.
+- Automatically moving visuals include Pause/Play controls.
 - A skip link leads directly to the main content.
 - The mobile menu supports Escape, keyboard focus containment and focus restoration.
-- Project disclosures use native HTML `<details>` controls.
+- Project disclosures use native HTML `<details>` controls; expanded screenshots use a native modal dialog with Escape support.
 - Copy-email feedback is announced through a polite live region; success appears only after the clipboard write succeeds.
 - The page guide is non-modal and leaves normal page navigation available.
 
@@ -96,7 +105,7 @@ An architecture and design studio website with a project archive, individual pro
 
 This portfolio brings the stack, experience, projects and education into one page, driven by a shared content configuration.
 
-`Next.js` `React` `TypeScript` `Tailwind CSS`
+`Next.js` `React` `TypeScript` `Tailwind CSS` `Motion` `GSAP`
 
 **[Visit the portfolio ↗](https://aghar-portfolio.vercel.app/)**
 
@@ -112,10 +121,12 @@ Plant disease detection combining a CNN, a Flask API, OpenCV preprocessing and a
 
 **03 / Start building**
 
-From the repository root, with Node.js and npm installed:
+With Node.js and npm installed:
 
 ```bash
-npm install
+git clone https://github.com/aghar-usman/Portfolio.git
+cd Portfolio
+npm ci
 npm run dev
 ```
 
@@ -128,7 +139,7 @@ npm run build
 npm run start
 ```
 
-These commands assume the standard Next.js scripts in `package.json`. Use the repository’s lockfile and package manager if they differ.
+Run these commands in the folder containing `package.json`. Motion and GSAP are project dependencies installed by npm; the optional `motion-ai` coding skill is not required to run the website.
 
 ## Make it yours
 
@@ -162,7 +173,7 @@ If the content module has its own `ProjectEntry` interface, add:
 screenshot?: { src: string; alt: string };
 ```
 
-A desktop capture around **1440 × 900** works well. Crop out browser chrome and private information. Screenshots are optional; projects without them render without empty image frames.
+For a sharp production preview, use a screenshot around **1600–2400px wide**, without browser chrome or private information. The image keeps its natural proportions and can be expanded. Local screenshots take priority over the automatic SU·EN Studio preview; image failure leaves the project details and live-site link available.
 
 </details>
 
@@ -183,7 +194,7 @@ The shared tokens live in the global stylesheet:
 | `--color-text` | `#f2f0e9` | Warm primary text |
 | `--color-text-muted` | `#a5a69d` | Supporting text |
 
-Inter and JetBrains Mono are preferred when already loaded; system fonts provide fallbacks. Set `--site-header-height` to the actual navbar height; the default is `80px`.
+Inter and JetBrains Mono are loaded with `next/font/google` and connected to the shared font tokens. System fonts provide fallbacks. The education panel reverses to warm paper with dark text. Set `--site-header-height` to the actual navbar height; the default is `80px`.
 
 </details>
 
@@ -205,7 +216,9 @@ Home
 
 Each section owns its maximum width, responsive gutters and vertical spacing. The page wrapper stays full-width, so alternating backgrounds reach the viewport edges. Avoid adding another narrow container or large gaps around these sections.
 
-The current interaction layer uses native browser APIs and React. Motion libraries listed for showcased projects describe those projects; the redesigned portfolio controls do not require installing a new animation package.
+The interaction layer uses React, Motion (`motion/react`), GSAP and native browser features. Scoped animation cleanup, reduced-motion support and manual controls keep the interactions manageable. No Motion+ package is required.
+
+The college emblem lives at `public/college-logo.jpg`. The `screenshot` fields in project data are optional.
 
 </details>
 
@@ -215,7 +228,9 @@ The current interaction layer uses native browser APIs and React. Motion librari
 - [ ] Place the résumé at `public/resume.pdf`, or update its URL.
 - [ ] Check the page at desktop, tablet and mobile widths.
 - [ ] Test keyboard navigation, menu closing and section destinations.
-- [ ] Test reduced motion and clipboard success/failure.
+- [ ] Test reduced motion, Pause/Play and clipboard success/failure.
+- [ ] Verify image expansion, Escape and focus restoration.
+- [ ] Check automatic previews; use local images when reliability or sharpness matters.
 - [ ] Check screenshots for readable content and private information.
 - [ ] Run the production build and review the built site.
 
