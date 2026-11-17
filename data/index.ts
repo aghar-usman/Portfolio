@@ -23,14 +23,19 @@ export const education = {
   detail: "CGPA 7.81 / 10 · First Class with Distinction",
   period: "Aug 2021 – May 2025",
   coursework: [
-    "Data Structures & Algorithms",
-    "DBMS",
-    "Operating Systems",
-    "Computer Networks",
-    "Software Engineering",
-    "Machine Learning",
-    "Information Storage and Management",
-  ],
+  "Data Structures and Applications",
+  "Design and Analysis of Algorithms",
+  "Database Management Systems",
+  "Object Oriented Programming using Java",
+  "Software Engineering",
+  "Operating Systems",
+  "Computer Networks",
+  "UNIX and Shell Programming",
+  "Artificial Intelligence",
+  "Machine Learning",
+  "Big Data Technologies",
+  "Information Storage and Management",
+],
 };
 
 export interface SkillGroup {
