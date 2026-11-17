@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { stagger, useAnimate, useReducedMotion } from "motion/react";
 
 export interface SkillGroup { label: string; items: string[] }
 
@@ -90,16 +91,21 @@ interface SkillsProps {
 }
 
 export default function Skills({ skills = skillGroups, disableAnimations = false }: SkillsProps) {
+  const [scope, animate] = useAnimate<HTMLElement>();
+  const reduced = useReducedMotion();
   const groups = useMemo(() => skills.map((group) => ({ label: group.label, items: Array.from(new Set(group.items.map((item) => item.trim()).filter(Boolean))) })).filter((group) => group.items.length), [skills]);
   return (
-    <section id="skills" className="cs-section" data-motion={disableAnimations ? "off" : undefined} aria-labelledby="cs-title">
+    <section ref={scope} id="skills" className="cs-section" data-motion={disableAnimations ? "off" : undefined} aria-labelledby="cs-title">
       <div className="cs-wrap">
         <div className="cs-label"><span>01 /</span>Stack</div>
         <div className="cs-heading"><h2 id="cs-title">My stack<span>.</span></h2><p>Tools I use across my projects.</p></div>
         <div className="cs-grid">{groups.map((group, index) => <article className="cs-group" key={group.label + index}>
           <div className="cs-group-heading"><span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><h3>{group.label}</h3></div>
           <ul className="cs-tools" aria-label={group.label}>{group.items.slice(0, 5).map((item) => <li key={item}>{item}</li>)}</ul>
-          {group.items.length > 5 && <details className="cs-more"><summary><span>More tools ({group.items.length - 5})</span><span className="cs-plus" aria-hidden="true" /></summary><ul className="cs-tools cs-extra" aria-label={"Additional " + group.label + " tools"}>{group.items.slice(5).map((item) => <li key={item}>{item}</li>)}</ul></details>}
+          {group.items.length > 5 && <details className="cs-more" onToggle={(event) => {
+            if (!event.currentTarget.open || disableAnimations || reduced || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+            animate(event.currentTarget.querySelectorAll(".cs-extra li"), { opacity: [.65, 1], y: [4, 0] }, { duration: .22, delay: stagger(.025), ease: [.22, 1, .36, 1] });
+          }}><summary><span>More tools ({group.items.length - 5})</span><span className="cs-plus" aria-hidden="true" /></summary><ul className="cs-tools cs-extra" aria-label={"Additional " + group.label + " tools"}>{group.items.slice(5).map((item) => <li key={item}>{item}</li>)}</ul></details>}
         </article>)}</div>
         {!groups.length && <p className="cs-empty">My projects show the tools I work with.</p>}
         <div className="cs-footer"><span>See the stack in use.</span><a href="#projects">View projects <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></a></div>
