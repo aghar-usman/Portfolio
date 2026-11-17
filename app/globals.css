@@ -10,22 +10,38 @@
   --color-accent-dark: #b23d1f;
   --color-text: #f2f0e9;
   --color-text-muted: #a5a69d;
-  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
-  --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
 }
 
-:root { --site-header-height: 80px; color-scheme: dark; }
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: var(--site-header-height); }
-body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+@theme inline {
+  --font-sans: var(--font-inter, "Inter"), "Segoe UI", Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono, "JetBrains Mono"), "SFMono-Regular", Consolas, monospace;
+}
+
+:root {
+  --site-header-height: 80px;
+  --font-sans: var(--font-inter, "Inter"), "Segoe UI", Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono, "JetBrains Mono"), "SFMono-Regular", Consolas, monospace;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-gutter: stable; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 button, input, textarea, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 img, video { max-width: 100%; height: auto; }
+svg { flex-shrink: 0; }
 ::selection { background: var(--color-accent); color: #17110d; }
 :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
 [id] { scroll-margin-top: var(--site-header-height); }
 
-/* Retained for TextType if another section still uses it. */
 @keyframes typing { from { width: 0; } to { width: 100%; } }
 @keyframes blink-caret { from, to { border-color: transparent; } 50% { border-color: var(--color-accent); } }
 
