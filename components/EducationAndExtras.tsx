@@ -29,7 +29,7 @@ function Arrow() {
 export default function EducationAndExtras({ education, certifications, achievements, languages }: EducationAndExtrasProps) {
   const [scope, animate] = useAnimate<HTMLElement>();
   const reduced = useReducedMotion();
-  const schoolLogo = education.logo ?? (education.school === "Malnad College of Engineering" ? "/images/college-logo.jpg" : undefined);
+  const schoolLogo = education.logo ?? (education.school === "Malnad College of Engineering" ? "/college-logo.jpg" : undefined);
   return (
     <section ref={scope} id="education" className="ax-section" aria-labelledby="ax-title">
       <div className="ax-wrap">
