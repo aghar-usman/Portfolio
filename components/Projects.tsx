@@ -1,3 +1,7 @@
+"use client";
+
+import { stagger, useAnimate, useReducedMotion } from "motion/react";
+
 export interface ProjectEntry {
   name: string;
   tagline: string;
@@ -16,10 +20,11 @@ function Arrow() {
   return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>;
 }
 
-/** Server-renderable. Native disclosures work without a client animation library. */
 export default function Projects({ projects }: ProjectsProps) {
+  const [scope, animate] = useAnimate<HTMLElement>();
+  const reduced = useReducedMotion();
   return (
-    <section id="projects" className="ap-section" aria-labelledby="ap-title">
+    <section ref={scope} id="projects" className="ap-section" aria-labelledby="ap-title">
       <div className="ap-wrap">
         <div className="ap-label"><span>03 /</span>Projects<i aria-hidden="true" /></div>
         <div className="ap-heading-row">
@@ -44,7 +49,10 @@ export default function Projects({ projects }: ProjectsProps) {
 
                 <div className="ap-body">
                   {project.points[0] && <p className="ap-overview">{project.points[0]}</p>}
-                  {project.points.length > 1 && <details className="ap-details">
+                  {project.points.length > 1 && <details className="ap-details" onToggle={(event) => {
+                    if (!event.currentTarget.open || reduced || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+                    animate(event.currentTarget.querySelectorAll(".ap-points li"), { opacity: [.65, 1], y: [4, 0] }, { duration: .24, delay: stagger(.035), ease: [.22, 1, .36, 1] });
+                  }}>
                     <summary><span>Implementation details</span><span className="ap-disclosure-icon" aria-hidden="true" /></summary>
                     <ul className="ap-points">{project.points.slice(1).map((point, pointIndex) => <li key={pointIndex}>{point}</li>)}</ul>
                   </details>}
