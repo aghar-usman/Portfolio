@@ -249,7 +249,7 @@ I’d like to hear about it.
 
 <br />
 
-<sub>Aghar Usman K T · Calicut, Kerala, India</sub>
+<sub>Aghar Usman K T · Kerala, India</sub>
 
 [Back to top ↑](#developer-portfolio)
 
