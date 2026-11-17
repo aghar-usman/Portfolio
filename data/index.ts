@@ -1,12 +1,12 @@
 export const profile = {
   name: "Aghar Usman K T",
-  location: "Calicut, Kerala, India",
+  location: "Kerala, India",
   roles: ["Full-stack developer"],
   headline: "Web interfaces. Python backends.",
   intro:
-    "I’m a full-stack developer in Calicut, Kerala. I build Next.js websites, React interfaces and Python APIs, with SQL databases behind them.",
+    "I build responsive websites with React and Next.js, backed by Python APIs and SQL databases.",
   summary:
-    "I’m Aghar Usman K T, a full-stack developer based in Calicut, Kerala. I build responsive websites with Next.js, React and TypeScript, and backend services with Python, Flask and SQL. My work includes an architecture studio website, production REST APIs, PostgreSQL ETL pipelines and an LLM-powered Text-to-SQL assistant. I’m interested in development roles where I can contribute across the stack and grow through code reviews and collaboration.",
+    "I’m a full-stack developer from Kerala, India, working with React, Next.js, Python and SQL. My projects span architecture websites, REST APIs, ETL pipelines and a Text-to-SQL assistant. I’m looking to contribute across the stack and grow within a development team.",
 };
 
 export const contact = {
@@ -40,7 +40,7 @@ export interface SkillGroup {
 
 export const skillGroups: SkillGroup[] = [
   {
-    label: "front end",
+    label: "Frontend",
     items: [
       "React",
       "Next.js",
@@ -49,12 +49,12 @@ export const skillGroups: SkillGroup[] = [
       "HTML5",
       "CSS3",
       "Tailwind CSS",
-      "Framer Motion",
+      "Motion (Framer Motion)",
       "GSAP",
     ],
   },
   {
-    label: "backend & apis",
+    label: "Backend & APIs",
     items: [
       "Python",
       "Flask",
@@ -62,12 +62,10 @@ export const skillGroups: SkillGroup[] = [
       "REST APIs",
       "Token-based auth",
       "Rate limiting",
-      "Java",
-      "C",
     ],
   },
   {
-    label: "ai & llms",
+    label: "AI & machine learning",
     items: [
       "LLM Integration",
       "Text-to-SQL",
@@ -83,13 +81,13 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
   {
-    label: "databases & data",
+    label: "Databases & data",
     items: [
       "PostgreSQL",
       "MSSQL",
       "MySQL",
       "SQLite",
-      "SQL (Joins, CTEs, Subqueries)",
+      "SQL",
       "ETL Pipelines",
       "Pandas",
       "NumPy",
@@ -97,11 +95,11 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
   {
-    label: "tools & cloud",
+    label: "Tools & cloud",
     items: ["Git/GitHub", "Docker", "Linux", "GCP", "CI/CD", "Vercel"],
   },
   {
-    label: "languages",
+    label: "Languages",
     items: ["Python", "TypeScript", "JavaScript", "Java", "C", "SQL"],
   },
 ];
@@ -132,10 +130,10 @@ export const experience: ExperienceEntry[] = [
     location: "Calicut, Kerala",
     period: "Feb 2025 – May 2025",
     points: [
-      "Built an ERP Text-to-SQL assistant that let business users query an MSSQL sales database in plain English, using Llama 3 and Mistral through Ollama. Added model fallback, three-attempt retries and thread-safe TTL caching.",
-      "Restricted generated queries to SELECT statements and added seven-pattern SQL-injection detection to reduce the risk of unsafe database access.",
-      "Developed a Flask REST API with concurrent request handling, configurable pagination and CSV export. Reduced response time by approximately 35% through caching and batch fetching.",
-      "Built a PostgreSQL ETL pipeline for a 22-column schema, with 100-row batch loading, timestamp normalization, per-record retries and automated failed-record reports.",
+      "Built an ERP assistant that turns plain-English questions into MSSQL queries using Llama 3 and Mistral. Added model fallback, retries and TTL caching.",
+      "Built a concurrent Flask API with pagination and CSV export. Reduced response time by approximately 35% through caching and batch fetching.",
+      "Added SELECT-only checks and seven-pattern SQL-injection detection to limit unsafe generated queries.",
+      "Built a PostgreSQL ETL pipeline for a 22-column schema, with 100-row batches, timestamp normalization, retries and failed-record reports.",
     ],
   },
 ];
@@ -154,12 +152,12 @@ export interface ProjectEntry {
 export const projects: ProjectEntry[] = [
   {
     name: "SU·EN Studio",
-    tagline: "Next.js website for an architecture and design studio in Kerala and Bangalore",
+    tagline: "Architecture studio website · Kerala & Bangalore",
     period: "2026",
     points: [
-      "Built a responsive architecture studio website with Next.js and TypeScript. A typed content file powers the project archive and individual project pages.",
-      "Created full-screen image galleries for residential and commercial projects, with page transitions and scroll-based animation using Framer Motion and GSAP.",
-      "Implemented a light and dark theme, a contact form, and a responsive layout that works from mobile to desktop.",
+      "Built a responsive project archive and individual project pages with Next.js and TypeScript, driven by one typed content file.",
+      "Created full-screen architecture galleries with page transitions and scroll animation using Framer Motion and GSAP.",
+      "Added light and dark themes, a contact form and layouts for mobile and desktop.",
       "Deployed on Vercel with automatic redeploys from GitHub.",
     ],
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "GSAP", "Vercel"],
@@ -167,24 +165,24 @@ export const projects: ProjectEntry[] = [
   },
   {
     name: "Personal Portfolio",
-    tagline: "An interactive developer portfolio with Next.js, TypeScript and Tailwind CSS",
+    tagline: "Developer portfolio · Next.js & TypeScript",
     period: "2026",
     points: [
-      "Built with Next.js and Tailwind CSS, with sections for stack, experience, projects and education rendered from one typed content config.",
-      "Added section navigation, an interactive stack explorer, a floating page guide and a copy-email contact action.",
+      "Built a single-page portfolio with a shared content file for skills, experience, projects and education.",
+      "Added an interactive stack visual, section navigation, expandable project previews and a copy-email action.",
       "Deployed on Vercel.",
     ],
-    stack: ["Next.js", "React", "Tailwind CSS", "TypeScript", "Vercel"],
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "Motion", "GSAP", "Vercel"],
     live: "https://aghar-portfolio.vercel.app/",
   },
   {
     name: "AgriLeaf Pro",
-    tagline: "Plant disease detection with TensorFlow, a Flask API and IoT soil data",
+    tagline: "Plant disease detection · Machine learning & IoT",
     period: "2024 – 2025",
     points: [
-      "Designed and trained a 5-layer CNN classifying 19 plant diseases across 4 crops, achieving 85%+ accuracy with sub-100ms inference on test hardware.",
-      "Built a Flask REST API with OpenCV image preprocessing, secure token-based authentication, and automated treatment-recommendation responses.",
-      "Integrated a ThingSpeak IoT pipeline ingesting 6 real-time soil parameters with 7-day historical visualization.",
+      "Trained a five-layer CNN to classify 19 plant diseases across four crops, achieving 85%+ accuracy and sub-100ms inference on test hardware.",
+      "Built a Flask API with OpenCV preprocessing, token-based authentication and treatment recommendations.",
+      "Connected six soil parameters through ThingSpeak, with seven days of historical visualization.",
     ],
     stack: ["Python", "TensorFlow", "Flask", "OpenCV", "ThingSpeak", "GCP"],
     github: "https://github.com/aghar-usman/Leaf-Disease-Detection-using-CNN",
@@ -192,7 +190,7 @@ export const projects: ProjectEntry[] = [
 ];
 
 export const achievements = [
-  "Placed second in a state-level hackathon, leading a four-person team through a six-hour build. Owned the backend architecture, coordinated tasks and delivered a working product.",
+  "Second place at a state-level hackathon. Led a four-person team, owned the backend and delivered a working product in six hours.",
 ];
 
 export const languages = [
