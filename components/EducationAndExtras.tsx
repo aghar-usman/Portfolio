@@ -31,12 +31,12 @@ export default function EducationAndExtras({ education, certifications, achievem
   const reduced = useReducedMotion();
   const schoolLogo = education.logo ?? (education.school === "Malnad College of Engineering" ? "/college-logo.jpg" : undefined);
   return (
-    <section ref={scope} id="education" className="ax-section" aria-labelledby="ax-title">
+    <section ref={scope} id="education" data-portfolio-chapter="" className="ax-section" aria-labelledby="ax-title">
       <div className="ax-wrap">
-        <div className="ax-label"><span>04 /</span>Background<i aria-hidden="true" /></div>
-        <div className="ax-heading-row"><h2 id="ax-title">Education<span>.</span></h2><p>The foundations behind my work.</p></div>
+        <div className="ax-label" data-portfolio-beat="chapter"><span>04 /</span>Background<i aria-hidden="true" /><span data-portfolio-dock="" aria-hidden="true" /></div>
+        <div className="ax-heading-row"><h2 id="ax-title">Education<span>.</span></h2><p>Degree, coursework, and hackathon work.</p></div>
 
-        <div className={languages.length ? "ax-main" : "ax-main ax-main-single"}>
+        <div data-portfolio-beat="education" className={languages.length ? "ax-main" : "ax-main ax-main-single"}>
           <article className="ax-education" aria-labelledby="ax-school">
             <div className="ax-meta"><span>Education</span><span>{education.period}</span></div>
             <div className="ax-school-identity">{schoolLogo && <Image className="ax-school-logo" src={schoolLogo} alt={education.logoAlt ?? education.school + " emblem"} width={64} height={64} unoptimized />}<h3 id="ax-school">{education.school}</h3></div>
