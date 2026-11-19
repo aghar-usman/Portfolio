@@ -35,15 +35,15 @@ function ProjectPreview({ project }: { project: ProjectEntry }) {
   let isStudio = false;
   try { isStudio = Boolean(project.live && new URL(project.live).hostname === "suen-studio.vercel.app"); } catch {}
   const preview = project.screenshot ?? (isStudio ? {
-    src: "https://image.thum.io/get/width/1200/crop/750/noanimate/https://suen-studio.vercel.app/",
-    alt: "SU·EN Studio architecture website homepage",
+    src: "/suen-studio-preview.jpg",
+    alt: "SU·EN Studio homepage with its architecture portfolio introduction and a Kerala home",
   } : undefined);
   if (!preview || failed) return null;
   function openPreview() { dialog.current?.showModal(); setExpanded(true); }
   function closePreview() { dialog.current?.close(); setExpanded(false); }
-  return <div className="ap-image-frame">
-    <div className="ap-preview-bar"><span>{project.name}</span><button type="button" onClick={openPreview}>Expand preview <span aria-hidden="true">↗</span></button></div>
-    <button type="button" className="ap-preview-button" onClick={openPreview} aria-label={"Expand " + project.name + " screenshot"}><img src={preview.src} alt={preview.alt} width={1200} height={750} loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => { dialog.current?.close(); setExpanded(false); setFailed(true); }} /></button>
+  return <div className="ap-image-frame" data-portfolio-beat="preview">
+    <div className="ap-preview-bar"><span>{project.name}</span><button type="button" onClick={openPreview}>Open preview <span aria-hidden="true">↗</span></button></div>
+    <button type="button" className="ap-preview-button" onClick={openPreview} aria-label={"Open " + project.name + " screenshot"}><img src={preview.src} alt={preview.alt} width={1200} height={750} loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => { dialog.current?.close(); setExpanded(false); setFailed(true); }} /></button>
     <dialog ref={dialog} className="ap-preview-dialog" aria-labelledby={titleId} onClose={() => setExpanded(false)} onClick={(event) => { if (event.target === event.currentTarget) closePreview(); }}>
       <div className="ap-lightbox"><div className="ap-lightbox-bar"><h4 id={titleId}>{project.name}</h4><button type="button" onClick={closePreview} autoFocus>Close <span aria-hidden="true">×</span></button></div><div className="ap-lightbox-image"><img src={preview.src} alt={preview.alt} width={1200} height={750} decoding="async" referrerPolicy="no-referrer" /></div>{project.live && <a className="ap-lightbox-link" href={project.live} target="_blank" rel="noopener noreferrer">Open live website ↗</a>}</div>
     </dialog>
@@ -54,12 +54,12 @@ export default function Projects({ projects }: ProjectsProps) {
   const [scope, animate] = useAnimate<HTMLElement>();
   const reduced = useReducedMotion();
   return (
-    <section ref={scope} id="projects" className="ap-section" aria-labelledby="ap-title">
+    <section ref={scope} id="projects" data-portfolio-chapter="" className="ap-section" aria-labelledby="ap-title">
       <div className="ap-wrap">
-        <div className="ap-label"><span>03 /</span>Projects<i aria-hidden="true" /></div>
+        <div className="ap-label" data-portfolio-beat="chapter"><span>03 /</span>Projects<i aria-hidden="true" /><span data-portfolio-dock="" aria-hidden="true" /></div>
         <div className="ap-heading-row">
           <h2 id="ap-title">Selected projects<span>.</span></h2>
-          <p>The interfaces, services<br className="ap-desktop-break" /> and systems I’ve built.</p>
+          <p>An architecture website, this portfolio,<br className="ap-desktop-break" /> and a plant disease detector.</p>
         </div>
 
         <div className="ap-list">
@@ -68,7 +68,7 @@ export default function Projects({ projects }: ProjectsProps) {
               <ProjectPreview key={project.screenshot?.src ?? project.live ?? project.name} project={project} />
               <div className="ap-project-top"><span className="ap-number">{String(index + 1).padStart(2, "0")} /</span><span className="ap-period">{project.period}</span></div>
               <div className="ap-project-grid">
-                <div className="ap-identity">
+                <div className="ap-identity" data-portfolio-beat="project">
                   <h3 id={"ap-project-" + index}>{project.name}</h3>
                   <p className="ap-tagline">{project.tagline}</p>
                   {(project.live || project.github) && <div className="ap-actions">
@@ -84,7 +84,7 @@ export default function Projects({ projects }: ProjectsProps) {
                     if (!event.currentTarget.open || reduced || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
                     animate(event.currentTarget.querySelectorAll(".ap-points li"), { opacity: [.65, 1], y: [4, 0] }, { duration: .24, delay: stagger(.035), ease: [.22, 1, .36, 1] });
                   }}>
-                    <summary><span>Implementation details</span><span className="ap-disclosure-icon" aria-hidden="true" /></summary>
+                    <summary><span>How I built it</span><span className="ap-disclosure-icon" aria-hidden="true" /></summary>
                     <ul className="ap-points">{project.points.slice(1).map((point, pointIndex) => <li key={pointIndex}>{point}</li>)}</ul>
                   </details>}
                 </div>
