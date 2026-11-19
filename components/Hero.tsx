@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 interface HeroProps {
   profile: {
@@ -32,6 +33,7 @@ export default function Hero({ profile, contact }: HeroProps) {
   useEffect(() => {
     if (!root.current) return;
     const scene = root.current;
+    gsap.registerPlugin(ScrollTrigger);
     const media = gsap.matchMedia();
     media.add("(prefers-reduced-motion: no-preference)", () => {
       const elements = gsap.utils.selector(scene);
@@ -44,11 +46,42 @@ export default function Hero({ profile, contact }: HeroProps) {
         .fromTo(elements(".ph-trace"), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.24, stagger: .18, ease: "power2.inOut" }, 1.27)
         .fromTo(elements(".ph-label"), { x: -12, opacity: .35 }, { x: 0, opacity: 1, duration: .6, stagger: .15 }, 1.65);
     });
+    media.add("(min-width: 960px) and (min-height: 680px) and (prefers-reduced-motion: no-preference)", () => {
+      const figure = scene.querySelector<HTMLElement>(".ph-figure");
+      const sticky = scene.querySelector<HTMLElement>(".ph-sticky");
+      if (!figure || !sticky) return;
+      const header = document.querySelector(".an-header");
+      const wrap = figure.offsetParent;
+      const camera = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: scene,
+          start: () => "top top+=" + (header?.getBoundingClientRect().height ?? 0),
+          end: "bottom bottom",
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      });
+      camera
+        .to(scene.querySelector(".ph-copy"), {
+          y: -165, autoAlpha: 0, duration: .42, ease: "power1.in",
+        }, .11)
+        .to(scene.querySelector(".ph-bottom"), { autoAlpha: 0, y: -20, duration: .28 }, .03)
+        .to(figure, {
+          x: () => scene.getBoundingClientRect().width / 2 - (figure.offsetLeft + (wrap?.getBoundingClientRect().left ?? 0) + figure.offsetWidth / 2),
+          y: -38, scale: 1.51, duration: .58, ease: "power2.inOut",
+        }, .04)
+        .to(figure, {
+          y: () => -sticky.offsetHeight * .46, scale: 1.65, autoAlpha: .24, duration: .38, ease: "power2.in",
+        }, .62);
+    });
     return () => media.revert();
   }, []);
 
   return (
     <section ref={root} id="about" className="ph-hero" data-portfolio-chapter="" aria-labelledby="ph-title">
+      <span data-portfolio-dock="hero" aria-hidden="true" />
+      <div className="ph-sticky">
       <div className="ph-light" aria-hidden="true" />
       <div className="ph-wrap">
         <div className="ph-stage">
@@ -64,8 +97,7 @@ export default function Hero({ profile, contact }: HeroProps) {
             </div>
           </div>
 
-          <figure className="ph-figure" data-portfolio-lens="">
-            <span data-portfolio-dock="hero" aria-hidden="true" />
+          <figure className="ph-figure">
             <svg className="ph-machine" viewBox="0 0 690 600" role="img" aria-label="Exploded view of a web application: interface, API, and data">
               <defs>
                 <linearGradient id={fill} x2="1" y2="1">
@@ -134,6 +166,7 @@ export default function Hero({ profile, contact }: HeroProps) {
           <a href="#skills">View tech stack <Arrow down /></a>
         </div>
       </div>
+      </div>
       <style>{heroStyles}</style>
     </section>
   );
@@ -159,7 +192,7 @@ const heroStyles = `
   .ph-primary:hover { background: var(--color-accent-hover); }
   .ph-secondary:hover { border-color: var(--color-text-muted); }
   .ph-figure { position: relative; margin: 0 -38px 0 -13px; min-width: 0; }
-  .ph-machine { display: block; overflow: visible; width: 100%; height: auto; fill: none; scale: var(--portfolio-camera-scale, 1); translate: var(--portfolio-camera-x, 0px) var(--portfolio-camera-y, 0px); transform-origin: 54% 50%; }
+  .ph-machine { display: block; overflow: visible; width: 100%; height: auto; fill: none; transform-origin: 54% 50%; }
   .ph-grid { stroke: var(--color-border); stroke-width: 1; opacity: .82; }
   .ph-plane { stroke: var(--color-text-muted); stroke-opacity: .57; stroke-width: 1.55; }
   .ph-front { stroke: var(--color-accent); stroke-opacity: .84; }
@@ -175,6 +208,11 @@ const heroStyles = `
   .ph-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid var(--color-border); padding-top: 12px; margin-top: 12px; color: var(--color-text-muted); font: 11px/1.6 var(--font-mono); }
   .ph-bottom a { margin-inline-start: auto; display: inline-flex; min-height: 44px; gap: 12px; align-items: center; color: inherit; text-decoration: none; }
   .ph-bottom a:hover { color: var(--color-text); }
+  @media (min-width: 960px) and (min-height: 680px) and (prefers-reduced-motion: no-preference) {
+    .ph-hero { height: 170svh; }
+    .ph-sticky { position: sticky; top: var(--site-header-height, 80px); }
+    .ph-figure { will-change: transform; }
+  }
   @media (max-width: 1023px) { .ph-wrap { width: calc(100% - 64px); } .ph-figure { margin-inline-end: -22px; } }
   @media (max-width: 840px) {
     .ph-stage { grid-template-columns: 1fr; }
