@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 // Three perspective cuts from the hero's exploded stack, spaced for each chapter.
 const frames = [
@@ -15,6 +16,36 @@ const frames = [
 
 const ENTERED = "portfolio-motion-entered";
 
+export function SectionWindow({ chapter }: { chapter: "stack" | "experience" }) {
+  const isStack = chapter === "stack";
+  return (
+    <div className={"portfolio-window portfolio-window-" + chapter}>
+      <div className="portfolio-window-label">{isStack ? "01 / Stack" : "02 / Experience"}</div>
+      <p className="portfolio-window-title">{isStack ? "Tools I build with" : "Experience"}<span>.</span></p>
+      {isStack ? (
+        <div className="portfolio-window-tools">
+          {[
+            ["Frontend", "React", "Next.js"],
+            ["Backend & APIs", "Python", "Flask"],
+            ["Databases & data", "PostgreSQL", "SQL"],
+          ].map(([group, first, second]) => (
+            <div key={group}><small>{group}</small><strong>{first}</strong><span>{second}</span></div>
+          ))}
+        </div>
+      ) : (
+        <div className="portfolio-window-flow">
+          <p>Which orders are pending?</p>
+          <svg viewBox="0 0 640 30" fill="none" aria-hidden="true">
+            <path d="M10 15h620" />
+            <circle cx="10" cy="15" r="5" /><circle cx="320" cy="15" r="5" /><circle cx="630" cy="15" r="5" />
+          </svg>
+          <div><span>Request</span><span>Service</span><span>Data</span></div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function PortfolioMotion() {
   const signal = useRef<SVGSVGElement>(null);
 
@@ -22,9 +53,9 @@ export default function PortfolioMotion() {
     const graphic = signal.current;
     if (!graphic) return;
 
+    gsap.registerPlugin(ScrollTrigger);
     const media = gsap.matchMedia();
     media.add("(prefers-reduced-motion: no-preference)", () => {
-      const lens = document.querySelector<HTMLElement>("[data-portfolio-lens]");
       const chapterElements = Array.from(document.querySelectorAll<HTMLElement>("[data-portfolio-chapter]"));
       const docks = chapterElements.map((chapter) => chapter.querySelector<HTMLElement>("[data-portfolio-dock]"));
       const strokes = Array.from(graphic.querySelectorAll("polyline"));
@@ -44,12 +75,7 @@ export default function PortfolioMotion() {
         if (positions.length < 2) return;
 
         const scroll = window.scrollY;
-        const dolly = gsap.utils.clamp(0, 1, scroll / (viewport.height * .63));
         const wide = viewport.width >= 960;
-        const push = dolly * dolly;
-        lens?.style.setProperty("--portfolio-camera-scale", String(1 + push * (wide ? .34 : .14)));
-        lens?.style.setProperty("--portfolio-camera-x", (wide ? 32 * push : 0) + "px");
-        lens?.style.setProperty("--portfolio-camera-y", -28 * push + "px");
         const lower = Math.max(viewport.header + 46, viewport.height * .68);
         const probe = scroll + lower;
         let index = 0;
@@ -134,10 +160,35 @@ export default function PortfolioMotion() {
         if (raf) cancelAnimationFrame(raf);
         for (const beat of beats) beat.classList.remove(ENTERED);
         graphic.removeAttribute("style");
-        lens?.style.removeProperty("--portfolio-camera-scale");
-        lens?.style.removeProperty("--portfolio-camera-x");
-        lens?.style.removeProperty("--portfolio-camera-y");
       };
+    });
+    media.add({ motion: "(prefers-reduced-motion: no-preference)", wide: "(min-width: 741px)" }, ({ conditions }) => {
+      if (!conditions?.motion) return;
+      const bridge = document.querySelector<HTMLElement>("[data-portfolio-layer-bridge]");
+      if (!bridge) return;
+      const elements = gsap.utils.selector(bridge);
+      const assembly = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: bridge,
+          start: "top 88%",
+          end: "bottom 47%",
+          scrub: true,
+        },
+      });
+      assembly
+        .fromTo(elements(".cs-bridge-api"), { x: -23, y: 70, opacity: .55 }, { x: 0, y: -6, opacity: 1, duration: .74, ease: "power2.out" }, 0)
+        .fromTo(elements(".cs-bridge-data"), { x: 34, y: -36, opacity: .45 }, { x: 0, y: 18, opacity: 1, duration: .8, ease: "power2.out" }, .08)
+        .fromTo(elements(".cs-layer-rails"), { opacity: 0 }, { opacity: .38, duration: .48 }, .26)
+        .fromTo(elements(".cs-bridge-route"), { strokeDashoffset: 1, opacity: .15 }, { strokeDashoffset: 0, opacity: .8, duration: .53, ease: "power2.inOut" }, .44);
+      if (conditions.wide) {
+        const preview = elements(".cs-nested");
+        assembly
+          .fromTo(preview, { scale: .17, rotation: -5, y: 18, autoAlpha: 0 }, { scale: .28, rotation: -2, y: 10, autoAlpha: 1, duration: .14, ease: "power2.out" }, .39)
+          .to(preview, { scale: 1.04, rotation: 0, y: -14, duration: .29, ease: "power2.inOut" }, .53)
+          .to(elements(".cs-layer-assembly"), { scale: 1.17, opacity: .04, duration: .29, ease: "power1.in" }, .59)
+          .to(preview, { autoAlpha: 0, y: -44, duration: .23, ease: "power2.in" }, .85);
+      }
     });
     return () => media.revert();
   }, []);
@@ -153,6 +204,32 @@ export default function PortfolioMotion() {
 }
 
 const motionStyles = `
+  .portfolio-window {
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 246px;
+    text-align: left;
+    overflow: clip;
+    padding: clamp(24px, 4.5vw, 62px);
+    background: var(--color-bg);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 66%, var(--color-border));
+    box-shadow: 0 20px 65px color-mix(in srgb, var(--color-bg) 83%, transparent);
+    color: var(--color-text);
+  }
+  .portfolio-window-experience { background: var(--color-surface); }
+  .portfolio-window-label { color: var(--color-accent); font: 11px/1.5 var(--font-mono); }
+  .portfolio-window-title { margin: 23px 0 clamp(18px, 3vw, 33px); font: 500 clamp(39px, 4.4vw, 62px)/1.04 var(--font-sans); letter-spacing: -.055em; }
+  .portfolio-window-title > span { color: var(--color-accent); }
+  .portfolio-window-tools { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
+  .portfolio-window-tools > div { display: grid; gap: 9px; align-content: start; min-height: 128px; border: 1px solid var(--color-border); padding: 20px 16px; border-radius: 6px; background: var(--color-surface); }
+  .portfolio-window-tools small { color: var(--color-text-muted); font: 11px/1.4 var(--font-mono); }
+  .portfolio-window-tools strong, .portfolio-window-tools span { color: var(--color-text); font: 500 clamp(15px, 2vw, 27px)/1.1 var(--font-sans); letter-spacing: -.025em; }
+  .portfolio-window-tools span { color: var(--color-text-muted); }
+  .portfolio-window-flow { padding: 15px 22px 12px; border: 1px solid var(--color-border); border-radius: 6px; background: var(--color-bg); }
+  .portfolio-window-flow > p { margin: 0 0 9px; color: var(--color-text); font-size: clamp(15px, 2vw, 25px); }
+  .portfolio-window-flow svg { display: block; width: 100%; height: 25px; stroke: var(--color-accent); stroke-width: 1.5; overflow: visible; }
+  .portfolio-window-flow svg circle { fill: var(--color-bg); }
+  .portfolio-window-flow > div { display: flex; justify-content: space-between; color: var(--color-text-muted); font: 10px/1.5 var(--font-mono); }
   .portfolio-signal {
     position: fixed;
     top: 0;
@@ -183,8 +260,8 @@ const motionStyles = `
   }
   [data-portfolio-dock="hero"] {
     position: absolute;
-    inset-inline-end: 0;
-    bottom: 17%;
+    inset-inline-end: max(21px, calc((100% - 1248px) / 2));
+    bottom: 9%;
   }
   [data-portfolio-beat="chapter"] { position: relative; }
   [data-portfolio-beat="chapter"]::after {
@@ -222,23 +299,6 @@ const motionStyles = `
   [data-portfolio-beat="stack"].portfolio-motion-entered .cs-group-heading > span:first-child {
     animation: portfolio-index .72s ease-out both;
   }
-  [data-portfolio-beat="workflow"] .ae-flow-core {
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-  [data-portfolio-beat="workflow"].portfolio-motion-entered .ae-flow-trace {
-    animation: portfolio-trace 1.5s cubic-bezier(.45, 0, .35, 1) both;
-  }
-  [data-portfolio-beat="workflow"].portfolio-motion-entered .ae-flow-core {
-    animation: portfolio-node .75s cubic-bezier(.22, 1, .36, 1) both;
-  }
-  .portfolio-motion-entered .ae-flow-diagram g:nth-of-type(2) .ae-flow-core { animation-delay: .38s; }
-  .portfolio-motion-entered .ae-flow-diagram g:nth-of-type(3) .ae-flow-core { animation-delay: .93s; }
-  [data-portfolio-beat="preview"] .ap-preview-button { position: relative; overflow: hidden; }
-  [data-portfolio-beat="preview"].portfolio-motion-entered .ap-preview-button img {
-    animation: portfolio-aperture 1.25s cubic-bezier(.22, 1, .36, 1) both;
-  }
-
   [data-portfolio-beat="project"].portfolio-motion-entered h3 {
     animation: portfolio-project-title .7s cubic-bezier(.22, 1, .36, 1) both;
   }
@@ -274,17 +334,9 @@ const motionStyles = `
   @keyframes portfolio-index {
     35% { color: var(--color-accent); }
   }
-  @keyframes portfolio-trace {
-    from { stroke-dashoffset: 200; }
-    to { stroke-dashoffset: 0; }
-  }
   @keyframes portfolio-node {
     35% { scale: 2.2; }
     to { scale: 1; }
-  }
-  @keyframes portfolio-aperture {
-    from { clip-path: inset(2% 9%); scale: 1.08; }
-    to { clip-path: inset(0); scale: 1; }
   }
   @keyframes portfolio-register {
     from { translate: 10px 0; }
