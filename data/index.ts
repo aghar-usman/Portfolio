@@ -2,11 +2,11 @@ export const profile = {
   name: "Aghar Usman K T",
   location: "Kerala, India",
   roles: ["Full-stack developer"],
-  headline: "Web interfaces. Python backends.",
+  headline: "From the first click\nto the database.",
   intro:
-    "I build responsive websites with React and Next.js, backed by Python APIs and SQL databases.",
+    "I’ve built an architecture studio’s website, Flask APIs, and an assistant that turns plain-English questions into SQL.",
   summary:
-    "I’m a full-stack developer from Kerala, India, working with React, Next.js, Python and SQL. My projects span architecture websites, REST APIs, ETL pipelines and a Text-to-SQL assistant. I’m looking to contribute across the stack and grow within a development team.",
+    "I’m a full-stack developer based in Kerala. I build websites with React and Next.js and work on APIs and data pipelines with Python and SQL.",
 };
 
 export const contact = {
@@ -135,10 +135,10 @@ export const experience: ExperienceEntry[] = [
     location: "Calicut, Kerala",
     period: "Feb 2025 – May 2025",
     points: [
-      "Built an ERP assistant that turns plain-English questions into MSSQL queries using Llama 3 and Mistral. Added model fallback, retries and TTL caching.",
-      "Built a concurrent Flask API with pagination and CSV export. Reduced response time by approximately 35% through caching and batch fetching.",
-      "Added SELECT-only checks and seven-pattern SQL-injection detection to limit unsafe generated queries.",
-      "Built a PostgreSQL ETL pipeline for a 22-column schema, with 100-row batches, timestamp normalization, retries and failed-record reports.",
+      "Built an ERP assistant that turns plain-English questions into SQL Server queries using Llama 3 and Mistral. Added model fallback, retries, and time-limited caching.",
+      "Cut response time by about 35% on a Flask API by caching results and fetching records in batches. The API supports concurrent requests, pagination, and CSV export.",
+      "Restricted generated queries to SELECT statements and checked for seven SQL injection patterns.",
+      "Built a PostgreSQL pipeline that loads records into a 22-column schema in batches of 100. It normalizes timestamps, retries failed loads, and reports failed records.",
     ],
   },
 ];
@@ -157,24 +157,24 @@ export interface ProjectEntry {
 export const projects: ProjectEntry[] = [
   {
     name: "SU·EN Studio",
-    tagline: "Architecture studio website · Kerala & Bangalore",
+    tagline: "Portfolio website for an architecture studio",
     period: "2026",
     points: [
-      "Built a responsive project archive and individual project pages with Next.js and TypeScript, driven by one typed content file.",
-      "Created full-screen architecture galleries with page transitions and scroll animation using Framer Motion and GSAP.",
-      "Added light and dark themes, a contact form and layouts for mobile and desktop.",
-      "Deployed on Vercel with automatic redeploys from GitHub.",
+      "Built an architecture project archive and individual case-study pages in Next.js. A single typed content file feeds both views.",
+      "Built full-screen project galleries with scroll animation and page transitions using Framer Motion and GSAP.",
+      "Added light and dark themes, a contact form, and layouts for mobile and desktop.",
+      "Connected the GitHub repository to Vercel for automatic deployments.",
     ],
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "GSAP", "Vercel"],
     live: "https://suen-studio.vercel.app/",
   },
   {
     name: "Personal Portfolio",
-    tagline: "Developer portfolio · Next.js & TypeScript",
+    tagline: "This site",
     period: "2026",
     points: [
-      "Built a single-page portfolio with a shared content file for skills, experience, projects and education.",
-      "Added an interactive stack visual, section navigation, expandable project previews and a copy-email action.",
+      "Built this single-page portfolio in Next.js and TypeScript. Its sections share one content file.",
+      "Built a GSAP sequence that connects the hero illustration to each section as you scroll, with a reduced-motion view.",
       "Deployed on Vercel.",
     ],
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Motion", "GSAP", "Vercel"],
@@ -182,12 +182,12 @@ export const projects: ProjectEntry[] = [
   },
   {
     name: "AgriLeaf Pro",
-    tagline: "Plant disease detection · Machine learning & IoT",
+    tagline: "Plant disease detection and soil monitoring",
     period: "2024 – 2025",
     points: [
-      "Trained a five-layer CNN to classify 19 plant diseases across four crops, achieving 85%+ accuracy and sub-100ms inference on test hardware.",
-      "Built a Flask API with OpenCV preprocessing, token-based authentication and treatment recommendations.",
-      "Connected six soil parameters through ThingSpeak, with seven days of historical visualization.",
+      "Trained a five-layer CNN to identify 19 diseases across four crops. It reached 85%+ accuracy and ran inference in under 100 ms on test hardware.",
+      "Built a Flask API that preprocesses photos with OpenCV and returns treatment recommendations. The API uses token-based authentication.",
+      "Connected six soil measurements to ThingSpeak and displayed seven days of readings.",
     ],
     stack: ["Python", "TensorFlow", "Flask", "OpenCV", "ThingSpeak", "GCP"],
     github: "https://github.com/aghar-usman/Leaf-Disease-Detection-using-CNN",
@@ -195,7 +195,7 @@ export const projects: ProjectEntry[] = [
 ];
 
 export const achievements = [
-  "Second place at a state-level hackathon. Led a four-person team, owned the backend and delivered a working product in six hours.",
+  "Placed second at a state-level hackathon. I led a team of four and built the backend for a working product we delivered in six hours.",
 ];
 
 export const languages = [
