@@ -20,7 +20,7 @@ const siteUrl = "https://aghar-portfolio.vercel.app";
 
 const title = "Aghar Usman K T | Full-Stack Developer";
 const description =
-  "Aghar Usman K T is a full-stack developer in Calicut, Kerala, building Next.js websites, React interfaces and Python APIs. Explore projects and experience.";
+  "Aghar Usman K T is a full-stack developer in Kerala. See his work on Next.js websites, Python APIs, data pipelines, and a text-to-SQL assistant.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
