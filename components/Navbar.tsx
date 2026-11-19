@@ -124,9 +124,9 @@ export default function Navbar({ links }: NavbarProps) {
     <>
       <header ref={header} className="an-header">
         <div className="an-wrap">
-          <a className="an-brand" href={home} aria-label="Aghar Usman, introduction">AUKT<span>.</span></a>
+          <a className="an-brand" href={home} aria-label="Aghar Usman, introduction">AUKT<span data-relay-origin aria-hidden="true">.</span></a>
           <nav className="an-desktop" aria-label="Main navigation">
-            {navigation.map((link) => <a key={link.href} className="an-link" href={link.href} aria-current={active === link.href ? "location" : undefined}>{link.label}</a>)}
+            {navigation.map((link) => <a key={link.href} className="an-link" href={link.href} aria-current={active === link.href ? "location" : undefined}>{link.label.charAt(0).toUpperCase() + link.label.slice(1)}</a>)}
           </nav>
           {contact && <a className="an-contact" href={contact.href} aria-current={active === contact.href ? "location" : undefined}>Contact me <Arrow /></a>}
           <button ref={toggle} className="an-toggle" type="button" aria-label={isOpen ? "Close navigation" : "Open navigation"} aria-expanded={isOpen} aria-controls="an-mobile-menu" onClick={() => setIsOpen(true)}><span>Menu</span><span className="an-menu-icon" aria-hidden="true"><i /><i /></span></button>
@@ -137,8 +137,8 @@ export default function Navbar({ links }: NavbarProps) {
       <dialog ref={dialog} id="an-mobile-menu" className="an-dialog" aria-labelledby="an-menu-title" onClose={() => { unlock.current?.(); setIsOpen(false); }}>
         <div ref={menuScope} className="an-dialog-content">
         <div className="an-dialog-top"><span id="an-menu-title" className="an-menu-title">Navigation<span>.</span></span><button ref={closeButton} className="an-close" type="button" onClick={closeMenu} aria-label="Close navigation"><span>Close</span><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" stroke="currentColor" strokeWidth="1.5" /></svg></button></div>
-        <nav className="an-mobile-links" aria-label="Mobile navigation">{links.map((link, index) => <a href={link.href} key={link.href} aria-current={active === link.href ? "location" : undefined} onClick={closeMenu}><span className="an-number">{String(index + 1).padStart(2, "0")}</span><span className="an-mobile-label">{link.label}</span><Arrow /></a>)}</nav>
-        <div className="an-dialog-bottom">Aghar Usman K T<span>Frontend to backend.</span></div>
+        <nav className="an-mobile-links" aria-label="Mobile navigation">{links.map((link, index) => <a href={link.href} key={link.href} aria-current={active === link.href ? "location" : undefined} onClick={closeMenu}><span className="an-number">{String(index + 1).padStart(2, "0")}</span><span className="an-mobile-label">{link.label.charAt(0).toUpperCase() + link.label.slice(1)}</span><Arrow /></a>)}</nav>
+        <div className="an-dialog-bottom">Aghar Usman K T<span>Full-stack developer</span></div>
         </div>
       </dialog>
       <style>{NAV_CSS}</style>
