@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SectionWindow } from "./PortfolioMotion";
 
 interface HeroProps {
   profile: {
@@ -37,7 +38,7 @@ export default function Hero({ profile, contact }: HeroProps) {
     const media = gsap.matchMedia();
     media.add("(prefers-reduced-motion: no-preference)", () => {
       const elements = gsap.utils.selector(scene);
-      gsap.timeline({ defaults: { ease: "power3.out" } })
+      gsap.timeline({ delay: .38, defaults: { ease: "power3.out" } })
         .fromTo(elements(".ph-light"), { opacity: .25, scale: .86 }, { opacity: 1, scale: 1, duration: 2.8 }, 0)
         .fromTo(elements(".ph-data"), { x: 23, y: -94, opacity: .45 }, { x: 0, y: 0, opacity: 1, duration: 1.34 }, .18)
         .fromTo(elements(".ph-api"), { x: 11, y: -42, opacity: .58 }, { x: 0, y: 0, opacity: 1, duration: 1.46 }, .4)
@@ -64,16 +65,40 @@ export default function Hero({ profile, contact }: HeroProps) {
       });
       camera
         .to(scene.querySelector(".ph-copy"), {
-          y: -165, autoAlpha: 0, duration: .42, ease: "power1.in",
-        }, .11)
+          y: -184, autoAlpha: 0, duration: .43, ease: "power1.in",
+        }, .16)
         .to(scene.querySelector(".ph-bottom"), { autoAlpha: 0, y: -20, duration: .28 }, .03)
         .to(figure, {
           x: () => scene.getBoundingClientRect().width / 2 - (figure.offsetLeft + (wrap?.getBoundingClientRect().left ?? 0) + figure.offsetWidth / 2),
-          y: -38, scale: 1.51, duration: .58, ease: "power2.inOut",
+          y: -22, scale: 1.41, duration: .6, ease: "power2.inOut",
         }, .04)
+        .to(scene.querySelector(".ph-scroll-interface"), {
+          y: -56, duration: .51, ease: "power2.inOut",
+        }, .16)
+        .to(scene.querySelector(".ph-scroll-api"), {
+          y: 34, opacity: .63, duration: .51, ease: "power2.inOut",
+        }, .18)
+        .to(scene.querySelector(".ph-scroll-data"), {
+          y: 93, opacity: .32, duration: .50, ease: "power2.inOut",
+        }, .20)
+        .to(scene.querySelectorAll(".ph-scroll-scaffold, .ph-grid"), {
+          opacity: 0, duration: .41, ease: "power2.inOut",
+        }, .22)
+        .to(scene.querySelector(".ph-scroll-interface"), {
+          y: 32, scale: 1.14, rotation: -7, transformOrigin: "50% 50%", duration: .28, ease: "power2.inOut",
+        }, .67)
+        .to(scene.querySelectorAll(".ph-scroll-api, .ph-scroll-data"), { opacity: 0, duration: .25 }, .69)
         .to(figure, {
-          y: () => -sticky.offsetHeight * .46, scale: 1.65, autoAlpha: .24, duration: .38, ease: "power2.in",
-        }, .62);
+          y: -94, autoAlpha: .13, duration: .27, ease: "power1.in",
+        }, .81)
+        .fromTo(scene.querySelector(".ph-nested"), {
+          scale: .13, y: -112, rotation: -9, skewY: 7, autoAlpha: 0,
+        }, {
+          scale: .23, y: -74, rotation: -5, skewY: 3, autoAlpha: 1, duration: .15, ease: "power2.out",
+        }, .65)
+        .to(scene.querySelector(".ph-nested"), {
+          scale: 1.06, y: 12, rotation: 0, skewY: 0, duration: .31, ease: "power2.inOut",
+        }, .8);
     });
     return () => media.revert();
   }, []);
@@ -110,20 +135,26 @@ export default function Hero({ profile, contact }: HeroProps) {
                 <path d="M-24-24H430V229H-24ZM-24 27H430M-24 77H430M-24 127H430M-24 177H430M27-24V229M77-24V229M127-24V229M177-24V229M227-24V229M277-24V229M327-24V229M377-24V229" />
               </g>
 
+              <g className="ph-scroll-data">
               <g className="ph-data">
                 <g transform="matrix(1 .26 -.85 .37 210 298)">
+                  <g id="portfolio-plane-data">
                   <rect className="ph-depth" width="390" height="200" rx="12" y="9" />
                   <rect className="ph-plane" width="390" height="200" rx="12" fill={`url(#${fill})`} />
                   <path className="ph-layout" d="M22 48H368M22 83H368M22 119H368M22 154H368M105 27V174M168 27V174M256 27V174" />
                   <path className="ph-fine" d="M39 64h44m39 0h23m45 0h44m41 0h75M39 101h34m48 0h29m40 0h30m55 0h67M39 137h47m34 0h23m47 0h48m36 0h54" />
                   <path className="ph-trace" pathLength="1" d="M105 48H256V154H368" />
+                  </g>
                 </g>
                 <path className="ph-lead" d="M599 401l23 7h24" />
                 <text className="ph-label" x="606" y="431">DATA</text>
               </g>
+              </g>
 
+              <g className="ph-scroll-api">
               <g className="ph-api">
                 <g transform="matrix(1 .26 -.85 .37 210 199)">
+                  <g id="portfolio-plane-api">
                   <rect className="ph-depth" width="390" height="200" rx="12" y="9" />
                   <rect className="ph-plane" width="390" height="200" rx="12" fill={`url(#${fill})`} />
                   <path className="ph-layout" d="M25 100H82L123 55H198L234 145H313L347 101H366M25 51h52m-52 99h56m222-99h61m-76 99h78" />
@@ -131,13 +162,17 @@ export default function Hero({ profile, contact }: HeroProps) {
                   <circle className="ph-node" cx="82" cy="100" r="7" />
                   <circle className="ph-node" cx="198" cy="55" r="7" />
                   <circle className="ph-node" cx="313" cy="145" r="7" />
+                  </g>
                 </g>
                 <path className="ph-lead" d="M599 302l23 7h24" />
                 <text className="ph-label" x="606" y="332">API</text>
               </g>
+              </g>
 
+              <g className="ph-scroll-interface">
               <g className="ph-interface">
                 <g transform="matrix(1 .26 -.85 .37 210 100)">
+                  <g id="portfolio-plane-interface">
                   <rect className="ph-depth" width="390" height="200" rx="12" y="9" />
                   <rect className="ph-plane ph-front" width="390" height="200" rx="12" fill={`url(#${fill})`} />
                   <path className="ph-layout" d="M1 35H388M25 61H183M25 80H139M25 152H226M25 169H188M294 131H363M294 148H344M294 165H333" />
@@ -148,14 +183,18 @@ export default function Hero({ profile, contact }: HeroProps) {
                   <rect className="ph-layout ph-window" x="25" y="103" width="94" height="24" rx="3" />
                   <rect className="ph-layout" x="211" y="58" width="153" height="59" rx="4" />
                   <path className="ph-trace" pathLength="1" d="m224 101 31-23 25 12 26-22 43 17M25 103h94" />
+                  </g>
                 </g>
                 <path className="ph-lead" d="M599 203l23 7h24" />
                 <text className="ph-label" x="606" y="233">UI</text>
               </g>
+              </g>
 
+              <g className="ph-scroll-scaffold">
               <path className="ph-connector" pathLength="1" d="M210 100V298" />
               <path className="ph-connector" pathLength="1" d="M600 202V400" />
               <path className="ph-connector" pathLength="1" d="M41 174V372" />
+              </g>
               <path className="ph-layout" d="M78 464h42m-21-21v42M572 496h42m-21-21v42" />
             </svg>
           </figure>
@@ -166,6 +205,7 @@ export default function Hero({ profile, contact }: HeroProps) {
           <a href="#skills">View tech stack <Arrow down /></a>
         </div>
       </div>
+        <div className="ph-nested" aria-hidden="true"><SectionWindow chapter="stack" /></div>
       </div>
       <style>{heroStyles}</style>
     </section>
@@ -175,6 +215,7 @@ export default function Hero({ profile, contact }: HeroProps) {
 const heroStyles = `
   .ph-hero { position: relative; overflow: clip; background: var(--color-bg); color: var(--color-text); }
   .ph-wrap { position: relative; width: min(100% - 96px, 1248px); margin-inline: auto; display: grid; align-content: center; min-height: calc(100svh - var(--site-header-height, 80px)); padding-block: 40px 14px; }
+  .ph-nested { display: none; }
   .ph-stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); align-items: center; }
   .ph-copy { position: relative; z-index: 1; min-width: 0; }
   .ph-light { position: absolute; inset: 0; pointer-events: none; transform-origin: 76% 50%; background: radial-gradient(ellipse at 78% 53%, color-mix(in srgb, var(--color-accent) 11%, transparent), transparent 49%); }
@@ -209,9 +250,10 @@ const heroStyles = `
   .ph-bottom a { margin-inline-start: auto; display: inline-flex; min-height: 44px; gap: 12px; align-items: center; color: inherit; text-decoration: none; }
   .ph-bottom a:hover { color: var(--color-text); }
   @media (min-width: 960px) and (min-height: 680px) and (prefers-reduced-motion: no-preference) {
-    .ph-hero { height: 170svh; }
+    .ph-hero { height: 184svh; }
     .ph-sticky { position: sticky; top: var(--site-header-height, 80px); }
     .ph-figure { will-change: transform; }
+    .ph-nested { display: block; position: absolute; width: min(100% - 96px, 1248px); height: min(66svh, 590px); left: 50%; top: 50%; translate: -50% -50%; visibility: hidden; opacity: 0; z-index: 2; pointer-events: none; transform-origin: 50% 48%; }
   }
   @media (max-width: 1023px) { .ph-wrap { width: calc(100% - 64px); } .ph-figure { margin-inline-end: -22px; } }
   @media (max-width: 840px) {
