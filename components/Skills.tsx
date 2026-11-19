@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { SiReact, SiPython, SiPostgresql, SiDocker, SiTypescript, SiTensorflow } from "react-icons/si";
 import { stagger, useAnimate, useReducedMotion } from "motion/react";
+import { SectionWindow } from "./PortfolioMotion";
 
 export interface SkillGroup { label: string; items: string[] }
 
@@ -113,7 +114,7 @@ export default function Skills({ skills = skillGroups, disableAnimations = false
     <section ref={scope} id="skills" data-portfolio-chapter="" className="cs-section" data-motion={disableAnimations ? "off" : undefined} aria-labelledby="cs-title">
       <div className="cs-wrap">
         <div className="cs-label" data-portfolio-beat="chapter"><span>01 /</span>Stack<span data-portfolio-dock="" aria-hidden="true" /></div>
-        <div className="cs-heading" data-portfolio-beat="stack-heading"><h2 id="cs-title">Tools I build with<span>.</span></h2><p>Frontend, backend, data, and machine learning.</p><svg className="cs-opening-frame" viewBox="0 0 280 72" fill="none" aria-hidden="true"><path d="M0 44L60 12h218M0 56l60-32h218M0 68l60-32h218" /></svg></div>
+        <div className="cs-heading" data-portfolio-beat="stack-heading"><h2 id="cs-title">Tools I build with<span>.</span></h2><p>Frontend, backend, data, and machine learning.</p><svg className="cs-opening-frame" viewBox="0 0 565 180" fill="none" aria-hidden="true"><g transform="matrix(1 .17 -.73 .48 160 18)"><use href="#portfolio-plane-interface" /></g></svg></div>
         <div className="cs-grid">{groups.map((group, index) => <article className="cs-group" data-portfolio-beat="stack" key={group.label + index}>
           <div className="cs-group-heading"><span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><h3>{group.label}</h3><StackMark items={group.items} /></div>
           <div className="cs-feature-tools">{group.items.slice(0, 2).map((item) => <span key={item}>{item}</span>)}</div>
@@ -126,6 +127,29 @@ export default function Skills({ skills = skillGroups, disableAnimations = false
         {!groups.length && <p className="cs-empty">My projects show the tools I work with.</p>}
         <div className="cs-footer"><span>Projects using this stack</span><a href="#projects">View projects <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></a></div>
       </div>
+      {!disableAnimations && (
+        <div className="cs-layer-bridge" data-portfolio-layer-bridge aria-hidden="true">
+          <svg className="cs-layer-assembly" viewBox="0 0 690 400" fill="none">
+            <path className="cs-layer-rails" d="M204 94v183m388-117v182M53 179v170" />
+            <g className="cs-bridge-data">
+              <g transform="matrix(1 .19 -.78 .39 203 206)">
+                <use href="#portfolio-plane-data" />
+              </g>
+              <path className="ph-lead" d="M592 281l22 11h37" />
+              <text className="ph-label" x="610" y="313">DATA</text>
+            </g>
+            <g className="cs-bridge-api">
+              <g transform="matrix(1 .19 -.78 .39 203 106)">
+                <use href="#portfolio-plane-api" />
+              </g>
+              <path className="ph-lead" d="M592 181l22 11h37" />
+              <text className="ph-label" x="610" y="213">API</text>
+            </g>
+            <path className="cs-bridge-route" pathLength="1" d="M58 243h57l28-18h80l37 27h78l48-34h75l26 17h75" />
+          </svg>
+          <div className="cs-nested"><SectionWindow chapter="experience" /></div>
+        </div>
+      )}
       <style>{SKILLS_CSS + ENTRY_CSS}</style>
     </section>
   );
@@ -136,9 +160,33 @@ const SKILLS_CSS = "\n.cs-section{box-sizing:border-box;position:relative;backgr
 const ENTRY_CSS = `
 .cs-heading { position: relative; }
 .cs-opening-frame { display: none; }
-@media (min-width: 960px) {
-  .cs-opening-frame { display: block; position: absolute; inset: auto 0 95% auto; width: min(28%, 280px); stroke: var(--color-accent); opacity: .24; pointer-events: none; }
-  .cs-heading.portfolio-motion-entered .cs-opening-frame { animation: cs-land 900ms cubic-bezier(.22, 1, .36, 1) both; }
-  @keyframes cs-land { from { transform: translate(19px,-20px) scale(1.15); opacity: .78; } to { transform: none; opacity: .24; } }
+.cs-layer-bridge {
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: clip;
+  min-height: clamp(190px, 42svh, 445px);
+  margin: 24px auto 0;
+  background: radial-gradient(ellipse at 50% 63%, color-mix(in srgb, var(--color-accent) 11%, transparent), transparent 64%);
+  pointer-events: none;
 }
+.cs-nested { display: none; }
+@media (min-width: 741px) {
+  .cs-nested { display: block; position: absolute; width: min(100% - 80px, 1100px); height: min(92%, 430px); left: 50%; top: 50%; translate: -50% -50%; visibility: hidden; opacity: 0; transform-origin: 50% 48%; }
+  .cs-nested .portfolio-window { padding: clamp(21px, 3vw, 44px); }
+  .cs-nested .portfolio-window-title { margin: 12px 0 18px; }
+}
+.cs-layer-assembly { width: min(89%, 670px); overflow: visible; }
+.cs-layer-rails { stroke: var(--color-accent); opacity: .35; stroke-width: 1; }
+.cs-bridge-route { stroke: var(--color-accent); stroke-width: 1.2; stroke-dasharray: 1; stroke-linecap: round; opacity: .35; }
+@media (min-width: 960px) {
+  .cs-opening-frame { display: block; position: absolute; inset: auto 0 calc(100% - 10px) auto; width: min(28%, 322px); opacity: .56; pointer-events: none; }
+  .cs-heading.portfolio-motion-entered .cs-opening-frame { animation: cs-land 1s cubic-bezier(.22, 1, .36, 1) both; }
+  @keyframes cs-land { from { transform: translate(28px,-28px) scale(1.13); opacity: .8; } to { transform: none; opacity: .56; } }
+}
+@media (max-width: 740px) {
+  .cs-layer-bridge { min-height: 0; margin-top: 20px; }
+  .cs-layer-assembly { width: min(94%, 480px); }
+}
+@media (prefers-reduced-motion: reduce) { .cs-layer-bridge { display: none; } }
 `;
