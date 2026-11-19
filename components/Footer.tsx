@@ -47,13 +47,13 @@ export default function Footer({ contact }: FooterProps) {
   }
 
   return (
-    <footer ref={scope} id="contact" className="af-footer" aria-labelledby="af-title">
+    <footer ref={scope} id="contact" data-portfolio-chapter="" className="af-footer" aria-labelledby="af-title">
       <div className="af-wrap">
-        <div className="af-label"><span>05 /</span>Contact<i aria-hidden="true" /></div>
+        <div className="af-label" data-portfolio-beat="chapter"><span>05 /</span>Contact<i aria-hidden="true" /><span data-portfolio-dock="" aria-hidden="true" /></div>
         <div className="af-main">
-          <div className="af-invitation">
-            <h2 id="af-title">Let’s build something <span>extraordinary</span> together.</h2>
-            <p className="af-intro">For development roles or website projects, send me a little about what you have in mind.</p>
+          <div className="af-invitation" data-portfolio-beat="contact">
+            <h2 id="af-title">Have a <span>project</span> in mind?</h2>
+            <p className="af-intro">For a website project or full-stack role, send me a short email about what you’re working on.</p>
             {email && <>
               <a className="af-email" href={emailHref}>{email}</a>
               <div className="af-actions">
@@ -65,7 +65,7 @@ export default function Footer({ contact }: FooterProps) {
           </div>
 
           {(contact.github || contact.linkedin || contact.resume) && <nav className="af-links" aria-label="Profiles and résumé">
-            <p className="af-links-label">Find me elsewhere</p>
+            <p className="af-links-label">Profiles and résumé</p>
             {contact.github && <a href={contact.github} target="_blank" rel="noopener noreferrer" aria-label="View my GitHub profile (opens in a new tab)"><span>GitHub</span><Arrow /></a>}
             {contact.linkedin && <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" aria-label="View my LinkedIn profile (opens in a new tab)"><span>LinkedIn</span><Arrow /></a>}
             {contact.resume && <a href={contact.resume} target="_blank" rel="noopener noreferrer" aria-label="View my résumé (opens in a new tab)"><span>Résumé</span><Arrow /></a>}
