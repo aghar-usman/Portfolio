@@ -110,11 +110,11 @@ export default function Skills({ skills = skillGroups, disableAnimations = false
   const reduced = useReducedMotion();
   const groups = useMemo(() => skills.map((group) => ({ label: group.label, items: Array.from(new Set(group.items.map((item) => item.trim()).filter(Boolean))) })).filter((group) => group.items.length), [skills]);
   return (
-    <section ref={scope} id="skills" className="cs-section" data-motion={disableAnimations ? "off" : undefined} aria-labelledby="cs-title">
+    <section ref={scope} id="skills" data-portfolio-chapter="" className="cs-section" data-motion={disableAnimations ? "off" : undefined} aria-labelledby="cs-title">
       <div className="cs-wrap">
-        <div className="cs-label"><span>01 /</span>Stack</div>
-        <div className="cs-heading"><h2 id="cs-title">My toolkit<span>.</span></h2><p>From the first component to the final query.</p></div>
-        <div className="cs-grid">{groups.map((group, index) => <article className="cs-group" key={group.label + index}>
+        <div className="cs-label" data-portfolio-beat="chapter"><span>01 /</span>Stack<span data-portfolio-dock="" aria-hidden="true" /></div>
+        <div className="cs-heading"><h2 id="cs-title">Tools I build with<span>.</span></h2><p>Frontend, backend, data, and machine learning.</p></div>
+        <div className="cs-grid">{groups.map((group, index) => <article className="cs-group" data-portfolio-beat="stack" key={group.label + index}>
           <div className="cs-group-heading"><span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><h3>{group.label}</h3><StackMark items={group.items} /></div>
           <div className="cs-feature-tools">{group.items.slice(0, 2).map((item) => <span key={item}>{item}</span>)}</div>
           <ul className="cs-tools" aria-label={group.label}>{group.items.slice(2, 5).map((item) => <li key={item}>{item}</li>)}</ul>
@@ -124,7 +124,7 @@ export default function Skills({ skills = skillGroups, disableAnimations = false
           }}><summary><span>More tools ({group.items.length - 5})</span><span className="cs-plus" aria-hidden="true" /></summary><ul className="cs-tools cs-extra" aria-label={"Additional " + group.label + " tools"}>{group.items.slice(5).map((item) => <li key={item}>{item}</li>)}</ul></details>}
         </article>)}</div>
         {!groups.length && <p className="cs-empty">My projects show the tools I work with.</p>}
-        <div className="cs-footer"><span>See the stack in use.</span><a href="#projects">View projects <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></a></div>
+        <div className="cs-footer"><span>Projects using this stack</span><a href="#projects">View projects <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></a></div>
       </div>
       <style>{SKILLS_CSS}</style>
     </section>
