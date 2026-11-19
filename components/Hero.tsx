@@ -1,136 +1,195 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
 import { gsap } from "gsap";
-import { AnimatePresence, MotionConfig, motion, useReducedMotion } from "motion/react";
 
 interface HeroProps {
-  profile: { name: string; roles: string[]; summary: string | string[]; location?: string; headline?: string; intro?: string };
+  profile: {
+    name: string;
+    roles: string[];
+    summary: string | string[];
+    location?: string;
+    headline?: string;
+    intro?: string;
+  };
   contact: { resume: string; github: string; linkedin: string };
 }
 
-const layers = [
-  { label: "Interface", mark: "UI", tools: "React / Next.js", description: "Websites & responsive interfaces" },
-  { label: "API", mark: "API", tools: "Python / Flask", description: "Backend services & integrations" },
-  { label: "Data", mark: "SQL", tools: "PostgreSQL / SQL", description: "Databases & data pipelines" },
-];
-
 function Arrow({ down = false }: { down?: boolean }) {
-  return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d={down ? "M12 4v16m-6-6 6 6 6-6" : "M4 12h15m-6-6 6 6-6 6"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>;
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d={down ? "M12 4v16m-6-6 6 6 6-6" : "M4 12h15m-6-6 6 6-6 6"} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
 }
 
 export default function Hero({ profile, contact }: HeroProps) {
   const root = useRef<HTMLElement>(null);
-  const marker = useRef<HTMLSpanElement>(null);
-  const accent = useRef<SVGPathElement>(null);
-  const rule = useRef<HTMLSpanElement>(null);
-  const [active, setActive] = useState(0);
-  const reduced = useReducedMotion();
-  const panelId = useId();
-  const heading = (profile.headline ?? "Web interfaces. Python backends.").split(". ");
-  const intro = profile.intro ?? "I build responsive web apps with React, Next.js, and Python APIs.";
+  const fill = useId();
+  const heading = (profile.headline ?? "From the first click\nto the database.").trim().split(/\n+|(?<=\.)\s+/);
+  const intro = profile.intro ?? "I’ve built an architecture studio’s website, Flask APIs, and an assistant that turns plain-English questions into SQL.";
 
   useEffect(() => {
-    const glyph = marker.current;
-    if (!glyph || !accent.current || !rule.current) return;
+    if (!root.current) return;
+    const scene = root.current;
     const media = gsap.matchMedia();
     media.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.timeline({ delay: .2 })
-        .fromTo(accent.current, { strokeDashoffset: 1 }, {
-          strokeDashoffset: 0, duration: 1.65, ease: "power2.inOut",
-        })
-        .fromTo(rule.current, { scaleX: 0 }, {
-          scaleX: 1, duration: .9, ease: "power2.out",
-        }, 1.12)
-        .fromTo(glyph, { opacity: .35, scale: .7 }, {
-          opacity: 1, scale: 1, duration: .45, ease: "power2.out",
-        }, 1.72);
-
-      const sections = ["skills", "experience", "projects", "education", "contact"]
-        .map((id) => document.getElementById(id))
-        .filter((section): section is HTMLElement => section !== null);
-      const rotate = gsap.quickTo(glyph, "rotation", { duration: .65, ease: "power3.out" });
-      const slide = gsap.quickTo(glyph, "y", { duration: .65, ease: "power3.out" });
-      let frame = 0;
-      const update = () => {
-        frame = 0;
-        const threshold = window.innerHeight * .52;
-        let progress = 0;
-        for (const section of sections) {
-          const distance = section.getBoundingClientRect().top - threshold;
-          progress += gsap.utils.clamp(0, 1, (140 - distance) / 280);
-        }
-        rotate(progress * 90);
-        slide(-30 * Math.sin((progress % 1) * Math.PI));
-      };
-      const schedule = () => {
-        if (!frame) frame = requestAnimationFrame(update);
-      };
-      window.addEventListener("scroll", schedule, { passive: true });
-      window.addEventListener("resize", schedule);
-      update();
-      return () => {
-        window.removeEventListener("scroll", schedule);
-        window.removeEventListener("resize", schedule);
-        if (frame) cancelAnimationFrame(frame);
-      };
+      const elements = gsap.utils.selector(scene);
+      gsap.timeline({ defaults: { ease: "power3.out" } })
+        .fromTo(elements(".ph-light"), { opacity: .25, scale: .86 }, { opacity: 1, scale: 1, duration: 2.8 }, 0)
+        .fromTo(elements(".ph-data"), { x: 23, y: -94, opacity: .45 }, { x: 0, y: 0, opacity: 1, duration: 1.34 }, .18)
+        .fromTo(elements(".ph-api"), { x: 11, y: -42, opacity: .58 }, { x: 0, y: 0, opacity: 1, duration: 1.46 }, .4)
+        .fromTo(elements(".ph-interface"), { x: -30, y: 66 }, { x: 0, y: 0, duration: 1.7 }, .62)
+        .fromTo(elements(".ph-connector"), { strokeDashoffset: 1, opacity: .15 }, { strokeDashoffset: 0, opacity: .75, duration: 1.16, stagger: .15, ease: "power2.inOut" }, 1.18)
+        .fromTo(elements(".ph-trace"), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.24, stagger: .18, ease: "power2.inOut" }, 1.27)
+        .fromTo(elements(".ph-label"), { x: -12, opacity: .35 }, { x: 0, opacity: 1, duration: .6, stagger: .15 }, 1.65);
     });
     return () => media.revert();
   }, []);
 
   return (
-    <MotionConfig reducedMotion="user">
-      <section ref={root} id="about" className="ch-hero" aria-labelledby="ch-title">
-        <span ref={marker} className="ch-section-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9V3h6m6 18h6v-6M8 16l8-8" /></svg></span>
-        <div className="ch-stage">
-          <div className="ch-wrap">
-            <div className="ch-main">
-              <div className="ch-copy">
-                <p className="ch-identity"><span className="ch-name">{profile.name}</span><span className="ch-role">{profile.roles.join(" / ") || "Full-stack developer"}</span></p>
-                <h1 id="ch-title" className="ch-title">{heading.map((part, index) => (
-                  <span key={index}>
-                    {index === 1 ? (
-                      <span className="ch-signal-phrase">
-                        {part}{index < heading.length - 1 ? "." : ""}
-                        <span ref={rule} className="ch-signal-rule" aria-hidden="true" />
-                      </span>
-                    ) : <>{part}{index < heading.length - 1 ? "." : ""}</>}
-                  </span>
-                ))}</h1>
-                <p className="ch-intro">{intro}</p>
-                <div className="ch-actions"><a className="ch-button ch-primary" href="#projects">View projects <Arrow /></a>{contact.resume && <a className="ch-button ch-secondary" href={contact.resume} target="_blank" rel="noopener noreferrer">View résumé <span aria-hidden="true">↗</span></a>}</div>
-              </div>
-
-              <div className="ch-visual">
-                <div className="ch-scope" aria-hidden="true">
-                  <div className="ch-orbit">
-                    <svg viewBox="0 0 400 400" fill="none"><circle cx="200" cy="200" r="180" className="ch-outer-ring" /><path ref={accent} d="M200 20A180 180 0 0 1 355.9 110" pathLength="1" className="ch-signal-arc" />{Array.from({ length: 24 }, (_, i) => <line key={i} x1="200" y1="21" x2="200" y2={i % 3 === 0 ? "31" : "26"} transform={"rotate(" + i * 15 + " 200 200)"} className={i % 3 === 0 ? "ch-tick ch-tick-strong" : "ch-tick"} />)}<circle cx="200" cy="200" r="151" className="ch-inner-ring" /><circle cx="200" cy="200" r="151" className="ch-trace" transform="rotate(-90 200 200)" /></svg>
-                  </div>
-                  
-                  <div className="ch-scope-center"><div className="ch-mark-space"><AnimatePresence initial={false} mode="wait"><motion.span className="ch-mark" key={active} initial={{ opacity: reduced ? 1 : .4, y: reduced ? 0 : 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: reduced ? 1 : .4 }} transition={{ duration: reduced ? 0 : .12 }}>{layers[active].mark}</motion.span></AnimatePresence></div><span className="ch-tools">{layers[active].tools}</span></div>
-                </div>
-                <div className="ch-layer-controls" role="group" aria-label="Explore my development stack">{layers.map((layer, index) => <button type="button" key={layer.label} aria-pressed={active === index} aria-controls={panelId} onClick={() => setActive(index)}>{layer.label}<span className="ch-control-line" /></button>)}</div>
-                <p id={panelId} className="ch-layer-description">{layers[active].description}</p>
-              </div>
+    <section ref={root} id="about" className="ph-hero" data-portfolio-chapter="" aria-labelledby="ph-title">
+      <div className="ph-light" aria-hidden="true" />
+      <div className="ph-wrap">
+        <div className="ph-stage">
+          <div className="ph-copy">
+            <p className="ph-identity"><span>{profile.name}</span><span>{profile.roles.join(" / ") || "Full-stack developer"}</span></p>
+            <h1 id="ph-title">{heading.map((line, index) => (
+              <span key={index}>{line}</span>
+            ))}</h1>
+            <p className="ph-intro">{intro}</p>
+            <div className="ph-actions">
+              <a className="ph-primary" href="#projects">View projects <Arrow /></a>
+              {contact.resume && <a className="ph-secondary" href={contact.resume} target="_blank" rel="noopener noreferrer">View résumé <span aria-hidden="true">↗</span></a>}
             </div>
-            <div className="ch-bottom"><span>{profile.location ?? "Full-stack development"}</span><a href="#skills"><span>Explore my stack</span><Arrow down /></a></div>
           </div>
+
+          <figure className="ph-figure" data-portfolio-lens="">
+            <span data-portfolio-dock="hero" aria-hidden="true" />
+            <svg className="ph-machine" viewBox="0 0 690 600" role="img" aria-label="Exploded view of a web application: interface, API, and data">
+              <defs>
+                <linearGradient id={fill} x2="1" y2="1">
+                  <stop stopColor="var(--color-surface-2)" />
+                  <stop offset="1" stopColor="var(--color-bg)" />
+                </linearGradient>
+              </defs>
+
+              <g className="ph-grid" transform="matrix(1 .26 -.85 .37 210 338)">
+                <path d="M-24-24H430V229H-24ZM-24 27H430M-24 77H430M-24 127H430M-24 177H430M27-24V229M77-24V229M127-24V229M177-24V229M227-24V229M277-24V229M327-24V229M377-24V229" />
+              </g>
+
+              <g className="ph-data">
+                <g transform="matrix(1 .26 -.85 .37 210 298)">
+                  <rect className="ph-depth" width="390" height="200" rx="12" y="9" />
+                  <rect className="ph-plane" width="390" height="200" rx="12" fill={`url(#${fill})`} />
+                  <path className="ph-layout" d="M22 48H368M22 83H368M22 119H368M22 154H368M105 27V174M168 27V174M256 27V174" />
+                  <path className="ph-fine" d="M39 64h44m39 0h23m45 0h44m41 0h75M39 101h34m48 0h29m40 0h30m55 0h67M39 137h47m34 0h23m47 0h48m36 0h54" />
+                  <path className="ph-trace" pathLength="1" d="M105 48H256V154H368" />
+                </g>
+                <path className="ph-lead" d="M599 401l23 7h24" />
+                <text className="ph-label" x="606" y="431">DATA</text>
+              </g>
+
+              <g className="ph-api">
+                <g transform="matrix(1 .26 -.85 .37 210 199)">
+                  <rect className="ph-depth" width="390" height="200" rx="12" y="9" />
+                  <rect className="ph-plane" width="390" height="200" rx="12" fill={`url(#${fill})`} />
+                  <path className="ph-layout" d="M25 100H82L123 55H198L234 145H313L347 101H366M25 51h52m-52 99h56m222-99h61m-76 99h78" />
+                  <path className="ph-trace" pathLength="1" d="M25 100H82L123 55H198L234 145H313L347 101H366" />
+                  <circle className="ph-node" cx="82" cy="100" r="7" />
+                  <circle className="ph-node" cx="198" cy="55" r="7" />
+                  <circle className="ph-node" cx="313" cy="145" r="7" />
+                </g>
+                <path className="ph-lead" d="M599 302l23 7h24" />
+                <text className="ph-label" x="606" y="332">API</text>
+              </g>
+
+              <g className="ph-interface">
+                <g transform="matrix(1 .26 -.85 .37 210 100)">
+                  <rect className="ph-depth" width="390" height="200" rx="12" y="9" />
+                  <rect className="ph-plane ph-front" width="390" height="200" rx="12" fill={`url(#${fill})`} />
+                  <path className="ph-layout" d="M1 35H388M25 61H183M25 80H139M25 152H226M25 169H188M294 131H363M294 148H344M294 165H333" />
+                  <path className="ph-fine" d="M171 18H243M305 18H364" />
+                  <circle className="ph-node" cx="26" cy="18" r="3" />
+                  <circle className="ph-node" cx="39" cy="18" r="3" />
+                  <circle className="ph-node" cx="52" cy="18" r="3" />
+                  <rect className="ph-layout ph-window" x="25" y="103" width="94" height="24" rx="3" />
+                  <rect className="ph-layout" x="211" y="58" width="153" height="59" rx="4" />
+                  <path className="ph-trace" pathLength="1" d="m224 101 31-23 25 12 26-22 43 17M25 103h94" />
+                </g>
+                <path className="ph-lead" d="M599 203l23 7h24" />
+                <text className="ph-label" x="606" y="233">UI</text>
+              </g>
+
+              <path className="ph-connector" pathLength="1" d="M210 100V298" />
+              <path className="ph-connector" pathLength="1" d="M600 202V400" />
+              <path className="ph-connector" pathLength="1" d="M41 174V372" />
+              <path className="ph-layout" d="M78 464h42m-21-21v42M572 496h42m-21-21v42" />
+            </svg>
+          </figure>
         </div>
-        <style>{HERO_CSS + SIGNAL_CSS}</style>
-      </section>
-    </MotionConfig>
+
+        <div className="ph-bottom">
+          {profile.location && <span>{profile.location}</span>}
+          <a href="#skills">View tech stack <Arrow down /></a>
+        </div>
+      </div>
+      <style>{heroStyles}</style>
+    </section>
   );
 }
 
-const HERO_CSS = "\n.ch-hero{position:relative;box-sizing:border-box;background:var(--color-bg,#0c0d0c);color:var(--color-text,#f2f0e9);font-family:var(--font-sans,Arial,sans-serif);scroll-margin-top:var(--site-header-height,80px)}.ch-hero *{box-sizing:border-box}.ch-stage{position:relative;display:flex;align-items:center;min-height:calc(100svh - var(--site-header-height,80px))}.ch-wrap{width:min(100% - 96px,1248px);margin-inline:auto;padding-block:44px 18px}.ch-main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(48px,7vw,112px);align-items:center}.ch-copy{min-width:0}.ch-identity{margin:0 0 30px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-family:var(--font-mono,monospace);font-size:11px;line-height:1.7}.ch-name{color:var(--color-text,#f2f0e9)}.ch-role{color:var(--color-text-muted,#a5a69d);display:inline-flex;align-items:center;gap:12px}.ch-role:before{content:\"\";width:4px;height:4px;border-radius:50%;background:var(--color-accent,#ff744f);flex:none}.ch-title{font-size:clamp(44px,5.5vw,80px);line-height:1.04;font-weight:500;letter-spacing:-.065em;margin:0 0 28px;overflow-wrap:anywhere}.ch-title>span{display:block}.ch-title>span+span{color:var(--color-text-muted,#a5a69d)}.ch-intro{font-size:16px;line-height:1.8;max-width:42ch;color:var(--color-text-muted,#a5a69d);margin:0;text-wrap:pretty}.ch-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}.ch-button{display:inline-flex;align-items:center;justify-content:space-between;gap:24px;min-height:50px;padding:13px 20px;border:1px solid var(--color-border,#30322d);border-radius:4px;font-size:13px;line-height:1.5;font-weight:600;text-decoration:none;transition:transform 150ms,background-color 150ms,border-color 150ms}.ch-primary{background:var(--color-accent,#ff744f);color:#17110d;border-color:transparent}.ch-secondary{color:var(--color-text,#f2f0e9);background:transparent}.ch-button svg{flex:none;transition:transform 150ms}.ch-secondary>span{font-size:18px;line-height:1}.ch-visual{width:100%;max-width:440px;justify-self:end;min-width:0}.ch-scope{position:relative;width:100%;aspect-ratio:1}.ch-orbit{position:absolute;inset:0}.ch-orbit svg{width:100%;height:100%;display:block}.ch-outer-ring,.ch-inner-ring{stroke:var(--color-border,#30322d);stroke-width:1}.ch-tick{stroke:var(--color-border,#30322d);stroke-width:1}.ch-tick-strong{stroke:var(--color-text-muted,#a5a69d)}.ch-trace{stroke:var(--color-accent,#ff744f);stroke-width:1.5;stroke-linecap:round}.ch-scope-center{position:absolute;inset:25% 15%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}.ch-layer-number{font-family:var(--font-mono,monospace);font-size:10px;line-height:1.7;color:var(--color-accent,#ff744f);font-variant-numeric:tabular-nums}.ch-mark-space{position:relative;height:120px;width:100%;display:flex;align-items:center;justify-content:center}.ch-mark{display:block;font-size:clamp(64px,7.3vw,106px);line-height:1;font-weight:500;letter-spacing:-.075em;color:var(--color-text,#f2f0e9)}.ch-tools{font-family:var(--font-mono,monospace);font-size:10px;line-height:1.8;text-align:center;color:var(--color-text-muted,#a5a69d)}.ch-crosshair{position:absolute;width:12px;height:1px;top:50%;background:var(--color-accent,#ff744f)}.ch-crosshair-left{left:16%}.ch-crosshair-right{right:16%}.ch-layer-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:2px}.ch-layer-controls button{position:relative;min-height:44px;padding:10px 0 16px;border:0;background:none;color:var(--color-text-muted,#a5a69d);font-family:var(--font-mono,monospace);font-size:10px;line-height:1.7;cursor:pointer;transition:color 150ms}.ch-control-line{position:absolute;inset-inline:0;bottom:0;height:1px;background:var(--color-border,#30322d)}.ch-control-line:after{content:\"\";position:absolute;inset:0;background:var(--color-accent,#ff744f);transform:scaleX(0);transform-origin:left;transition:transform 180ms cubic-bezier(.2,.8,.2,1)}.ch-layer-controls button[aria-pressed=\"true\"]{color:var(--color-text,#f2f0e9)}.ch-layer-controls button[aria-pressed=\"true\"] .ch-control-line:after{transform:scaleX(1)}.ch-layer-description{text-align:center;font-size:11px;line-height:1.8;color:var(--color-text-muted,#a5a69d);min-height:20px;margin:14px 0 0}.ch-bottom{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:44px;padding-top:16px;border-top:1px solid var(--color-border,#30322d);font-family:var(--font-mono,monospace);font-size:10px;line-height:1.7;color:var(--color-text-muted,#a5a69d);padding-right:72px}.ch-bottom a{display:inline-flex;align-items:center;gap:14px;min-height:44px;color:inherit;text-decoration:none}.ch-bottom svg{width:14px;height:14px;transition:transform 150ms}.ch-hero a:focus-visible,.ch-hero button:focus-visible{outline:2px solid var(--color-accent,#ff744f);outline-offset:5px}\n@media(hover:hover) and (pointer:fine){.ch-button:hover{transform:translateY(-1px)}.ch-primary:hover{background:var(--color-accent-hover,#ff8a6a)}.ch-secondary:hover{border-color:var(--color-text-muted,#a5a69d);background:var(--color-surface,#151713)}.ch-primary:hover svg{transform:translateX(3px)}.ch-layer-controls button:hover{color:var(--color-accent,#ff744f)}.ch-bottom a:hover{color:var(--color-text,#f2f0e9)}.ch-bottom a:hover svg{transform:translateY(3px)}}.ch-button:active{transform:translateY(1px) scale(.985)}\n@media(max-width:1100px){.ch-main{gap:48px}.ch-title{font-size:clamp(44px,5.8vw,64px)}.ch-mark-space{height:100px}.ch-identity{max-width:40ch}.ch-intro{font-size:15px}}\n@media(max-width:1023px){.ch-wrap{width:calc(100% - 64px)}.ch-main{gap:32px}.ch-title{font-size:54px}.ch-visual{max-width:360px}.ch-mark-space{height:92px}.ch-mark{font-size:80px}}\n@media(max-width:959px){.ch-main{grid-template-columns:minmax(0,1fr);gap:32px}.ch-copy{max-width:640px}.ch-title{font-size:clamp(48px,8vw,72px)}.ch-identity{max-width:none}.ch-visual{justify-self:center;max-width:380px}.ch-mark{font-size:92px}.ch-mark-space{height:110px}.ch-intro{max-width:45ch}}\n@media(max-width:639px){.ch-wrap{width:calc(100% - 40px);padding-block:36px 16px}.ch-identity{margin-bottom:24px;font-size:10px;gap:6px 12px}.ch-title{font-size:clamp(40px,10vw,60px);margin-bottom:22px;letter-spacing:-.06em}.ch-intro{font-size:14px;line-height:1.8}.ch-actions{margin-top:24px;gap:10px}.ch-button{width:100%;min-height:48px}.ch-visual{max-width:320px}.ch-mark{font-size:84px}.ch-mark-space{height:96px}.ch-tools{font-size:9px}.ch-layer-controls{gap:16px}.ch-layer-description{font-size:10px}.ch-bottom{margin-top:30px;align-items:flex-start;flex-direction:column;gap:4px;padding-right:60px;font-size:9px}.ch-bottom a{gap:10px}.ch-main{gap:28px}}\n@media(prefers-reduced-motion:reduce){.ch-hero *,.ch-hero *:after{transition:none!important}.ch-button:hover,.ch-button:active,.ch-button svg,.ch-bottom svg{transform:none!important}}\n\n.ch-ambient-arc{stroke:var(--color-accent,#ff744f);stroke-width:2;stroke-linecap:round;opacity:.65}.ch-motion-toggle{display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px;margin:6px auto 0;padding:8px 12px;border:0;background:none;color:var(--color-text-muted,#a5a69d);font-family:var(--font-mono,monospace);font-size:9px;cursor:pointer}.ch-motion-toggle>span{color:var(--color-accent,#ff744f)}@media(prefers-reduced-motion:reduce){.ch-motion-toggle{display:none}}";
-
-const SIGNAL_CSS = `
-.ch-title { text-wrap: balance; }
-.ch-section-mark { position: fixed; z-index: 3; inset-inline-end: 12px; top: 52vh; width: 20px; height: 20px; color: var(--color-accent, #ff744f); pointer-events: none; }
-.ch-section-mark svg { display: block; width: 100%; height: 100%; }
-.ch-section-mark path { stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
-.ch-signal-arc { stroke: var(--color-accent, #ff744f); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 1; }
-.ch-signal-phrase { display: inline-block; position: relative; max-width: 100%; }
-.ch-signal-rule { position: absolute; inset-inline: 0; bottom: -.09em; height: 2px; background: var(--color-accent, #ff744f); transform-origin: right center; }
-@media (max-width: 639px) { .ch-section-mark { inset-inline-end: 4px; width: 12px; height: 12px; } }
+const heroStyles = `
+  .ph-hero { position: relative; overflow: clip; background: var(--color-bg); color: var(--color-text); }
+  .ph-wrap { position: relative; width: min(100% - 96px, 1248px); margin-inline: auto; display: grid; align-content: center; min-height: calc(100svh - var(--site-header-height, 80px)); padding-block: 40px 14px; }
+  .ph-stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); align-items: center; }
+  .ph-copy { position: relative; z-index: 1; min-width: 0; }
+  .ph-light { position: absolute; inset: 0; pointer-events: none; transform-origin: 76% 50%; background: radial-gradient(ellipse at 78% 53%, color-mix(in srgb, var(--color-accent) 11%, transparent), transparent 49%); }
+  .ph-identity { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font: 11px/1.7 var(--font-mono); margin: 0 0 30px; }
+  .ph-identity span + span { color: var(--color-text-muted); }
+  .ph-identity span + span::before { content: ""; display: inline-block; width: 4px; height: 4px; border-radius: 50%; margin-inline-end: 12px; vertical-align: .18em; background: var(--color-accent); }
+  .ph-copy h1 { position: relative; width: min(117%, calc(100vw - 96px)); margin: 0 0 27px; font-size: clamp(44px, 5.55vw, 80px); line-height: 1.03; letter-spacing: -.066em; font-weight: 500; overflow-wrap: anywhere; }
+  .ph-copy h1 span { display: block; }
+  .ph-copy h1 span + span { color: var(--color-text-muted); }
+  .ph-intro { color: var(--color-text-muted); max-width: 44ch; font-size: 16px; line-height: 1.75; margin: 0; text-wrap: pretty; }
+  .ph-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .ph-actions a { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 50px; padding: 12px 19px; border: 1px solid var(--color-border); border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: 600; transition: background-color 160ms, border-color 160ms; }
+  .ph-actions .ph-primary { background: var(--color-accent); color: #17110d; border-color: transparent; }
+  .ph-secondary { color: var(--color-text); }
+  .ph-primary:hover { background: var(--color-accent-hover); }
+  .ph-secondary:hover { border-color: var(--color-text-muted); }
+  .ph-figure { position: relative; margin: 0 -38px 0 -13px; min-width: 0; }
+  .ph-machine { display: block; overflow: visible; width: 100%; height: auto; fill: none; scale: var(--portfolio-camera-scale, 1); translate: var(--portfolio-camera-x, 0px) var(--portfolio-camera-y, 0px); transform-origin: 54% 50%; }
+  .ph-grid { stroke: var(--color-border); stroke-width: 1; opacity: .82; }
+  .ph-plane { stroke: var(--color-text-muted); stroke-opacity: .57; stroke-width: 1.55; }
+  .ph-front { stroke: var(--color-accent); stroke-opacity: .84; }
+  .ph-depth { fill: var(--color-surface); stroke: var(--color-border); stroke-width: 2; }
+  .ph-layout, .ph-fine { stroke: var(--color-text-muted); stroke-opacity: .42; stroke-width: 1.45; }
+  .ph-fine { stroke-width: 2; stroke-opacity: .55; }
+  .ph-window { fill: color-mix(in srgb, var(--color-accent) 20%, var(--color-surface)); }
+  .ph-node { fill: var(--color-accent); stroke: var(--color-bg); stroke-width: 1.5; }
+  .ph-trace, .ph-connector { stroke: var(--color-accent); stroke-dasharray: 1; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .ph-connector { stroke-width: .85; opacity: .6; }
+  .ph-lead { stroke: var(--color-accent); stroke-width: 1; stroke-opacity: .75; }
+  .ph-label { fill: var(--color-text); font: 12px var(--font-mono); letter-spacing: .1em; }
+  .ph-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid var(--color-border); padding-top: 12px; margin-top: 12px; color: var(--color-text-muted); font: 11px/1.6 var(--font-mono); }
+  .ph-bottom a { margin-inline-start: auto; display: inline-flex; min-height: 44px; gap: 12px; align-items: center; color: inherit; text-decoration: none; }
+  .ph-bottom a:hover { color: var(--color-text); }
+  @media (max-width: 1023px) { .ph-wrap { width: calc(100% - 64px); } .ph-figure { margin-inline-end: -22px; } }
+  @media (max-width: 840px) {
+    .ph-stage { grid-template-columns: 1fr; }
+    .ph-copy h1 { width: 100%; font-size: clamp(42px, 9.5vw, 68px); }
+    .ph-figure { width: min(100%, 570px); justify-self: center; margin: 12px 0 -8px; }
+    .ph-light { background: radial-gradient(ellipse at 54% 67%, color-mix(in srgb, var(--color-accent) 11%, transparent), transparent 52%); }
+  }
+  @media (max-width: 639px) {
+    .ph-wrap { width: calc(100% - 40px); padding-top: 35px; }
+    .ph-identity { margin-bottom: 22px; font-size: 10px; }
+    .ph-copy h1 { margin-bottom: 18px; }
+    .ph-intro { font-size: 14px; }
+    .ph-actions { margin-top: 21px; gap: 8px; }
+    .ph-actions a { min-height: 46px; gap: 12px; padding-inline: 12px; }
+    .ph-label { font-size: 17px; }
+    .ph-bottom { margin-top: 0; font-size: 10px; }
+  }
 `;
