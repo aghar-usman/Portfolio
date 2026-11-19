@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import Loader from "@/components/loader";
 import Hero from "@/components/Hero";
 import Skills from "@/components/Skills";
 import Experience from "@/components/Experience";
@@ -7,6 +8,7 @@ import EducationAndExtras from "@/components/EducationAndExtras";
 import Footer from "@/components/Footer";
 import PageGuide from "@/components/PageGuide";
 import PortfolioMotion from "@/components/PortfolioMotion";
+import PortfolioFilm from "@/components/PortfolioFilm";
 
 import {
   profile,
@@ -31,6 +33,8 @@ export default function Home() {
         Skip to content
       </a>
 
+      <PortfolioFilm />
+      <Loader />
       <Navbar links={navLinks} />
 
       <main id="main-content" tabIndex={-1} className="min-h-screen">
@@ -40,8 +44,10 @@ export default function Home() {
 
         <Experience experience={experience} />
 
+        <div className="portfolio-film-gap" aria-hidden="true" />
         <Projects projects={projects} />
 
+        <div className="portfolio-film-gap" aria-hidden="true" />
         <EducationAndExtras
           education={education}
           certifications={certifications}
@@ -50,6 +56,7 @@ export default function Home() {
         />
       </main>
 
+      <div className="portfolio-film-gap" aria-hidden="true" />
       <Footer contact={contact} />
 
       <PageGuide links={navLinks} />
