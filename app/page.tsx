@@ -6,6 +6,7 @@ import Projects from "@/components/Projects";
 import EducationAndExtras from "@/components/EducationAndExtras";
 import Footer from "@/components/Footer";
 import PageGuide from "@/components/PageGuide";
+import PortfolioMotion from "@/components/PortfolioMotion";
 
 import {
   profile,
@@ -52,6 +53,7 @@ export default function Home() {
       <Footer contact={contact} />
 
       <PageGuide links={navLinks} />
+      <PortfolioMotion />
     </>
   );
 }
