@@ -72,7 +72,7 @@ export default function Footer({ contact }: FooterProps) {
           </nav>}
         </div>
 
-        <div className="af-bottom"><p>© {new Date().getFullYear()} Aghar Usman K T</p><a className="af-top" href="#about">Back to top <Arrow up /></a></div>
+        <div className="af-bottom"><p>© {new Date().getFullYear()} AUKT. </p><a className="af-top" href="#about">Back to top <Arrow up /></a></div>
       </div>
       <style>{FOOTER_CSS}</style>
     </footer>
