@@ -2,16 +2,17 @@
 @import "lenis/dist/lenis.css";
 @import "./guide.css";
 
-@theme {
-  --color-bg: #0c0d0c;
-  --color-surface: #151713;
-  --color-surface-2: #20231d;
-  --color-border: #30322d;
-  --color-accent: #ff744f;
-  --color-accent-hover: #ff8a6a;
-  --color-accent-dark: #b23d1f;
-  --color-text: #f2f0e9;
-  --color-text-muted: #a5a69d;
+@theme static {
+  --color-bg: #f7f4eb;
+  --color-surface: #f5f0e4;
+  --color-surface-2: #ebe6d9;
+  --color-border: #d1cabb;
+  --color-accent: #973b23;
+  --color-accent-hover: #80301e;
+  --color-accent-dark: #6c2819;
+  --color-on-accent: #f7f4eb;
+  --color-text: #22251f;
+  --color-text-muted: #56594e;
 }
 
 @theme inline {
@@ -29,7 +30,22 @@
   --acc-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --font-sans: var(--font-inter, "Inter"), "Segoe UI", Arial, sans-serif;
   --font-mono: var(--font-jetbrains-mono, "JetBrains Mono"), "SFMono-Regular", Consolas, monospace;
-  color-scheme: dark;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #191c17;
+    --color-surface: #232720;
+    --color-surface-2: #30362b;
+    --color-border: #484f42;
+    --color-accent: #f2a181;
+    --color-accent-hover: #ffb394;
+    --color-accent-dark: #dd896a;
+    --color-on-accent: #241711;
+    --color-text: #f4f0e6;
+    --color-text-muted: #bec2b4;
+  }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -46,7 +62,15 @@ button, input, textarea, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 img, video { max-width: 100%; height: auto; }
 svg { flex-shrink: 0; }
-::selection { background: var(--color-accent); color: #17110d; }
+::selection { background: var(--color-accent); color: var(--color-on-accent); }
+
+/* Match the label to the accent fill in both appearances. */
+body .ph-actions .ph-primary,
+body .ap-live,
+body .af-primary,
+body > a[href="#main-content"]:focus {
+  color: var(--color-on-accent);
+}
 :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
 [id] { scroll-margin-top: var(--site-header-height); }
 
