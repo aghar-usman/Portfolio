@@ -2,6 +2,7 @@
 
 import { stagger, useAnimate, useReducedMotion } from "motion/react";
 import Image from "next/image";
+import { guideCharacter } from "@/data";
 
 export interface Education {
   school: string;
@@ -33,13 +34,12 @@ export default function EducationAndExtras({ education, certifications, achievem
   return (
     <section ref={scope} id="education" data-portfolio-chapter="" className="ax-section" aria-labelledby="ax-title">
       <div className="ax-wrap">
-        <div className="ax-label" data-portfolio-beat="chapter"><span>04 /</span>Background<i aria-hidden="true" /><span data-portfolio-dock="" aria-hidden="true" /></div>
-        <div className="ax-heading-row"><h2 id="ax-title">Education<span>.</span></h2><p>Degree, coursework, and hackathon work.</p></div>
+        <div className="ax-heading-row"><h2 id="ax-title" aria-label={guideCharacter.educationTitle}><b data-guide-correction>Educati<span data-guide-ink-hole>o</span>n</b><b data-guide-typo aria-hidden="true">Educat<span>oi</span>n</b><span data-guide-ink-stop>.</span></h2></div>
 
         <div data-portfolio-beat="education" className={languages.length ? "ax-main" : "ax-main ax-main-single"}>
           <article className="ax-education" aria-labelledby="ax-school">
-            <div className="ax-meta"><span>Education</span><span>{education.period}</span></div>
-            <div className="ax-school-identity">{schoolLogo && <Image className="ax-school-logo" src={schoolLogo} alt={education.logoAlt ?? education.school + " emblem"} width={64} height={64} unoptimized />}<h3 id="ax-school">{education.school}</h3></div>
+            <div className="ax-meta"><span>{education.period}</span></div>
+            <div className="ax-school-identity">{schoolLogo && <Image className="ax-school-logo" src={schoolLogo} alt={education.logoAlt ?? ""} width={64} height={64} unoptimized />}<h3 id="ax-school">{education.school}</h3></div>
             <p className="ax-degree">{education.degree}</p>
             <p className="ax-location">{education.location}</p>
             {education.detail && <p className="ax-result"><span className="ax-result-mark" aria-hidden="true" />{education.detail}</p>}
@@ -49,10 +49,10 @@ export default function EducationAndExtras({ education, certifications, achievem
             }}><summary><span>View coursework ({education.coursework.length})</span><span className="ax-plus" aria-hidden="true" /></summary><ul>{education.coursework.map((course, index) => <li key={course + index}>{course}</li>)}</ul></details>}
           </article>
 
-          {languages.length > 0 && <aside className="ax-languages" aria-labelledby="ax-languages-title"><div className="ax-aside-heading"><h3 id="ax-languages-title">Languages</h3><span aria-hidden="true">↳</span></div><dl>{languages.map((language, index) => <div key={language.name + index}><dt>{language.name}</dt><dd>{language.level}</dd></div>)}</dl></aside>}
+          {languages.length > 0 && <aside className="ax-languages" aria-labelledby="ax-languages-title"><div className="ax-aside-heading"><h3 id="ax-languages-title">Spoken languages</h3></div><dl>{languages.map((language, index) => <div key={language.name + index}><dt>{language.name}</dt><dd>{language.level}</dd></div>)}</dl></aside>}
         </div>
 
-        {achievements.length > 0 && <div className="ax-achievements" aria-labelledby="ax-achievements-title"><div className="ax-block-title"><h3 id="ax-achievements-title">Achievements</h3></div><ol>{achievements.map((achievement, index) => <li key={index}><span className="ax-achievement-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><p>{achievement}</p></li>)}</ol></div>}
+        {achievements.length > 0 && <div className="ax-achievements" aria-labelledby="ax-achievements-title"><div className="ax-block-title"><h3 id="ax-achievements-title">Achievements</h3></div><ul role="list">{achievements.map((achievement, index) => <li key={index}><p>{achievement}</p></li>)}</ul></div>}
 
         {certifications.length > 0 && <div className="ax-certifications" aria-labelledby="ax-certifications-title"><div className="ax-block-title"><span className="ax-small-index" aria-hidden="true">↳</span><h3 id="ax-certifications-title">Certifications</h3></div><ul className="ax-certs-list">{certifications.map((certification, index) => {
           const content = <>{certification.badgeUrl && <Image className="ax-badge" src={certification.badgeUrl} alt="" width={48} height={48} unoptimized loading="lazy" />}<span className="ax-cert-copy"><span className="ax-cert-name">{certification.name}</span><span className="ax-issuer">{certification.issuer}</span></span>{certification.credentialUrl && <Arrow />}</>;

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import RequestDemo from "./RequestDemo";
 import { stagger, useAnimate, useReducedMotion } from "motion/react";
+import { portfolioCopy } from "@/data";
 
 export interface ExperienceEntry {
   role: string;
@@ -13,141 +14,65 @@ export interface ExperienceEntry {
 
 interface ExperienceProps { experience: ExperienceEntry[] }
 
-const requestStages = [
-  "See how a plain-English question becomes a database query.",
-  "Request received.",
-  "The service builds a read-only SQL query.",
-  "The sample query is ready.",
-];
-const sampleSql = "SELECT order_id, customer_name\nFROM orders\nWHERE status = 'pending';";
-
-function RequestDemo() {
-  const [stage, setStage] = useState(0);
-  const timers = useRef<number[]>([]);
-  useEffect(() => () => timers.current.forEach((timer) => window.clearTimeout(timer)), []);
-
-  function runRequest() {
-    timers.current.forEach((timer) => window.clearTimeout(timer));
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setStage(3);
-      return;
-    }
-    setStage(1);
-    timers.current = [
-      window.setTimeout(() => setStage(2), 520),
-      window.setTimeout(() => setStage(3), 1180),
-    ];
-  }
-
-  const offset = [200, 185, 97, 0][stage];
-
-  return (
-    <div className="ae-flow ae-request-demo" data-request-stage={stage} style={{ "--ae-flow-offset": offset } as CSSProperties}>
-      <div className="ae-flow-top">
-        <div>
-          <span className="ae-example-label">Text-to-SQL example</span>
-          <p className="ae-question">Which orders are pending?</p>
-        </div>
-        <button type="button" className="ae-run" onClick={runRequest}>{stage === 3 ? "Run again" : "Run a request"} <span aria-hidden="true">↗</span></button>
-      </div>
-      <svg viewBox="0 0 960 90" className="ae-flow-diagram" aria-hidden="true">
-        <path d="M85 30H875" className="ae-flow-track" />
-        <path d="M85 30H875" pathLength="200" className="ae-flow-trace" />
-        {[{ x: 85, text: "Request" }, { x: 480, text: "Service" }, { x: 875, text: "Data" }].map((node, index) => (
-          <g key={node.text} data-node-state={stage === index + 1 ? "active" : stage > index + 1 ? "complete" : "pending"}>
-            <circle cx={node.x} cy="30" r="8" className="ae-flow-node" />
-            <circle cx={node.x} cy="30" r="3" className="ae-flow-core" />
-            <text x={node.x} y="72" textAnchor="middle" className="ae-flow-text">{node.text}</text>
-          </g>
-        ))}
-      </svg>
-      <div className="ae-query">
-        <p role="status">{requestStages[stage]}</p>
-        {stage === 3 && <pre><code>{sampleSql}</code></pre>}
-      </div>
-    </div>
-  );
-}
-
 export default function Experience({ experience }: ExperienceProps) {
   const [scope, animate] = useAnimate<HTMLElement>();
   const reduced = useReducedMotion();
+
   return (
     <section ref={scope} id="experience" data-portfolio-chapter="" className="ae-section" aria-labelledby="ae-title">
       <div className="ae-wrap">
-        <div className="ae-label" data-portfolio-beat="chapter"><span>02 /</span>Experience<i aria-hidden="true" /><span data-portfolio-dock="" aria-hidden="true" /></div>
         <div className="ae-heading-row" data-portfolio-beat="experience-heading">
-          <h2 id="ae-title">Experience<span>.</span></h2>
-          <p>APIs, automation, and data work.</p>
-          <svg className="ae-layer-arrival" viewBox="0 0 520 145" fill="none" aria-hidden="true"><path pathLength="1" d="M0 84l56-24h135l48 27h105l48-31h120M345 87l47 30h120M392 56V25h120" /><circle cx="239" cy="87" r="4" /><circle cx="392" cy="56" r="4" /><circle cx="392" cy="117" r="4" /></svg>
+          <h2 id="ae-title">{portfolioCopy.experience.heading}<span aria-hidden="true">.</span></h2>
         </div>
-
-        {experience.length > 0 && <RequestDemo />}
         <div className="ae-entries">
           {experience.map((entry, index) => (
             <article className="ae-entry" key={entry.company + entry.period + index} aria-labelledby={"ae-company-" + index}>
               <div className="ae-meta">
-                <div className="ae-period"><span className="ae-timeline-dot" aria-hidden="true" />{entry.period}</div>
                 <h3 id={"ae-company-" + index}>{entry.company}</h3>
                 <p className="ae-role">{entry.role}</p>
+                <p className="ae-period">{entry.period}</p>
                 <p className="ae-location">{entry.location}</p>
-                <span className="ae-entry-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
               </div>
-
               {entry.points.length > 0 && <div className="ae-work">
-                <p className="ae-work-label">Contributions</p>
-                <ol className="ae-points">
-                  {entry.points.slice(0, 2).map((point, pointIndex) => <li className={pointIndex === 0 ? "ae-point ae-point-lead" : "ae-point"} key={pointIndex}>
-                    <span className="ae-point-index" aria-hidden="true">{String(pointIndex + 1).padStart(2, "0")}</span>
-                    <p>{point}</p>
-                  </li>)}
-                </ol>
-                {entry.points.length > 2 && <details className="ae-more" onToggle={(event) => {
-                  if (!event.currentTarget.open || reduced || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+                <ul className="ae-points" role="list">
+                  {entry.points.slice(0, 2).map((point, pointIndex) => <li className="ae-point" key={pointIndex}>{point}</li>)}
+                </ul>
+                {entry.points.length > 2 && <details className="ae-more section-disclosure" onToggle={(event) => {
+                  if (!event.currentTarget.open || reduced || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
                   animate(event.currentTarget.querySelectorAll(".ae-point"), { opacity: [.65, 1], y: [4, 0] }, { duration: .24, delay: stagger(.035), ease: [.22, 1, .36, 1] });
-                }}><summary><span>More contributions ({entry.points.length - 2})</span><span className="ae-plus" aria-hidden="true" /></summary><ol className="ae-points" start={3}>{entry.points.slice(2).map((point, index) => <li className="ae-point" key={index}><span className="ae-point-index" aria-hidden="true">{String(index + 3).padStart(2, "0")}</span><p>{point}</p></li>)}</ol></details>}
+                }}>
+                  <summary>
+                    <span>{portfolioCopy.experience.more}</span>
+                    <span className="section-plus" aria-hidden="true" />
+                  </summary>
+                  <ul className="ae-points" role="list">{entry.points.slice(2).map((point, index) => <li className="ae-point" key={index}>{point}</li>)}</ul>
+                </details>}
               </div>}
             </article>
           ))}
-          {experience.length === 0 && <p className="ae-empty">See my projects for examples of my work.</p>}
+          {experience.length === 0 && <p className="ae-empty">{portfolioCopy.experience.empty}</p>}
         </div>
-        <div className="ae-footer"><span>See what I’ve built</span><a href="#projects">View projects<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></a></div>
+        {experience.length > 0 && <RequestDemo />}
       </div>
-      <style>{EXPERIENCE_CSS + DEMO_CSS}</style>
+      <style>{EXPERIENCE_CSS}</style>
     </section>
   );
 }
 
-const EXPERIENCE_CSS = "\n.ae-section{box-sizing:border-box;position:relative;background:var(--color-surface,#151713);color:var(--color-text,#f2f0e9);font-family:var(--font-sans,Arial,sans-serif);scroll-margin-top:var(--site-header-height,80px);padding-block:72px 32px}.ae-section *{box-sizing:border-box}.ae-wrap{width:min(100% - 96px,1248px);margin-inline:auto}.ae-label{display:flex;align-items:center;gap:12px;font-family:var(--font-mono,monospace);font-size:12px;line-height:1.6;color:var(--color-text-muted,#a5a69d);margin-bottom:32px}.ae-label>span{color:var(--color-accent,#ff744f)}.ae-label i{display:block;width:64px;height:1px;margin-left:6px;background:var(--color-border,#30322d)}.ae-heading-row{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;padding-bottom:48px}.ae-heading-row h2{font-size:clamp(40px,4.4vw,62px);font-weight:500;letter-spacing:-.055em;line-height:1.08;margin:0;text-wrap:balance}.ae-heading-row h2>span{color:var(--color-text-muted,#a5a69d)}.ae-heading-row>p{font-size:15px;line-height:1.75;color:var(--color-text-muted,#a5a69d);margin:0 0 4px;max-width:32ch}.ae-entry{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);column-gap:64px;padding-block:36px 48px;border-top:1px solid var(--color-border,#30322d)}.ae-meta{position:relative;min-width:0;padding-left:22px;border-left:1px solid var(--color-border,#30322d)}.ae-period{position:relative;display:flex;align-items:center;font-family:var(--font-mono,monospace);font-size:11px;line-height:1.7;color:var(--color-text-muted,#a5a69d);margin-bottom:22px}.ae-timeline-dot{position:absolute;left:-26px;top:6px;width:7px;height:7px;background:var(--color-accent,#ff744f);border-radius:50%;box-shadow:0 0 0 5px var(--color-surface,#151713)}.ae-meta h3{font-size:clamp(28px,3vw,40px);line-height:1.12;font-weight:500;letter-spacing:-.05em;overflow-wrap:anywhere;margin:0 0 14px}.ae-role{font-size:15px;line-height:1.6;color:var(--color-accent,#ff744f);margin:0 0 6px}.ae-location{font-family:var(--font-mono,monospace);font-size:11px;line-height:1.7;color:var(--color-text-muted,#a5a69d);margin:0}.ae-entry-number{display:block;margin-top:36px;font-family:var(--font-mono,monospace);font-size:12px;color:var(--color-text-muted,#a5a69d)}.ae-work{min-width:0}.ae-work-label{font-family:var(--font-mono,monospace);font-size:11px;line-height:1.7;color:var(--color-text-muted,#a5a69d);margin:0 0 22px}.ae-points{list-style:none;padding:0;margin:0}.ae-point{display:grid;grid-template-columns:22px minmax(0,1fr);gap:20px;padding-block:22px;border-top:1px solid var(--color-border,#30322d)}.ae-point:first-child{padding-top:0;border-top:0}.ae-point:last-child{padding-bottom:0}.ae-point-index{padding-top:5px;font-family:var(--font-mono,monospace);font-size:10px;line-height:1.7;color:var(--color-accent,#ff744f)}.ae-point p{margin:0;font-size:15px;line-height:1.8;color:var(--color-text-muted,#a5a69d);overflow-wrap:anywhere;text-wrap:pretty}.ae-point-lead p{font-size:18px;line-height:1.65;letter-spacing:-.015em;color:var(--color-text,#f2f0e9)}.ae-footer{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-top:18px;border-top:1px solid var(--color-border,#30322d)}.ae-footer>span{font-family:var(--font-mono,monospace);font-size:11px;line-height:1.7;color:var(--color-text-muted,#a5a69d)}.ae-footer a{display:inline-flex;align-items:center;gap:16px;min-height:44px;color:var(--color-text,#f2f0e9);font-size:12px;text-decoration:underline;text-decoration-color:var(--color-border,#30322d);text-underline-offset:5px;transition:color 150ms,text-decoration-color 150ms}.ae-footer svg{transition:transform 150ms}.ae-footer a:focus-visible{outline:2px solid var(--color-accent,#ff744f);outline-offset:5px}.ae-empty{font-size:15px;line-height:1.7;color:var(--color-text-muted,#a5a69d);padding-bottom:32px;margin:0}\n@media(hover:hover) and (pointer:fine){.ae-footer a:hover{color:var(--color-accent,#ff744f);text-decoration-color:currentColor}.ae-footer a:hover svg{transform:translateX(3px)}}\n@media(max-width:1023px){.ae-wrap{width:calc(100% - 64px)}.ae-section{padding-top:56px}.ae-heading-row{gap:32px;padding-bottom:40px}.ae-heading-row h2{font-size:48px}.ae-heading-row>p{font-size:14px;max-width:26ch}.ae-desktop-break{display:none}.ae-entry{column-gap:32px;grid-template-columns:minmax(0,.85fr) minmax(0,1.5fr)}.ae-point{gap:14px}.ae-point-lead p{font-size:17px}}\n@media(max-width:639px){.ae-wrap{width:calc(100% - 40px)}.ae-section{padding-block:40px 24px}.ae-label{margin-bottom:24px;font-size:11px}.ae-heading-row{flex-direction:column;align-items:flex-start;gap:20px;padding-bottom:32px}.ae-heading-row h2{font-size:42px}.ae-heading-row>p{font-size:14px;max-width:32ch}.ae-entry{grid-template-columns:minmax(0,1fr);gap:32px;padding-block:28px 36px}.ae-meta{padding-left:20px}.ae-timeline-dot{left:-24px}.ae-period{margin-bottom:16px}.ae-meta h3{font-size:32px;margin-bottom:10px}.ae-entry-number{display:none}.ae-work-label{margin-bottom:20px}.ae-point{grid-template-columns:18px minmax(0,1fr);gap:12px;padding-block:20px}.ae-point p{font-size:14px;line-height:1.8}.ae-point-lead p{font-size:17px;line-height:1.7}.ae-footer{gap:16px}.ae-footer>span{font-size:10px}}\n@media(prefers-reduced-motion:reduce){.ae-footer a,.ae-footer svg{transition:none}.ae-footer a:hover svg{transform:none}}\n\n.ae-heading-row h2>span{color:var(--color-accent,#ff744f)}.ae-heading-row{align-items:baseline}.ae-more{margin-top:22px;border-top:1px solid var(--color-border,#30322d)}.ae-more summary{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:52px;font-family:var(--font-mono,monospace);font-size:11px;line-height:1.7;color:var(--color-text-muted,#a5a69d);cursor:pointer;list-style:none;transition:color 150ms}.ae-more summary::-webkit-details-marker{display:none}.ae-more summary::marker{content:\"\"}.ae-more>.ae-points{padding-top:8px}.ae-plus{width:10px;height:10px;position:relative;color:var(--color-accent,#ff744f);flex:none}.ae-plus:before,.ae-plus:after{content:\"\";position:absolute;background:currentColor}.ae-plus:before{width:10px;height:1px;left:0;top:4px}.ae-plus:after{width:1px;height:10px;left:4px;top:0;transform:scaleY(1);transition:transform 150ms}.ae-more[open] .ae-plus:after{transform:scaleY(0)}.ae-more summary:focus-visible{outline:2px solid var(--color-accent,#ff744f);outline-offset:4px}@media(hover:hover) and (pointer:fine){.ae-more summary:hover{color:var(--color-text,#f2f0e9)}}@media(max-width:639px){.ae-footer{flex-direction:column;align-items:flex-start;gap:6px;padding-right:56px}}@media(prefers-reduced-motion:reduce){.ae-more *,.ae-more *:after{transition:none!important}}\n\n.ae-flow{padding:18px 24px 12px;border:1px solid var(--color-border,#30322d);border-radius:6px;background:var(--color-bg,#0c0d0c);margin-bottom:30px}.ae-flow-top{display:flex;justify-content:space-between;align-items:center;gap:20px;font-family:var(--font-mono,monospace);font-size:10px;line-height:1.7;color:var(--color-text-muted,#a5a69d)}.ae-flow-top button{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:6px 0;background:none;border:0;color:inherit;font:inherit;cursor:pointer}.ae-flow-top button>span{color:var(--color-accent,#ff744f)}.ae-flow-top button:focus-visible{outline:2px solid var(--color-accent,#ff744f);outline-offset:4px}.ae-flow-diagram{display:block;width:100%;height:auto;max-height:112px;overflow:visible}.ae-flow-track{fill:none;stroke:var(--color-border,#30322d);stroke-width:1.5}.ae-flow-trace{fill:none;stroke:var(--color-accent,#ff744f);stroke-width:2;stroke-dasharray:200;stroke-linecap:round;opacity:.72}.ae-flow-node{fill:var(--color-bg,#0c0d0c);stroke:var(--color-border,#30322d);stroke-width:1.5}.ae-flow-core{fill:var(--color-accent,#ff744f)}.ae-flow-text{font-family:var(--font-mono,monospace);font-size:13px;fill:var(--color-text-muted,#a5a69d)}@media(max-width:639px){.ae-flow{padding:12px 16px 16px}.ae-flow-diagram{height:76px}.ae-flow-text{font-size:28px}.ae-flow-top{font-size:9px}}@media(prefers-reduced-motion:reduce){.ae-flow-trace{animation:none;stroke-dasharray:none;opacity:.35}.ae-flow-top button{display:none}}\n";
-
-const DEMO_CSS = `
-.ae-heading-row { position: relative; }
-.ae-layer-arrival { display: none; }
-@media (min-width: 960px) {
-  .ae-layer-arrival { display: block; position: absolute; inset: auto 0 calc(100% - 12px) auto; width: min(33%, 375px); color: var(--color-accent); opacity: .42; pointer-events: none; }
-  .ae-layer-arrival path { stroke: currentColor; stroke-width: 1.4; stroke-dasharray: 1; }
-  .ae-layer-arrival circle { fill: currentColor; }
-  .ae-heading-row.portfolio-motion-entered .ae-layer-arrival path { animation: ae-route-arrival 1050ms cubic-bezier(.22, 1, .36, 1) both; }
-  @keyframes ae-route-arrival { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-}
-
-.ae-request-demo { padding: clamp(18px, 3vw, 38px); }
-.ae-example-label { color: var(--color-text-muted); }
-.ae-question { margin: 8px 0 0; font: 500 clamp(18px, 3vw, 28px)/1.28 var(--font-sans); letter-spacing: -.035em; color: var(--color-text); }
-.ae-flow-top .ae-run { display: inline-flex; padding: 8px 13px; border: 1px solid var(--color-border); border-radius: 4px; color: var(--color-text); font-size: 11px; flex: none; }
-.ae-run:hover { border-color: var(--color-accent); }
-.ae-request-demo .ae-flow-diagram { margin-top: 16px; }
-.ae-request-demo .ae-flow-trace { stroke-dasharray: 200; stroke-dashoffset: var(--ae-flow-offset); opacity: 1; transition: stroke-dashoffset 480ms cubic-bezier(.22, 1, .36, 1); }
-.ae-request-demo .ae-flow-core { opacity: .24; transition: opacity 200ms; }
-.ae-request-demo [data-node-state="active"] .ae-flow-node { stroke: var(--color-accent); stroke-width: 2; }
-.ae-request-demo [data-node-state="active"] .ae-flow-text { fill: var(--color-text); }
-.ae-request-demo [data-node-state="active"] .ae-flow-core,
-.ae-request-demo [data-node-state="complete"] .ae-flow-core { opacity: 1; }
-.ae-query { margin-top: 12px; padding-top: 14px; border-top: 1px solid var(--color-border); min-height: 110px; }
-.ae-query p { margin: 0; color: var(--color-text-muted); font-size: 12px; }
-.ae-query pre { color: var(--color-text); font: 12px/1.65 var(--font-mono); margin: 8px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-@media (max-width: 639px) {
-  .ae-request-demo .ae-flow-top { flex-wrap: wrap; gap: 12px; }
-  .ae-request-demo .ae-flow-diagram { margin-top: 9px; }
-}
+const EXPERIENCE_CSS = `
+  .ae-section { background: var(--color-surface); padding-block: var(--section-space); }
+  .ae-entry { display: grid; grid-template-columns: minmax(118px, .4fr) minmax(0, 1fr); gap: 28px; border-top: 1px solid var(--color-border); padding-block: 22px 30px; }
+  .ae-meta h3 { margin: 0 0 6px; font-size: clamp(23px, 3vw, 30px); font-weight: 550; letter-spacing: -.04em; line-height: 1.15; }
+  .ae-role { margin: 0 0 12px; color: var(--color-accent); font-size: 14px; }
+  .ae-period, .ae-location { margin: 0 0 3px; color: var(--color-text-muted); font: 11px/1.5 var(--font-mono); }
+  .ae-work { min-width: 0; }
+  .ae-points { display: grid; gap: 12px; list-style: none; margin: 0; padding: 0; }
+  .ae-point { color: var(--color-text-muted); font-size: 15px; line-height: 1.65; text-wrap: pretty; }
+  .ae-work > ul > li:first-child { color: var(--color-text); }
+  .ae-more { margin-block-start: 6px; }
+  .ae-more .ae-points { margin-block: 4px 8px; }
+  .ae-empty { color: var(--color-text-muted); }
+  @media (max-width: 640px) {
+    .ae-entry { grid-template-columns: minmax(0,1fr); gap: 16px; padding-block: 18px 24px; }
+  }
 `;

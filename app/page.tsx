@@ -1,5 +1,4 @@
 import Navbar from "@/components/Navbar";
-import Loader from "@/components/loader";
 import Hero from "@/components/Hero";
 import Skills from "@/components/Skills";
 import Experience from "@/components/Experience";
@@ -8,7 +7,8 @@ import EducationAndExtras from "@/components/EducationAndExtras";
 import Footer from "@/components/Footer";
 import PageGuide from "@/components/PageGuide";
 import PortfolioMotion from "@/components/PortfolioMotion";
-import PortfolioFilm from "@/components/PortfolioFilm";
+import LayerStack from "@/components/LayerStack";
+import StompSkip from "@/components/StompSkip";
 
 import {
   profile,
@@ -26,6 +26,7 @@ import {
 export default function Home() {
   return (
     <>
+      <StompSkip />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded focus:bg-[var(--color-accent)] focus:px-4 focus:py-3 focus:text-black"
@@ -33,33 +34,30 @@ export default function Home() {
         Skip to content
       </a>
 
-      <PortfolioFilm />
-      <Loader />
       <Navbar links={navLinks} />
 
-      <main id="main-content" tabIndex={-1} className="min-h-screen">
+      <main id="main-content" tabIndex={-1} className="stack-story">
         <Hero profile={profile} contact={contact} />
+        <LayerStack />
+        <div className="stack-content">
+          <Skills skills={skillGroups} />
 
-        <Skills skills={skillGroups} />
+          <Experience experience={experience} />
 
-        <Experience experience={experience} />
+          <Projects projects={projects} />
 
-        <div className="portfolio-film-gap" aria-hidden="true" />
-        <Projects projects={projects} />
-
-        <div className="portfolio-film-gap" aria-hidden="true" />
-        <EducationAndExtras
-          education={education}
-          certifications={certifications}
-          achievements={achievements}
-          languages={languages}
-        />
+          <EducationAndExtras
+            education={education}
+            certifications={certifications}
+            achievements={achievements}
+            languages={languages}
+          />
+        </div>
+        <Footer contact={contact} />
       </main>
 
-      <div className="portfolio-film-gap" aria-hidden="true" />
-      <Footer contact={contact} />
-
-      <PageGuide links={navLinks} />
+      <PageGuide links={navLinks} characterTrigger />
+      <div className="guide-story-ink" aria-hidden="true"><i /><b /></div>
       <PortfolioMotion />
     </>
   );

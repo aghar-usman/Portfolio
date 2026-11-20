@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useAnimate, useReducedMotion } from "motion/react";
+import { layerStory, portfolioCopy } from "@/data";
 
 export interface ContactInfo { email: string; linkedin: string; github: string; resume: string }
 interface FooterProps { contact: ContactInfo }
@@ -47,17 +48,16 @@ export default function Footer({ contact }: FooterProps) {
   }
 
   return (
-    <footer ref={scope} id="contact" data-portfolio-chapter="" className="af-footer" aria-labelledby="af-title">
+    <footer ref={scope} id="contact" data-portfolio-chapter="" className="af-footer" role="contentinfo" aria-labelledby="af-title">
       <div className="af-wrap">
-        <div className="af-label" data-portfolio-beat="chapter"><span>05 /</span>Contact<i aria-hidden="true" /><span data-portfolio-dock="" aria-hidden="true" /></div>
         <div className="af-main">
           <div className="af-invitation" data-portfolio-beat="contact">
-            <h2 id="af-title">Have a <span>project</span> in mind?</h2>
-            <p className="af-intro">For a website project or full-stack role, send me a short email about what you’re working on.</p>
+            <p className="layer-contact-status">{layerStory.steps.contact.status}</p>
+            <h2 id="af-title">{portfolioCopy.contact.heading}<span aria-hidden="true">.</span></h2>
+            <p className="af-intro">{portfolioCopy.contact.intro}</p>
             {email && <>
               <a className="af-email" href={emailHref}>{email}</a>
               <div className="af-actions">
-                <a className="af-button af-primary" href={emailHref}>Email me <Arrow /></a>
                 <button className="af-button af-copy" type="button" onClick={copyEmail} disabled={copyState === "copying"}>{copyState === "copied" ? "Copied" : copyState === "copying" ? "Copying…" : "Copy email"}<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">{copyState === "copied" ? <path d="m5 12 4 4L19 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /> : <><rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" /><path d="M15 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3" stroke="currentColor" strokeWidth="1.5" /></>}</svg></button>
               </div>
               <p className="af-copy-status" role="status" aria-live="polite" aria-atomic="true">{copyState === "copied" ? "Email address copied." : copyState === "error" ? "Couldn’t copy. You can select the email address above." : ""}</p>
@@ -65,7 +65,6 @@ export default function Footer({ contact }: FooterProps) {
           </div>
 
           {(contact.github || contact.linkedin || contact.resume) && <nav className="af-links" aria-label="Profiles and résumé">
-            <p className="af-links-label">Profiles and résumé</p>
             {contact.github && <a href={contact.github} target="_blank" rel="noopener noreferrer" aria-label="View my GitHub profile (opens in a new tab)"><span>GitHub</span><Arrow /></a>}
             {contact.linkedin && <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" aria-label="View my LinkedIn profile (opens in a new tab)"><span>LinkedIn</span><Arrow /></a>}
             {contact.resume && <a href={contact.resume} target="_blank" rel="noopener noreferrer" aria-label="View my résumé (opens in a new tab)"><span>Résumé</span><Arrow /></a>}

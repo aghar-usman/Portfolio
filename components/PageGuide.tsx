@@ -1,20 +1,30 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { guideCharacter } from "@/data";
 interface GuideLink { href: string; label: string }
 
-export default function PageGuide({ links }: { links: GuideLink[] }) {
+export default function PageGuide({ links, characterTrigger = false }: { links: GuideLink[]; characterTrigger?: boolean }) {
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const latestProgress = useRef(0);
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
+  const character = useRef<HTMLButtonElement | null>(null);
   const ring = useRef<SVGCircleElement>(null);
   const targets = links.filter((link) => link.href.startsWith("#") && link.href.length > 1);
   const key = targets.map((link) => link.href).join("|");
 
   useEffect(() => {
+    if (characterTrigger) {
+      const toggle = (event: Event) => {
+        character.current = (event as CustomEvent<HTMLButtonElement>).detail;
+        setOpen(value => !value);
+      };
+      window.addEventListener(guideCharacter.navigationEvent, toggle);
+      return () => window.removeEventListener(guideCharacter.navigationEvent, toggle);
+    }
     const blockers = [document.getElementById("about"), document.getElementById("contact")].filter((element): element is HTMLElement => element !== null);
     if (!blockers.length) { setVisible(true); return; }
     const intersecting = new Set<Element>();
@@ -26,12 +36,12 @@ export default function PageGuide({ links }: { links: GuideLink[] }) {
     }, { threshold: [0, 0.001] });
     blockers.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
-  }, []);
+  }, [characterTrigger]);
 
   useEffect(() => {
-    if (!visible) setOpen(false);
+    if (!visible && !characterTrigger) setOpen(false);
     if (visible && ring.current) ring.current.style.strokeDashoffset = String(100 * (1 - latestProgress.current));
-  }, [visible]);
+  }, [visible, characterTrigger]);
 
   useEffect(() => {
     let frame = 0;
@@ -74,11 +84,17 @@ export default function PageGuide({ links }: { links: GuideLink[] }) {
 
   useEffect(() => {
     if (!open) return;
-    const outside = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
-    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") { setOpen(false); trigger.current?.focus(); } };
+    const actor = character.current;
+    actor?.setAttribute("aria-expanded", "true");
+    root.current?.querySelector<HTMLElement>("nav button[aria-current], nav button")?.focus({ preventScroll: true });
+    const outside = (event: PointerEvent) => {
+      if (!(event.target instanceof Node)) return;
+      if (!root.current?.contains(event.target) && !actor?.contains(event.target)) setOpen(false);
+    };
+    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") { setOpen(false); (actor ?? trigger.current)?.focus(); } };
     document.addEventListener("pointerdown", outside);
     document.addEventListener("keydown", escape);
-    return () => { document.removeEventListener("pointerdown", outside); document.removeEventListener("keydown", escape); };
+    return () => { actor?.setAttribute("aria-expanded", "false"); document.removeEventListener("pointerdown", outside); document.removeEventListener("keydown", escape); };
   }, [open]);
 
   function navigate(index: number) {
@@ -98,9 +114,9 @@ export default function PageGuide({ links }: { links: GuideLink[] }) {
     setOpen(false);
   }
 
-  if (!targets.length || !visible) return null;
+  if (!targets.length || (!visible && !characterTrigger)) return null;
   return (
-    <div ref={root} className="pg-root">
+    <div ref={root} className={characterTrigger ? "pg-root pg-from-character" : "pg-root"}>
       {open && <div id="page-guide-panel" className="pg-panel" role="region" aria-label="Page guide">
         <div className="pg-heading"><span>Page guide</span><span>{String(active + 1).padStart(2, "0")} / {String(targets.length).padStart(2, "0")}</span></div>
         <nav aria-label="Jump to section">{targets.map((link, index) => <button type="button" key={link.href} onClick={() => navigate(index)} aria-current={active === index ? "location" : undefined}><span className="pg-number">{String(index + 1).padStart(2, "0")}</span><span>{link.label}</span><span className="pg-marker" aria-hidden="true">{active === index ? "●" : "↗"}</span></button>)}</nav>
