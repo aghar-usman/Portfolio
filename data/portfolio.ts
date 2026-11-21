@@ -1,5 +1,8 @@
 media: {
   introVideoSrc: "/media/intro-wave.mp4",
-  zoomAt: 4.2, // set to the exact second he finishes waving & starts zooming
-  characterSrc: "/images/character-hero.png",
+  zoomAt: 4.2,
+  characterSrc: "/images/character-base.png",
+  blinkSrc: "/images/character-blink.png",
+  lookSrc: "/images/character-look.png",
+  armSrc: "/images/character-arm.png",
 },
