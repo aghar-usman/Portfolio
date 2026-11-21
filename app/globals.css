@@ -2,16 +2,32 @@
 @import "lenis/dist/lenis.css";
 @import "./guide.css";
 
+/* ==========================================================================
+   1. Theme Tokens (Light: Coral + Cream default | Dark: Warm Charcoal)
+   ========================================================================== */
 @theme {
-  --color-bg: #0c0d0c;
-  --color-surface: #151713;
-  --color-surface-2: #20231d;
-  --color-border: #30322d;
-  --color-accent: #ff744f;
-  --color-accent-hover: #ff8a6a;
-  --color-accent-dark: #b23d1f;
-  --color-text: #f2f0e9;
-  --color-text-muted: #a5a69d;
+  --color-bg: #FBF6F2;
+  --color-surface: #FFFFFF;
+  --color-surface-2: #F3EAE3;
+  --color-border: #E8DDD5;
+  --color-border-strong: #D6C7BD;
+
+  --color-accent: #FF754F;
+  --color-accent-hover: #E55A34;
+  --color-accent-text: #D64924;
+  --color-accent-dark: #B23D1F;
+  --color-accent-soft: #FFE4D9;
+
+  --color-brand-band: #FF754F;
+  --color-brand-ink: #1C1512;
+
+  --color-text: #241B18;
+  --color-text-body: #524641;
+  --color-text-muted: #7A6C66;
+
+  --color-btn-bg: #241B18;
+  --color-btn-hover: #3B2E2A;
+  --color-btn-text: #FBF6F2;
 }
 
 @theme inline {
@@ -27,61 +43,244 @@
   --acc-expand: 250ms;
   --acc-collapse: 250ms;
   --acc-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --font-sans: var(--font-inter, "Inter"), "Segoe UI", Arial, sans-serif;
-  --font-mono: var(--font-jetbrains-mono, "JetBrains Mono"), "SFMono-Regular", Consolas, monospace;
+  --motion-fast: 160ms;
+  --motion-base: 240ms;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"],
+.dark {
+  --color-bg: #12100E;
+  --color-surface: #1C1917;
+  --color-surface-2: #26221F;
+  --color-border: #2E2926;
+  --color-border-strong: #3D3632;
+
+  --color-accent: #FF754F;
+  --color-accent-hover: #FF8968;
+  --color-accent-text: #FF754F;
+  --color-accent-dark: #D64924;
+  --color-accent-soft: #2E1E19;
+
+  --color-brand-band: #FF754F;
+  --color-brand-ink: #12100E;
+
+  --color-text: #F8F3EF;
+  --color-text-body: #C7BEB8;
+  --color-text-muted: #8F857E;
+
+  --color-btn-bg: #FF754F;
+  --color-btn-hover: #FF8968;
+  --color-btn-text: #12100E;
+
   color-scheme: dark;
 }
 
+/* ==========================================================================
+   2. Base & Accessibility
+   ========================================================================== */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scrollbar-gutter: stable; }
+
+html { scrollbar-gutter: stable; }
+html:not(.lenis) { scroll-behavior: smooth; }
+
 body {
   margin: 0;
+  overflow-x: clip;
   background: var(--color-bg);
-  color: var(--color-text);
+  color: var(--color-text-body);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+h1, h2, h3, h4, h5, h6 { color: var(--color-text); }
 button, input, textarea, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
-img, video { max-width: 100%; height: auto; }
+img, video { display: block; max-width: 100%; height: auto; }
 svg { flex-shrink: 0; }
-::selection { background: var(--color-accent); color: #17110d; }
-:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
-[id] { scroll-margin-top: var(--site-header-height); }
 
-.stack-story { --stack-dock-height: 124px; --hero-stage-height: var(--stack-dock-height); }
+::selection {
+  background: var(--color-accent);
+  color: var(--color-brand-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-text);
+  outline-offset: 4px;
+}
+
+[id] { scroll-margin-top: calc(var(--site-header-height) + 16px); }
+
+/* ==========================================================================
+   3. Taste-Skill Surfaces & Micro-Interactions
+   ========================================================================== */
+/* Single contrasting coral section per page */
+.brand-band {
+  background: var(--color-brand-band);
+  color: var(--color-brand-ink);
+  --color-text: var(--color-brand-ink);
+  --color-text-body: color-mix(in srgb, var(--color-brand-ink) 84%, transparent);
+  --color-border: color-mix(in srgb, var(--color-brand-ink) 18%, transparent);
+}
+
+/* Primary & Secondary button pair (step on hover, press on click) */
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  gap: 8px;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) var(--acc-ease),
+    border-color var(--motion-fast) var(--acc-ease),
+    color var(--motion-fast) var(--acc-ease),
+    transform var(--motion-fast) var(--acc-ease);
+}
+
+.btn-primary {
+  background: var(--color-btn-bg);
+  color: var(--color-btn-text);
+  border: 1px solid transparent;
+}
+.btn-primary:hover {
+  background: var(--color-btn-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+}
+.btn-secondary:hover {
+  background: var(--color-surface-2);
+  border-color: var(--color-text-muted);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active,
+.btn-secondary:active {
+  transform: translateY(1px);
+}
+
+/* Linked card lift (2px) & photo frame zoom (1.025) */
+.card-link {
+  transition:
+    transform var(--motion-base) var(--acc-ease),
+    border-color var(--motion-base) var(--acc-ease),
+    background-color var(--motion-base) var(--acc-ease);
+}
+.card-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-border-strong);
+}
+
+.media-frame { overflow: hidden; }
+.media-frame > img,
+.media-frame > video {
+  transition: transform 320ms var(--acc-ease);
+}
+.card-link:hover .media-frame > img,
+.media-frame:hover > img {
+  transform: scale(1.025);
+}
+
+/* ==========================================================================
+   4. Stack Story Layout & Typography
+   ========================================================================== */
+.stack-story {
+  --stack-dock-height: 124px;
+  --hero-stage-height: var(--stack-dock-height);
+}
 .stack-content { min-width: 0; }
+
 .an-header .an-wrap,
 .stack-story :is(.ph-wrap, .cs-wrap, .ae-wrap, .ap-wrap, .ax-wrap, .af-wrap) {
   width: auto;
   margin-inline: var(--portfolio-gutter);
 }
-.stack-story :is(.ap-section, .ax-section, .af-footer) { padding-block: var(--section-space); }
-.stack-story :is(.cs-section, .ae-section, .ap-section, .ax-section, .af-footer) { border-top: 1px solid var(--color-border); }
-.stack-story :is(.cs-heading, .ae-heading-row, .ap-heading-row, .ax-heading-row) { display: block; margin: 0 0 clamp(24px, 3vw, 44px); padding: 0; }
-.stack-story :is(.cs-heading, .ae-heading-row, .ap-heading-row, .ax-heading-row, .af-invitation) h2 {
-  font-size: var(--section-title-size); font-weight: 500; letter-spacing: -.055em; line-height: 1.06; text-wrap: balance;
+
+.stack-story :is(.ap-section, .ax-section, .af-footer) {
+  padding-block: var(--section-space);
 }
-.stack-story :is(.cs-heading, .ae-heading-row, .ap-heading-row, .ax-heading-row, .af-invitation) h2 > span { color: var(--color-accent); }
+
+.stack-story :is(.cs-section, .ae-section, .ap-section, .ax-section, .af-footer) {
+  border-top: 1px solid var(--color-border);
+}
+
+.stack-story :is(.cs-heading, .ae-heading-row, .ap-heading-row, .ax-heading-row) {
+  display: block;
+  margin: 0 0 clamp(24px, 3vw, 44px);
+  padding: 0;
+}
+
+.stack-story :is(.cs-heading, .ae-heading-row, .ap-heading-row, .ax-heading-row, .af-invitation) h2 {
+  font-size: var(--section-title-size);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 1.06;
+  text-wrap: balance;
+  color: var(--color-text);
+}
+
+.stack-story :is(.cs-heading, .ae-heading-row, .ap-heading-row, .ax-heading-row, .af-invitation) h2 > span {
+  color: var(--color-accent-text);
+}
+
 .section-disclosure > summary {
-  display: inline-flex; align-items: center; min-height: 44px; gap: 11px; cursor: pointer; list-style: none;
-  color: var(--color-text-muted); font: 12px/1.45 var(--font-mono); transition: color 150ms;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 11px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--color-text-muted);
+  font: 12px/1.45 var(--font-mono);
+  transition: color 150ms var(--acc-ease);
 }
 .section-disclosure > summary::-webkit-details-marker { display: none; }
 .section-disclosure > summary:hover { color: var(--color-text); }
-.section-plus { position: relative; flex: 0 0 11px; height: 11px; color: var(--color-accent); }
-.section-plus::before, .section-plus::after { content: ""; position: absolute; inset: 5px 0 auto; height: 1px; background: currentColor; }
-.section-plus::after { transform: rotate(90deg); transition: transform 150ms; }
+
+.section-plus {
+  position: relative;
+  flex: 0 0 11px;
+  height: 11px;
+  color: var(--color-accent-text);
+}
+.section-plus::before,
+.section-plus::after {
+  content: "";
+  position: absolute;
+  inset: 5px 0 auto;
+  height: 1px;
+  background: currentColor;
+}
+.section-plus::after {
+  transform: rotate(90deg);
+  transition: transform 150ms var(--acc-ease);
+}
 [open] > summary .section-plus::after { transform: rotate(0deg); }
+
 .stack-story .ap-project-top { margin-block: 0 10px; }
 .stack-story .ax-achievements ul { margin: 0; padding: 0; list-style: none; }
 .stack-story .ax-achievements li { display: block; padding-block: 12px 0; }
-.stack-story .ax-achievements li p { margin: 0; color: var(--color-text-muted); font-size: 15px; line-height: 1.65; }
+.stack-story .ax-achievements li p {
+  margin: 0;
+  color: var(--color-text-body);
+  font-size: 15px;
+  line-height: 1.65;
+}
 .stack-story .af-links a { min-height: 50px; }
 .stack-story .af-email { display: inline-flex; align-items: center; min-height: 44px; }
-.stack-story .af-copy { width: auto; min-width: 0; }
+.stack-story .af-copy { width: auto; min-width: 0; min-height: 44px; }
 .stack-story .af-copy-status { min-height: 18px; }
+
+/* ==========================================================================
+   5. Layer Stage SVG Architecture Diagram
+   ========================================================================== */
 .layer-stage {
   position: sticky;
   top: var(--site-header-height);
@@ -94,46 +293,89 @@ svg { flex-shrink: 0; }
   border-bottom: 1px solid var(--color-border);
   pointer-events: none;
 }
-.layer-stage-field { display: grid; place-items: center; width: 100%; height: 100%; background: radial-gradient(ellipse at 50% 53%, var(--color-surface), transparent 68%); }
+
+.layer-stage-field {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 50% 53%,
+    color-mix(in srgb, var(--color-surface-2) 72%, transparent),
+    transparent 68%
+  );
+}
+
 .layer-svg { display: block; width: 100%; height: 100%; max-width: 390px; }
-.layer-guide, .layer-plate, .layer-edge, .layer-etching, .layer-glint, .layer-leader { vector-effect: non-scaling-stroke; }
+.layer-guide, .layer-plate, .layer-edge, .layer-etching, .layer-glint, .layer-leader {
+  vector-effect: non-scaling-stroke;
+}
 .layer-guide { fill: none; stroke: var(--color-border); stroke-dasharray: 3 5; }
-.layer-edge { fill: var(--color-surface); stroke: var(--color-border); }
+.layer-edge { fill: var(--color-surface); stroke: var(--color-border-strong); }
 .layer-plate { stroke: color-mix(in srgb, var(--color-text-muted) 64%, transparent); }
 .layer-etching, .layer-leader { fill: none; stroke: color-mix(in srgb, var(--color-text-muted) 53%, transparent); }
-.layer-glint { fill: none; stroke: var(--color-accent); opacity: .25; }
-.layer-type { fill: var(--color-text); font: 12px var(--font-mono); letter-spacing: .06em; }
+.layer-glint { fill: none; stroke: var(--color-accent); opacity: 0.28; }
+.layer-type { fill: var(--color-text); font: 12px var(--font-mono); letter-spacing: 0.06em; }
 .layer-print { opacity: 0; transform-box: fill-box; transform-origin: left center; }
-.layer-print path, .layer-print rect { fill: none; stroke: var(--color-accent); stroke-width: 1.05; vector-effect: non-scaling-stroke; }
+.layer-print path, .layer-print rect {
+  fill: none;
+  stroke: var(--color-accent-text);
+  stroke-width: 1.05;
+  vector-effect: non-scaling-stroke;
+}
 .layer-print text { fill: var(--color-text); font: 8px var(--font-mono); }
 .layer-packet-track, .layer-packet, .layer-click-packet { opacity: 0; }
-.layer-packet-halo { fill: var(--color-accent); opacity: .22; }
+.layer-packet-halo { fill: var(--color-accent); opacity: 0.22; }
 .layer-packet-core { fill: var(--color-accent); stroke: var(--color-text); stroke-width: 1; }
 .layer-response { opacity: 0; }
-.layer-response-card { fill: var(--color-surface); stroke: var(--color-accent); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.layer-response-rule { fill: none; stroke: var(--color-border); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.layer-response-type { fill: var(--color-text); font: 32px var(--font-mono); letter-spacing: -.04em; }
-.layer-contact-status { margin: 0 0 14px; color: var(--color-accent); font: 12px/1.4 var(--font-mono); }
+.layer-response-card {
+  fill: var(--color-surface);
+  stroke: var(--color-accent-text);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.layer-response-rule {
+  fill: none;
+  stroke: var(--color-border);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.layer-response-type { fill: var(--color-text); font: 32px var(--font-mono); letter-spacing: -0.04em; }
+.layer-contact-status { margin: 0 0 14px; color: var(--color-accent-text); font: 12px/1.4 var(--font-mono); }
+
 .layer-stage[data-guide-highlight="ui"] [data-layer="ui"],
 .layer-stage[data-guide-highlight="api"] [data-layer="api"],
 .layer-stage[data-guide-highlight="data"] [data-layer="data"],
 .layer-stage[data-guide-highlight="ui"] [data-layer="ui"] .layer-glint,
 .layer-stage[data-guide-highlight="api"] [data-layer="api"] .layer-glint,
-.layer-stage[data-guide-highlight="data"] [data-layer="data"] .layer-glint { opacity: 1 !important; }
+.layer-stage[data-guide-highlight="data"] [data-layer="data"] .layer-glint {
+  opacity: 1 !important;
+}
 
 @media (min-width: 1100px) and (prefers-reduced-motion: no-preference) {
   .layer-stage[data-idle] .layer-float { animation: layer-idle 6.4s ease-in-out infinite; }
 }
 @keyframes layer-idle { 50% { transform: translateY(-5px); } }
+
+/* ==========================================================================
+   6. Responsive Breakpoints (Desktop Split, Tablet, Mobile 640 / 390)
+   ========================================================================== */
 @media (max-width: 1099px) {
-  .stack-story [id]:not(#about) { scroll-margin-top: calc(var(--site-header-height) + var(--stack-dock-height) + 12px); }
-  .stack-story .ph-wrap { min-height: calc(100svh - var(--site-header-height) - var(--hero-stage-height)); }
+  .stack-story [id]:not(#about) {
+    scroll-margin-top: calc(var(--site-header-height) + var(--stack-dock-height) + 12px);
+  }
+  .stack-story .ph-wrap {
+    min-height: calc(100svh - var(--site-header-height) - var(--hero-stage-height));
+  }
   .layer-svg { width: min(100%, 170px); }
 }
 
 @media (max-width: 640px) {
   :root { --site-header-height: 64px; --portfolio-gutter: 20px; }
-  .stack-story { --stack-dock-height: 96px; --hero-stage-height: clamp(220px, 30svh, 278px); }
+  .stack-story {
+    --stack-dock-height: 96px;
+    --hero-stage-height: clamp(220px, 30svh, 278px);
+  }
   .layer-stage {
     height: var(--hero-stage-height);
     top: calc(var(--site-header-height) + var(--stack-dock-height) - var(--hero-stage-height));
@@ -147,12 +389,21 @@ svg { flex-shrink: 0; }
     background-color: var(--color-bg);
   }
   .layer-svg { width: min(61%, 245px); margin-inline-end: min(14vw, 78px); }
-  .layer-stage[data-section]:not([data-section="about"], [data-intro]) .layer-stage-field { height: var(--stack-dock-height); }
-  .layer-stage[data-section]:not([data-section="about"], [data-intro]) .layer-svg { width: min(48%, 132px); }
+  .layer-stage[data-section]:not([data-section="about"], [data-intro]) .layer-stage-field {
+    height: var(--stack-dock-height);
+  }
+  .layer-stage[data-section]:not([data-section="about"], [data-intro]) .layer-svg {
+    width: min(48%, 132px);
+  }
   .stack-story .ph-wrap { padding-block: 32px 58px; }
-  .stack-story .ph-copy h1 { font-size: clamp(43px, 11.3vw, 70px); }
-  .stack-story .ph-actions { display: grid; grid-template-columns: 1.1fr 1fr; }
+  .stack-story .ph-copy h1 { font-size: clamp(40px, 11vw, 70px); }
+  .stack-story .ph-actions { display: grid; grid-template-columns: 1.1fr 1fr; gap: 10px; }
   .stack-story .ph-actions a:only-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 390px) {
+  .stack-story .ph-actions { grid-template-columns: 1fr; }
+  .stack-story .ph-actions :is(a, button) { width: 100%; }
 }
 
 @media (max-width: 640px) and (prefers-reduced-motion: reduce) {
@@ -164,18 +415,29 @@ svg { flex-shrink: 0; }
   .stack-story {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(320px, min(34vw, 590px));
-    grid-template-areas: "hero stage" "body stage" "footer stage";
+    grid-template-areas:
+      "hero stage"
+      "body stage"
+      "footer stage";
   }
   .stack-story > .ph-hero { grid-area: hero; }
   .stack-content { grid-area: body; }
   .stack-story > .af-footer { grid-area: footer; }
-  .layer-stage { grid-area: stage; align-self: start; height: calc(100svh - var(--site-header-height)); border: 0; border-inline-start: 1px solid var(--color-border); }
+  .layer-stage {
+    grid-area: stage;
+    align-self: start;
+    height: calc(100svh - var(--site-header-height));
+    border: 0;
+    border-inline-start: 1px solid var(--color-border);
+  }
   .layer-svg { width: 96%; height: auto; max-width: 610px; }
   .stack-story .af-main { gap: clamp(26px, 4vw, 64px); }
   .stack-story .af-wrap { flex: 1; }
 }
 
-/* Transitions.dev accordion height transition using the native disclosure state. */
+/* ==========================================================================
+   7. Native Details Accordion & Reduced Motion
+   ========================================================================== */
 @supports selector(details::details-content) and (transition-behavior: allow-discrete) {
   @media (prefers-reduced-motion: no-preference) {
     .ap-details::details-content {
@@ -208,7 +470,7 @@ svg { flex-shrink: 0; }
 }
 
 @keyframes typing { from { width: 0; } to { width: 100%; } }
-@keyframes blink-caret { from, to { border-color: transparent; } 50% { border-color: var(--color-accent); } }
+@keyframes blink-caret { from, to { border-color: transparent; } 50% { border-color: var(--color-accent-text); } }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
