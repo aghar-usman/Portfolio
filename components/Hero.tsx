@@ -19,8 +19,6 @@ interface HeroProps {
   media: {
     /** Walk-in -> phone in pocket -> wave -> zoom MP4 */
     introVideoSrc?: string;
-    /** Exact second when zoom-in starts after the wave */
-    zoomAt?: number;
     /** Base standing cutout PNG (transparent background) */
     characterSrc: string;
     /** Optional: pixel-locked eyes-closed PNG for auto blink */
@@ -119,13 +117,11 @@ export default function Hero({ profile, contact, media }: HeroProps) {
     const vid = videoRef.current;
     if (!vid) return;
 
-    const target = media.zoomAt || vid.duration || 4;
-    const pct = Math.min(99, Math.round((vid.currentTime / target) * 100));
+    // Keep the counter tied to the complete video timeline.
+    // Hold at 99% until the browser confirms playback has ended.
+    if (!Number.isFinite(vid.duration) || vid.duration <= 0) return;
+    const pct = Math.min(99, Math.floor((vid.currentTime / vid.duration) * 100));
     setProgress(pct);
-
-    if (media.zoomAt && vid.currentTime >= media.zoomAt) {
-      triggerZoomTransition();
-    }
   };
 
   /* ---------- GSAP Micro-Rig (Scoped & Auto-Cleaned) ---------- */
