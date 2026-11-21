@@ -16,7 +16,7 @@ interface HeroProps {
     intro?: string;
   };
   contact: { resume: string; github: string; linkedin: string };
-  media: {
+  media?: {
     /** Walk-in -> phone in pocket -> wave -> zoom MP4 */
     introVideoSrc?: string;
     /** Base standing cutout PNG (transparent background) */
@@ -46,7 +46,12 @@ function Arrow() {
   );
 }
 
-export default function Hero({ profile, contact, media }: HeroProps) {
+export default function Hero({ profile, contact, media: mediaInput }: HeroProps) {
+  const media = {
+    introVideoSrc: "/hero-loader.mp4",
+    characterSrc: "/character/front.webp",
+    ...mediaInput,
+  };
   const role = profile.roles.join(" / ") || "Full-stack developer";
   const heading = profile.headline?.trim() || "AUKT.\n— 26";
   const intro =
