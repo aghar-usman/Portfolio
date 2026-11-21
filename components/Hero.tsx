@@ -6,21 +6,21 @@ interface HeroProps {
   profile: {
     name: string;
     roles: string[];
-    summary: string | string[];
+    summary?: string | string[];
     location?: string;
     headline?: string;
     intro?: string;
   };
   contact: { resume: string; github: string; linkedin: string };
-  media?: {
-    /** MP4 or WebM clip: walks in -> stops -> snaps */
+  media: {
+    /** Your walk-in -> phone in pocket -> wave -> zoom MP4 */
     introVideoSrc?: string;
-    /** Exact second in the video when the finger snap happens (triggers wipe) */
-    snapAt?: number;
-    /** Main transparent character cutout PNG */
-    characterSrc?: string;
-    /** Optional separate waving arm PNG for layered animation */
-    armSrc?: string;
+    /** Exact second when the zoom-in starts after the wave (triggers handoff) */
+    zoomAt?: number;
+    /** Transparent PNG cutout of your character for the hero stage */
+    characterSrc: string;
+    /** Optional: drop a seamless looping idle MP4/WebM here later if desired */
+    idleVideoSrc?: string;
   };
 }
 
@@ -40,35 +40,37 @@ function Arrow() {
 
 export default function Hero({ profile, contact, media }: HeroProps) {
   const role = profile.roles.join(" / ") || "Full-stack developer";
-  const heading = profile.headline?.trim() || role;
-  const intro = profile.intro ?? [profile.summary].flat().join(" ");
+  const heading = profile.headline?.trim() || "AUKT.\n— 26";
+  const intro =
+    profile.intro ?? [profile.summary].flat().filter(Boolean).join(" ");
 
-  const videoSrc = media?.introVideoSrc; // e.g. "/media/intro-snap.mp4"
-  const snapAt = media?.snapAt; // e.g. 2.4
-  const characterSrc = media?.characterSrc || "/images/character-hero.png";
-
-  // Loader states: "playing" -> "snapping" -> "done"
-  const [phase, setPhase] = useState<"playing" | "snapping" | "done">(
-    videoSrc ? "playing" : "done"
+  const [phase, setPhase] = useState<"playing" | "zooming" | "done">(
+    media.introVideoSrc ? "playing" : "done"
   );
+  const [progress, setProgress] = useState(0);
   const [ctaHovered, setCtaHovered] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const snappedRef = useRef(false);
 
-  const triggerSnap = () => {
-    if (snappedRef.current) return;
-    snappedRef.current = true;
-    setPhase("snapping");
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const triggeredRef = useRef(false);
+
+  const triggerZoomTransition = () => {
+    if (triggeredRef.current) return;
+    triggeredRef.current = true;
+    setProgress(100);
+    setPhase("zooming");
+
     try {
-      sessionStorage.setItem("hero-intro-seen", "1");
+      sessionStorage.setItem("aukt-intro-seen", "1");
     } catch {}
-    window.setTimeout(() => setPhase("done"), 620);
+
+    window.setTimeout(() => setPhase("done"), 680);
   };
 
   useEffect(() => {
-    if (!videoSrc) return;
+    if (!media.introVideoSrc) return;
+
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const seen = sessionStorage.getItem("hero-intro-seen") === "1";
+    const seen = sessionStorage.getItem("aukt-intro-seen") === "1";
 
     if (reduced || seen) {
       setPhase("done");
@@ -79,7 +81,7 @@ export default function Hero({ profile, contact, media }: HeroProps) {
     return () => {
       document.documentElement.style.overflow = "";
     };
-  }, [videoSrc]);
+  }, [media.introVideoSrc]);
 
   useEffect(() => {
     if (phase === "done") {
@@ -88,54 +90,73 @@ export default function Hero({ profile, contact, media }: HeroProps) {
   }, [phase]);
 
   const handleTimeUpdate = () => {
-    if (!snapAt || !videoRef.current) return;
-    if (videoRef.current.currentTime >= snapAt) {
-      triggerSnap();
+    const vid = videoRef.current;
+    if (!vid) return;
+
+    const target = media.zoomAt || vid.duration || 4;
+    const pct = Math.min(99, Math.round((vid.currentTime / target) * 100));
+    setProgress(pct);
+
+    if (media.zoomAt && vid.currentTime >= media.zoomAt) {
+      triggerZoomTransition();
     }
   };
 
+  const heroVisible = phase === "zooming" || phase === "done";
+
   return (
     <>
-      {/* 1. WALK-IN + SNAP INTRO LOADER */}
-      {phase !== "done" && videoSrc && (
+      {/* 1. PHONE-IN-POCKET -> WAVE -> ZOOM LOADER */}
+      {phase !== "done" && media.introVideoSrc && (
         <div
-          className={`ph-loader ${phase === "snapping" ? "is-snapping" : ""}`}
+          className={`ph-loader ${phase === "zooming" ? "is-zooming" : ""}`}
           role="dialog"
-          aria-label="Intro animation"
+          aria-label="AUKT intro animation"
         >
           <div className="ph-loader-stage">
             <video
               ref={videoRef}
               className="ph-loader-video"
-              src={videoSrc}
-              poster={characterSrc}
+              src={media.introVideoSrc}
+              poster={media.characterSrc}
               autoPlay
               muted
               playsInline
               onTimeUpdate={handleTimeUpdate}
-              onEnded={triggerSnap}
-              onError={triggerSnap}
+              onEnded={triggerZoomTransition}
+              onError={triggerZoomTransition}
             />
-            <span className="ph-snap-ring" aria-hidden="true" />
           </div>
 
-          <button type="button" className="ph-skip" onClick={triggerSnap}>
-            Skip intro
-          </button>
+          <div className="ph-loader-bar">
+            <span className="font-mono text-xs tracking-wider text-[var(--color-text-muted)]">
+              AUKT.
+            </span>
+            <span className="font-mono text-sm font-medium tabular-nums text-[var(--color-text)]">
+              {String(progress).padStart(2, "0")}%
+            </span>
+            <button
+              type="button"
+              className="btn-secondary rounded-md px-4 font-mono text-xs"
+              onClick={triggerZoomTransition}
+            >
+              Skip intro
+            </button>
+          </div>
         </div>
       )}
 
-      {/* 2. EDITORIAL CUTOUT HERO */}
+      {/* 2. FRAMER-VIBE EDITORIAL HERO */}
       <section
         id="about"
-        className={`ph-hero ${phase === "done" ? "is-ready" : ""}`}
-        data-portfolio-chapter=""
-        data-enter={phase === "done" ? "in" : "wait"}
+        className={`ph-hero ${heroVisible ? "is-ready" : ""}`}
+        data-enter={heroVisible ? "in" : "wait"}
         aria-labelledby="ph-title"
       >
-        <div className="ph-wrap">
+        <div className="ph-wrap mx-[var(--portfolio-gutter)]">
+          {/* Left: Bold Editorial Typography */}
           <div className="ph-copy">
-            <div className="ph-identity">
+            <div className="ph-meta">
               <p className="ph-name">{profile.name}</p>
               <p className="ph-role">
                 {[role, profile.location].filter(Boolean).join(" · ")}
@@ -147,17 +168,16 @@ export default function Hero({ profile, contact, media }: HeroProps) {
 
             <div className="ph-actions">
               <a
-                className="btn-primary ph-primary"
+                className="btn-primary ph-btn"
                 href="#projects"
                 onMouseEnter={() => setCtaHovered(true)}
                 onMouseLeave={() => setCtaHovered(false)}
               >
                 View projects <Arrow />
               </a>
-
               {contact.resume && (
                 <a
-                  className="btn-secondary ph-secondary"
+                  className="btn-secondary ph-btn"
                   href={contact.resume}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -168,7 +188,7 @@ export default function Hero({ profile, contact, media }: HeroProps) {
             </div>
           </div>
 
-          {/* Grounded Character Stage */}
+          {/* Right: Grounded Character Stage */}
           <div
             className={`ph-stage ${ctaHovered ? "is-attentive" : ""}`}
             aria-hidden="true"
@@ -177,21 +197,23 @@ export default function Hero({ profile, contact, media }: HeroProps) {
             <div className="ph-floor-shadow" />
 
             <div className="ph-actor">
-              {/* Client asset slot: transparent PNG cutout of character */}
-              <img
-                src={characterSrc}
-                alt=""
-                className="ph-actor-body"
-                loading="eager"
-                decoding="async"
-              />
-              {/* Optional separate waving arm layer when split */}
-              {media?.armSrc && (
+              {media.idleVideoSrc ? (
+                <video
+                  src={media.idleVideoSrc}
+                  poster={media.characterSrc}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="ph-actor-media"
+                />
+              ) : (
                 <img
-                  src={media.armSrc}
+                  src={media.characterSrc}
                   alt=""
-                  className="ph-actor-arm"
+                  className="ph-actor-media"
                   loading="eager"
+                  decoding="async"
                 />
               )}
             </div>
@@ -205,136 +227,138 @@ export default function Hero({ profile, contact, media }: HeroProps) {
 }
 
 const heroStyles = `
-  /* ---------- Intro Loader & Snap Transition ---------- */
+  /* ---------- Loader & Continuous Zoom Handoff ---------- */
   .ph-loader {
     position: fixed;
     inset: 0;
     z-index: 250;
     display: grid;
+    grid-template-rows: 1fr auto;
     place-items: center;
     background: var(--color-bg);
-    clip-path: inset(0 0 0 0);
-    transition: clip-path 560ms cubic-bezier(0.77, 0, 0.175, 1);
+    opacity: 1;
+    transition: opacity 580ms cubic-bezier(0.22, 1, 0.36, 1) 80ms;
   }
-  .ph-loader.is-snapping {
-    clip-path: inset(0 0 100% 0);
+  .ph-loader.is-zooming {
+    opacity: 0;
     pointer-events: none;
   }
   .ph-loader-stage {
     position: relative;
     display: grid;
     place-items: center;
-    width: min(92vw, 560px);
-    height: min(82svh, 680px);
+    width: min(94vw, 820px);
+    height: min(76svh, 580px);
+    transform: scale(1);
+    transition: transform 680ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .ph-loader.is-zooming .ph-loader-stage {
+    transform: scale(1.32);
   }
   .ph-loader-video {
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
-  .ph-snap-ring {
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    border-radius: 999px;
-    border: 2px solid var(--color-accent);
+  .ph-loader-bar {
+    width: 100%;
+    padding: 16px var(--portfolio-gutter) max(20px, env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--color-border);
+    transition: opacity 260ms ease;
+  }
+  .ph-loader.is-zooming .ph-loader-bar {
     opacity: 0;
-    pointer-events: none;
-  }
-  .ph-loader.is-snapping .ph-snap-ring {
-    animation: ph-snap-burst 480ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  }
-  .ph-skip {
-    position: fixed;
-    right: max(20px, env(safe-area-inset-right));
-    bottom: max(20px, env(safe-area-inset-bottom));
-    min-height: 44px;
-    padding: 0 16px;
-    border: 1px solid var(--color-border-strong);
-    border-radius: 6px;
-    background: var(--color-surface);
-    color: var(--color-text);
-    font: 12px/1 var(--font-mono);
-    cursor: pointer;
-    transition: background-color 160ms var(--acc-ease), transform 160ms var(--acc-ease);
-  }
-  .ph-skip:hover { background: var(--color-surface-2); transform: translateY(-1px); }
-  .ph-skip:active { transform: translateY(1px); }
-
-  @keyframes ph-snap-burst {
-    0% { opacity: 0.95; transform: scale(1); }
-    100% { opacity: 0; transform: scale(16); }
   }
 
-  /* ---------- Editorial Split Hero ---------- */
+  /* ---------- Editorial Hero ---------- */
   .ph-hero {
     position: relative;
     overflow: clip;
     background: var(--color-bg);
-    color: var(--color-text);
+    transform: scale(0.95);
+    opacity: 0;
+    transition:
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
   }
+  .ph-hero.is-ready {
+    transform: scale(1);
+    opacity: 1;
+  }
+
   .ph-wrap {
-    position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
     align-items: center;
     gap: clamp(28px, 4vw, 64px);
     min-height: calc(100svh - var(--site-header-height));
-    padding-block: 36px 0;
+    padding-top: 32px;
   }
 
   .ph-copy {
     position: relative;
     z-index: 2;
-    min-width: 0;
     padding-bottom: 48px;
-    opacity: 0;
-    transform: translateY(14px);
-    transition: opacity 520ms var(--acc-ease), transform 520ms var(--acc-ease);
   }
-  .ph-hero.is-ready .ph-copy {
-    opacity: 1;
-    transform: translateY(0);
+  .ph-meta {
+    display: grid;
+    gap: 4px;
+    margin-bottom: clamp(20px, 3vw, 38px);
   }
-
-  .ph-identity { display: grid; gap: 5px; margin-block-end: clamp(20px, 3vw, 40px); }
-  .ph-name { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--color-text); }
-  .ph-role { margin: 0; color: var(--color-text-muted); font: 12px/1.55 var(--font-mono); }
-
-  .ph-copy h1 {
-    margin: 0 0 24px;
-    font-size: clamp(44px, 6.2vw, 92px);
-    line-height: 0.98;
-    letter-spacing: -0.06em;
-    font-weight: 500;
-    overflow-wrap: anywhere;
-    white-space: pre-line;
+  .ph-name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  .ph-role {
+    margin: 0;
+    font: 12px/1.5 var(--font-mono);
     color: var(--color-text-muted);
   }
-  .ph-copy h1::first-line { color: var(--color-text); }
+
+  .ph-copy h1 {
+    margin: 0 0 22px;
+    font-size: clamp(58px, 8.6vw, 132px);
+    line-height: 0.92;
+    letter-spacing: -0.065em;
+    font-weight: 500;
+    white-space: pre-line;
+    color: var(--color-accent-text);
+  }
+  .ph-copy h1::first-line {
+    color: var(--color-text);
+  }
 
   .ph-intro {
-    color: var(--color-text-body);
-    max-width: 44ch;
+    margin: 0;
+    max-width: 42ch;
     font-size: 17px;
     line-height: 1.65;
-    margin: 0;
+    color: var(--color-text-body);
     text-wrap: pretty;
   }
 
-  .ph-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-  .ph-actions a {
-    gap: 20px;
+  .ph-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .ph-btn {
+    padding: 0 20px;
     min-height: 50px;
-    padding: 12px 20px;
     border-radius: 6px;
-    text-decoration: none;
     font-size: 13px;
     font-weight: 600;
+    text-decoration: none;
   }
   @media (hover: hover) and (pointer: fine) {
     .ph-actions svg { transition: transform 160ms var(--acc-ease); }
-    .ph-primary:hover svg { transform: translateX(3px); }
+    .ph-actions a:hover svg { transform: translateX(3px); }
   }
 
   /* ---------- Grounded Character Stage ---------- */
@@ -343,21 +367,23 @@ const heroStyles = `
     align-self: end;
     display: grid;
     place-items: end center;
-    height: min(78svh, 660px);
+    height: min(80svh, 680px);
     pointer-events: none;
   }
   .ph-coral-slab {
     position: absolute;
-    inset: 12% 8% 0 8%;
-    border-radius: 20px 20px 0 0;
+    inset: 10% 8% 0 8%;
+    border-radius: 22px 22px 0 0;
     background: var(--color-brand-band);
+    transform: translateY(28px);
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 560ms var(--acc-ease) 100ms, transform 560ms var(--acc-ease) 100ms;
+    transition:
+      transform 640ms cubic-bezier(0.16, 1, 0.3, 1) 120ms,
+      opacity 540ms ease 120ms;
   }
   .ph-hero.is-ready .ph-coral-slab {
-    opacity: 1;
     transform: translateY(0);
+    opacity: 1;
   }
 
   .ph-floor-shadow {
@@ -383,56 +409,42 @@ const heroStyles = `
     transition: transform 320ms var(--acc-ease);
   }
   .ph-hero.is-ready .ph-actor {
-    animation: ph-breathe 4.2s ease-in-out infinite;
+    animation: ph-auto-idle 4.2s ease-in-out infinite;
   }
   .ph-stage.is-attentive .ph-actor {
-    transform: translateX(-8px) scale(1.015);
+    transform: translateX(-8px) scale(1.02);
   }
 
-  .ph-actor-body {
+  .ph-actor-media {
     height: 100%;
     width: auto;
     object-fit: contain;
     object-position: bottom center;
   }
-  .ph-actor-arm {
-    position: absolute;
-    inset: 0;
-    height: 100%;
-    width: auto;
-    transform-origin: 36% 42%;
-    animation: ph-wave 1.1s var(--acc-ease) 0.45s 1;
-  }
 
-  @keyframes ph-breathe {
+  @keyframes ph-auto-idle {
     0%, 100% { transform: translateY(0) scaleY(1); }
-    50% { transform: translateY(-3px) scaleY(1.006); }
-  }
-  @keyframes ph-wave {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-10deg); }
-    55% { transform: rotate(8deg); }
-    80% { transform: rotate(-5deg); }
+    50% { transform: translateY(-4px) scaleY(1.008); }
   }
 
-  /* ---------- Responsive ---------- */
   @media (max-width: 900px) {
     .ph-wrap {
       grid-template-columns: 1fr;
-      padding-block: 36px 0;
-      gap: 28px;
+      gap: 24px;
+      padding-top: 28px;
     }
     .ph-copy { padding-bottom: 0; }
-    .ph-stage { height: min(52svh, 420px); }
-    .ph-coral-slab { inset: 14% 12% 0 12%; }
+    .ph-stage { height: min(54svh, 440px); }
+    .ph-coral-slab { inset: 12% 10% 0 10%; }
   }
-  @media (max-width: 639px) {
-    .ph-copy h1 { font-size: clamp(38px, 10.5vw, 64px); margin-bottom: 16px; }
-    .ph-intro { font-size: 15px; }
-    .ph-actions { margin-top: 20px; gap: 8px; }
+
+  @media (max-width: 390px) {
+    .ph-actions { display: grid; grid-template-columns: 1fr; }
+    .ph-btn { width: 100%; }
   }
+
   @media (prefers-reduced-motion: reduce) {
-    .ph-copy, .ph-coral-slab { opacity: 1; transform: none; }
-    .ph-hero.is-ready .ph-actor, .ph-actor-arm { animation: none; }
+    .ph-hero, .ph-coral-slab { opacity: 1; transform: none; }
+    .ph-hero.is-ready .ph-actor { animation: none; }
   }
 `;
