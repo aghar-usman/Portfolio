@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { SiJavascript, SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiFlask, SiFastapi, SiPostgresql, SiMysql, SiDocker, SiGit, SiPandas, SiNumpy, SiSqlite } from "react-icons/si";
+import { SiJavascript, SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiFlask, SiFastapi, SiPostgresql, SiMysql, SiDocker, SiGit, SiPandas, SiNumpy, SiLinux } from "react-icons/si";
 import { RiOpenaiFill } from "react-icons/ri";
 import s from "./StackPlotter.module.css";
 
@@ -11,11 +11,11 @@ gsap.registerPlugin(ScrollTrigger,useGSAP);
 const skills=[
   {name:"JavaScript",icon:SiJavascript,color:"#e2b321"},{name:"React",icon:SiReact,color:"#087ea4"},{name:"Next.js",icon:SiNextdotjs,color:"var(--ink)"},{name:"TypeScript",icon:SiTypescript,color:"#3178c6"},
   {name:"Tailwind CSS",icon:SiTailwindcss,color:"#0891b2"},{name:"Python",icon:SiPython,color:"#3776ab"},{name:"Flask",icon:SiFlask,color:"var(--ink)"},{name:"FastAPI",icon:SiFastapi,color:"#009688"},
-  {name:"PostgreSQL",icon:SiPostgresql,color:"#4169a1"},{name:"MySQL",icon:SiMysql,color:"#4479a1"},{name:"SQLite",icon:SiSqlite,color:"#1680ad"},{name:"Docker",icon:SiDocker,color:"#2496ed"},
-  {name:"Git",icon:SiGit,color:"#f05032"},{name:"Pandas",icon:SiPandas,color:"#7665ae"},{name:"NumPy",icon:SiNumpy,color:"#4dabcf"},{name:"Codex",icon:RiOpenaiFill,color:"var(--ink)"}
+  {name:"PostgreSQL",icon:SiPostgresql,color:"#4169a1"},{name:"MySQL",icon:SiMysql,color:"#4479a1"},{name:"Git",icon:SiGit,color:"#f05032"},{name:"Docker",icon:SiDocker,color:"#2496ed"},
+  {name:"Pandas",icon:SiPandas,color:"#7665ae"},{name:"NumPy",icon:SiNumpy,color:"#4dabcf"},{name:"Linux",icon:SiLinux,color:"var(--ink)"},{name:"Codex",icon:RiOpenaiFill,color:"var(--ink)"}
 ];
 const offsets=[[-.04,.03,-8],[.02,-.04,7],[-.015,.02,-5],[.025,-.03,9],[.02,.025,5],[-.035,-.025,-8],[.035,.035,7],[-.025,.01,-6],[-.03,-.01,-5],[.025,.04,9],[-.025,-.025,-7],[.02,.04,6],[.035,.01,8],[-.025,-.025,-5],[.02,.02,6],[-.02,-.02,-8]];
-const moreTools=["Linux","MSSQL","SQL","REST APIs","ETL pipelines","LLM integration","Text-to-SQL","Prompt engineering","Ollama","Llama 3","Mistral","Claude","HuggingFace","TensorFlow","PyTorch","OpenCV","HTML5","CSS3","GCP","CI/CD","Vercel","Motion","GSAP"];
+const moreTools=["SQLite","MSSQL","SQL","REST APIs","ETL pipelines","LLM integration","Text-to-SQL","Prompt engineering","Ollama","Llama 3","Mistral","Claude","HuggingFace","TensorFlow","PyTorch","OpenCV","HTML5","CSS3","GCP","CI/CD","Vercel","Motion","GSAP"];
 
 export default function StackPlotter(){
   const root=useRef<HTMLElement>(null);
