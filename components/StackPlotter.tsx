@@ -60,6 +60,7 @@ export default function StackPlotter(){
         .to(dot,{scaleX:1.25,scaleY:.8,duration:.065,repeat:1,yoyo:true},6.7)
         .to(`.${s.splash} i`,{opacity:1,scale:1,duration:.03},6.68)
         .to(`.${s.splash} i`,{x:(i)=>Math.cos(i*Math.PI/3)*28,y:(i)=>Math.sin(i*Math.PI/3)*23,opacity:0,duration:.35},6.71);
+      tl.timeScale(.5);
       ScrollTrigger.create({trigger:el,start:"top 65%",once:true,onEnter:()=>tl.play()});
       const finish=ScrollTrigger.create({trigger:el,start:"bottom top",onEnter:()=>{if(tl.isActive())tl.progress(1);}});
       return()=>{finish.kill();timeline.current=null;delete el.dataset.plotter;};
