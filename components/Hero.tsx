@@ -6,6 +6,14 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP);
 
+type CharacterState =
+  | "idle-blink"
+  | "wave-greet"
+  | "look-left"
+  | "look-right"
+  | "click-excited"
+  | "think-focus";
+
 interface HeroProps {
   profile: {
     name: string;
@@ -16,13 +24,13 @@ interface HeroProps {
     intro?: string;
   };
   contact: { resume: string; github: string; linkedin: string };
-  media: {
+  media?: {
     /** Walk-in -> phone in pocket -> wave -> zoom MP4 */
     introVideoSrc?: string;
-    /** Exact second when zoom-in starts after the wave */
-    zoomAt?: number;
-    /** Base standing cutout PNG (transparent background) */
-    characterSrc: string;
+    /** Optional poster image; character states are rendered from WebM videos. */
+    characterSrc?: string;
+    /** Optional overrides for the six character-state WebM assets. */
+    characterStates?: Partial<Record<CharacterState, string>>;
     /** Optional: pixel-locked eyes-closed PNG for auto blink */
     blinkSrc?: string;
     /** Optional: pixel-locked glancing-left PNG for CTA hover */
@@ -48,7 +56,21 @@ function Arrow() {
   );
 }
 
-export default function Hero({ profile, contact, media }: HeroProps) {
+export default function Hero({ profile, contact, media: mediaInput }: HeroProps) {
+  const media = {
+    introVideoSrc: "/hero-loader.mp4",
+    characterSrc: "/character/front.webp",
+    ...mediaInput,
+  };
+  const characterVideos: Record<CharacterState, string> = {
+    "idle-blink": "/character/idle-blink.webm",
+    "wave-greet": "/character/wave-greet.webm",
+    "look-left": "/character/look-left.webm",
+    "look-right": "/character/look-right.webm",
+    "click-excited": "/character/click-excited.webm",
+    "think-focus": "/character/think-focus.webm",
+    ...media.characterStates,
+  };
   const role = profile.roles.join(" / ") || "Full-stack developer";
   const heading = profile.headline?.trim() || "AUKT.\n— 26";
   const intro =
@@ -59,6 +81,8 @@ export default function Hero({ profile, contact, media }: HeroProps) {
   );
   const [progress, setProgress] = useState(0);
   const [bubbleText, setBubbleText] = useState<string | null>(null);
+  const [characterState, setCharacterState] = useState<CharacterState>("idle-blink");
+  const actorHoveredRef = useRef(false);
 
   const heroRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -119,13 +143,11 @@ export default function Hero({ profile, contact, media }: HeroProps) {
     const vid = videoRef.current;
     if (!vid) return;
 
-    const target = media.zoomAt || vid.duration || 4;
-    const pct = Math.min(99, Math.round((vid.currentTime / target) * 100));
+    // Keep the counter tied to the complete video timeline.
+    // Hold at 99% until the browser confirms playback has ended.
+    if (!Number.isFinite(vid.duration) || vid.duration <= 0) return;
+    const pct = Math.min(99, Math.floor((vid.currentTime / vid.duration) * 100));
     setProgress(pct);
-
-    if (media.zoomAt && vid.currentTime >= media.zoomAt) {
-      triggerZoomTransition();
-    }
   };
 
   /* ---------- GSAP Micro-Rig (Scoped & Auto-Cleaned) ---------- */
@@ -204,27 +226,11 @@ export default function Hero({ profile, contact, media }: HeroProps) {
   );
 
   /* ---------- Context-Safe Hover & Click Handlers ---------- */
-  const playWave = contextSafe((energetic = false) => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (!media.armSrc) return;
-
-    gsap.killTweensOf(".ph-layer-arm");
-    gsap.to(".ph-layer-arm", {
-      keyframes: energetic
-        ? [
-            { rotation: -14, duration: 0.14, ease: "power2.out" },
-            { rotation: 11, duration: 0.14, ease: "sine.inOut" },
-            { rotation: -10, duration: 0.14, ease: "sine.inOut" },
-            { rotation: 7, duration: 0.14, ease: "sine.inOut" },
-            { rotation: 0, duration: 0.22, ease: "power2.inOut" },
-          ]
-        : [
-            { rotation: -9, duration: 0.16, ease: "power2.out" },
-            { rotation: 6, duration: 0.18, ease: "sine.inOut" },
-            { rotation: 0, duration: 0.2, ease: "power2.inOut" },
-          ],
-    });
-  });
+  const playWave = () => {
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setCharacterState("wave-greet");
+    }
+  };
 
   const handleStagePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!stageRef.current || !quickXRef.current || !quickYRef.current || !quickRotRef.current) {
@@ -237,12 +243,20 @@ export default function Hero({ profile, contact, media }: HeroProps) {
     quickXRef.current(nx * 14);
     quickYRef.current(ny * 6);
     quickRotRef.current(nx * 2.4);
+
+    if (!actorHoveredRef.current) {
+      if (nx < -0.12) setCharacterState("look-left");
+      else if (nx > 0.12) setCharacterState("look-right");
+      else setCharacterState("idle-blink");
+    }
   };
 
   const handleStagePointerLeave = () => {
     quickXRef.current?.(0);
     quickYRef.current?.(0);
     quickRotRef.current?.(0);
+    actorHoveredRef.current = false;
+    setCharacterState("idle-blink");
   };
 
   const handleCharacterClick = contextSafe(() => {
@@ -300,18 +314,13 @@ export default function Hero({ profile, contact, media }: HeroProps) {
         ease: "elastic.out(1, 0.55)",
       });
 
-    playWave(true);
+    setCharacterState("click-excited");
   });
 
   const handleCtaHover = contextSafe((entering: boolean) => {
-    if (media.lookSrc) {
-      gsap.to(".ph-layer-look", {
-        opacity: entering ? 1 : 0,
-        duration: 0.16,
-        ease: "power2.out",
-      });
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setCharacterState(entering ? "think-focus" : "idle-blink");
     }
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     gsap.to(".ph-actor-pointer", {
       x: entering ? -10 : 0,
@@ -421,7 +430,14 @@ export default function Hero({ profile, contact, media }: HeroProps) {
               type="button"
               className="ph-actor-trigger"
               onClick={handleCharacterClick}
-              onMouseEnter={() => playWave(false)}
+              onMouseEnter={() => {
+                actorHoveredRef.current = true;
+                playWave();
+              }}
+              onMouseLeave={() => {
+                actorHoveredRef.current = false;
+                setCharacterState("idle-blink");
+              }}
               aria-label={`Interact with ${profile.name}'s character`}
             >
               {bubbleText && (
@@ -433,37 +449,28 @@ export default function Hero({ profile, contact, media }: HeroProps) {
               <span className="ph-actor-hop">
                 <span className="ph-actor-pointer">
                   <span className="ph-actor-breathe">
-                    <img
-                      src={media.characterSrc}
-                      alt=""
-                      className="ph-layer ph-layer-base"
-                      loading="eager"
-                      decoding="async"
+                    <video
+                      key={characterState}
+                      className="ph-character-video"
+                      src={characterVideos[characterState]}
+                      poster={media.characterSrc}
+                      autoPlay
+                      muted
+                      playsInline
+                      loop={characterState !== "click-excited"}
+                      preload="auto"
+                      onEnded={() => {
+                        if (characterState === "click-excited") {
+                          setCharacterState("idle-blink");
+                        }
+                      }}
+                      onError={() => {
+                        if (characterState !== "idle-blink") {
+                          setCharacterState("idle-blink");
+                        }
+                      }}
+                      aria-hidden="true"
                     />
-                    {media.lookSrc && (
-                      <img
-                        src={media.lookSrc}
-                        alt=""
-                        className="ph-layer ph-layer-look"
-                        loading="eager"
-                      />
-                    )}
-                    {media.blinkSrc && (
-                      <img
-                        src={media.blinkSrc}
-                        alt=""
-                        className="ph-layer ph-layer-blink"
-                        loading="eager"
-                      />
-                    )}
-                    {media.armSrc && (
-                      <img
-                        src={media.armSrc}
-                        alt=""
-                        className="ph-layer ph-layer-arm"
-                        loading="eager"
-                      />
-                    )}
                   </span>
                 </span>
               </span>
@@ -635,26 +642,15 @@ const heroStyles = `
   .ph-actor-hop,
   .ph-actor-pointer { will-change: transform; }
 
-  .ph-layer {
+  .ph-character-video {
+    display: block;
+    width: 100%;
     height: 100%;
-    width: auto;
-    object-fit: contain;
-    object-position: bottom center;
+    object-fit: cover;
+    object-position: center 38%;
     user-select: none;
     pointer-events: none;
-  }
-  .ph-layer-look,
-  .ph-layer-blink,
-  .ph-layer-arm {
-    position: absolute;
-    inset: 0;
-    margin: auto;
-  }
-  .ph-layer-look,
-  .ph-layer-blink { opacity: 0; }
-  .ph-layer-arm {
-    transform-origin: 36% 42%;
-    will-change: transform;
+    background: var(--color-bg);
   }
 
   /* Click micro-bubble */
