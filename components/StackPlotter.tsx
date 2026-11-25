@@ -3,7 +3,8 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { SiJavascript, SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiFlask, SiFastapi, SiPostgresql, SiMysql, SiDocker, SiGit, SiPandas, SiNumpy, SiLinux, SiSqlite } from "react-icons/si";
+import { SiJavascript, SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiFlask, SiFastapi, SiPostgresql, SiMysql, SiDocker, SiGit, SiPandas, SiNumpy, SiSqlite } from "react-icons/si";
+import { RiOpenaiFill } from "react-icons/ri";
 import s from "./StackPlotter.module.css";
 
 gsap.registerPlugin(ScrollTrigger,useGSAP);
@@ -11,10 +12,10 @@ const skills=[
   {name:"JavaScript",icon:SiJavascript,color:"#e2b321"},{name:"React",icon:SiReact,color:"#087ea4"},{name:"Next.js",icon:SiNextdotjs,color:"var(--ink)"},{name:"TypeScript",icon:SiTypescript,color:"#3178c6"},
   {name:"Tailwind CSS",icon:SiTailwindcss,color:"#0891b2"},{name:"Python",icon:SiPython,color:"#3776ab"},{name:"Flask",icon:SiFlask,color:"var(--ink)"},{name:"FastAPI",icon:SiFastapi,color:"#009688"},
   {name:"PostgreSQL",icon:SiPostgresql,color:"#4169a1"},{name:"MySQL",icon:SiMysql,color:"#4479a1"},{name:"SQLite",icon:SiSqlite,color:"#1680ad"},{name:"Docker",icon:SiDocker,color:"#2496ed"},
-  {name:"Git",icon:SiGit,color:"#f05032"},{name:"Pandas",icon:SiPandas,color:"#7665ae"},{name:"NumPy",icon:SiNumpy,color:"#4dabcf"},{name:"Linux",icon:SiLinux,color:"var(--ink)"}
+  {name:"Git",icon:SiGit,color:"#f05032"},{name:"Pandas",icon:SiPandas,color:"#7665ae"},{name:"NumPy",icon:SiNumpy,color:"#4dabcf"},{name:"Codex",icon:RiOpenaiFill,color:"var(--ink)"}
 ];
 const offsets=[[-.04,.03,-8],[.02,-.04,7],[-.015,.02,-5],[.025,-.03,9],[.02,.025,5],[-.035,-.025,-8],[.035,.035,7],[-.025,.01,-6],[-.03,-.01,-5],[.025,.04,9],[-.025,-.025,-7],[.02,.04,6],[.035,.01,8],[-.025,-.025,-5],[.02,.02,6],[-.02,-.02,-8]];
-const moreTools=["MSSQL","SQL","REST APIs","ETL pipelines","LLM integration","Text-to-SQL","Prompt engineering","Ollama","Llama 3","Mistral","Claude","HuggingFace","TensorFlow","PyTorch","OpenCV","HTML5","CSS3","GCP","CI/CD","Vercel","Motion","GSAP"];
+const moreTools=["Linux","MSSQL","SQL","REST APIs","ETL pipelines","LLM integration","Text-to-SQL","Prompt engineering","Ollama","Llama 3","Mistral","Claude","HuggingFace","TensorFlow","PyTorch","OpenCV","HTML5","CSS3","GCP","CI/CD","Vercel","Motion","GSAP"];
 
 export default function StackPlotter(){
   const root=useRef<HTMLElement>(null);
@@ -60,7 +61,7 @@ export default function StackPlotter(){
         .to(dot,{scaleX:1.25,scaleY:.8,duration:.065,repeat:1,yoyo:true},6.7)
         .to(`.${s.splash} i`,{opacity:1,scale:1,duration:.03},6.68)
         .to(`.${s.splash} i`,{x:(i)=>Math.cos(i*Math.PI/3)*28,y:(i)=>Math.sin(i*Math.PI/3)*23,opacity:0,duration:.35},6.71);
-      tl.timeScale(.5);
+      tl.timeScale(.375);
       ScrollTrigger.create({trigger:el,start:"top 65%",once:true,onEnter:()=>tl.play()});
       const finish=ScrollTrigger.create({trigger:el,start:"bottom top",onEnter:()=>{if(tl.isActive())tl.progress(1);}});
       return()=>{finish.kill();timeline.current=null;delete el.dataset.plotter;};
@@ -70,6 +71,6 @@ export default function StackPlotter(){
   return <section id="skills" ref={root} className={s.section} aria-labelledby="stack-heading"><div className={s.stage}><div className={`${s.wrap} max-w-6xl mx-auto px-8 md:px-16`}>
     <p className={s.eyebrow}>TOOLS BEHIND THE WORK <span>FROM A LITTLE CHAOS TO A CLEAR SYSTEM</span></p><h2 id="stack-heading" className={s.heading}>The stack behind the work<span className={s.anchor} aria-hidden="true"><span className={s.staticPeriod}>.</span><span className={s.splash}>{Array.from({length:6},(_,i)=><i key={i}/>)}</span></span></h2><p className={s.subtitle}>One request travels through an interface, an API, and data.</p>
     <div className={s.board}><ul className={s.grid}>{skills.map(skill=><li className={s.tile} key={skill.name}><svg className={s.outline} viewBox="0 0 220 70" preserveAspectRatio="none" aria-hidden="true"><rect x=".5" y=".5" width="219" height="69" rx="11"/></svg><span className={s.skillIcon} style={{"--skill-color":skill.color} as CSSProperties}><skill.icon aria-hidden="true"/></span><span className={s.skillName}>{skill.name}</span></li>)}</ul></div>
-    <div className={s.foot}><button type="button" aria-expanded={more} onClick={()=>setMore(!more)}>{more?"− Fewer tools":"+ More tools"}</button>{canReplay&&<button className={s.replay} type="button" disabled={playing} onClick={()=>timeline.current?.restart()}>{playing?"Drawing the stack…":"↻ Replay drawing"}</button>}<a href="#experience">Follow the request ↘</a></div><p className={s.credit}>Technology marks: <a href="https://simpleicons.org/" target="_blank" rel="noreferrer">Simple Icons</a>.</p>
+    <div className={s.foot}><button type="button" aria-expanded={more} onClick={()=>setMore(!more)}>{more?"− Fewer tools":"+ More tools"}</button>{canReplay&&<button className={s.replay} type="button" disabled={playing} onClick={()=>timeline.current?.restart()}>{playing?"Drawing the stack…":"↻ Replay drawing"}</button>}<a href="#experience">Follow the request ↘</a></div><p className={s.credit}>Technology marks: <a href="https://simpleicons.org/" target="_blank" rel="noreferrer">Simple Icons</a> and <a href="https://remixicon.com/" target="_blank" rel="noreferrer">Remix Icon</a>.</p>
     </div><svg className={s.trailSvg} aria-hidden="true"><path className={s.trail}/></svg><span className={s.dot} aria-hidden="true"/></div>{more&&<ul className={s.more}>{moreTools.map(tool=><li key={tool}>{tool}</li>)}</ul>}</section>;
 }
