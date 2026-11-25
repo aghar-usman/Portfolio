@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#EEEDE8"/>
+  <text x="76" y="100" fill="#16181D" font-family="Arial,sans-serif" font-size="32" font-weight="700" letter-spacing="-2">AUKT<tspan fill="#C42620">.</tspan></text>
+  <text x="68" y="325" fill="#E5322D" font-family="Arial,sans-serif" font-size="140" font-weight="900" letter-spacing="-9">HEY, I’M</text>
+  <text x="68" y="465" fill="#E5322D" font-family="Arial,sans-serif" font-size="140" font-weight="900" letter-spacing="-9">AGHAR</text>
+  <text x="76" y="560" fill="#16181D" font-family="Arial,sans-serif" font-size="30">React interfaces. Python APIs. SQL that answers back.</text>
+</svg>
