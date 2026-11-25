@@ -1,1 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" fill="#16181D"/><text x="5" y="39" fill="#EEEDE8" font-family="Arial,sans-serif" font-size="20" font-weight="700" letter-spacing="-2">AUKT</text><circle cx="55" cy="47" r="4" fill="#E5322D"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="13" fill="#2B5B84"/><path fill="#FDF5E8" fill-rule="evenodd" d="M7 52 25 12h14l18 40H43l-3-8H24l-3 8H7Zm21-18h8l-4-11-4 11Z"/></svg>
