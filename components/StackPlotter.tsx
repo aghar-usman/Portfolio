@@ -1,71 +1,74 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { SiJavascript, SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiFlask, SiFastapi, SiPostgresql, SiMysql, SiDocker, SiGit, SiPandas, SiNumpy, SiLinux, SiSqlite } from "react-icons/si";
 import s from "./StackPlotter.module.css";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
-const nodes=[{name:"UI",items:["React","Next.js","TypeScript","Tailwind CSS"]},{name:"API",items:["Python","Flask","FastAPI","REST APIs"]},{name:"DATA",items:["PostgreSQL","MSSQL","SQL","ETL pipelines"]}];
-const moreTools=["LLM integration","Text-to-SQL","Prompt engineering","Ollama","Llama 3","Mistral","Claude","HuggingFace","TensorFlow","PyTorch","OpenCV","JavaScript","HTML5","CSS3","MySQL","SQLite","Pandas","NumPy","Docker","Git/GitHub","Linux","GCP","CI/CD","Vercel","Motion","GSAP"];
-function Icon({index}:{index:number}){return <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">{index===0?<><rect x="10" y="10" width="11" height="11" rx="2"/><rect x="27" y="10" width="11" height="11" rx="2"/><rect x="10" y="27" width="11" height="11" rx="2"/><rect x="27" y="27" width="11" height="11" rx="2"/></>:index===1?<><path d="m20 7 8 0 1 6 5 3 6-2 4 7-5 4v6l4 4-4 7-6-2-5 3-1 5h-8l-1-5-5-3-6 2-4-7 5-4v-6l-5-4 4-7 6 2 5-3Z" transform="translate(0 -4) scale(.95)"/><circle cx="24" cy="24" r="7"/></>:<><ellipse cx="24" cy="11" rx="15" ry="6"/><path d="M9 11v25c0 8 30 8 30 0V11M9 23c0 8 30 8 30 0M9 35c0 8 30 8 30 0"/></>}</svg>}
+gsap.registerPlugin(ScrollTrigger,useGSAP);
+const skills=[
+  {name:"JavaScript",icon:SiJavascript,color:"#e2b321"},{name:"React",icon:SiReact,color:"#087ea4"},{name:"Next.js",icon:SiNextdotjs,color:"var(--ink)"},{name:"TypeScript",icon:SiTypescript,color:"#3178c6"},
+  {name:"Tailwind CSS",icon:SiTailwindcss,color:"#0891b2"},{name:"Python",icon:SiPython,color:"#3776ab"},{name:"Flask",icon:SiFlask,color:"var(--ink)"},{name:"FastAPI",icon:SiFastapi,color:"#009688"},
+  {name:"PostgreSQL",icon:SiPostgresql,color:"#4169a1"},{name:"MySQL",icon:SiMysql,color:"#4479a1"},{name:"SQLite",icon:SiSqlite,color:"#1680ad"},{name:"Docker",icon:SiDocker,color:"#2496ed"},
+  {name:"Git",icon:SiGit,color:"#f05032"},{name:"Pandas",icon:SiPandas,color:"#7665ae"},{name:"NumPy",icon:SiNumpy,color:"#4dabcf"},{name:"Linux",icon:SiLinux,color:"var(--ink)"}
+];
+const offsets=[[-.04,.03,-8],[.02,-.04,7],[-.015,.02,-5],[.025,-.03,9],[.02,.025,5],[-.035,-.025,-8],[.035,.035,7],[-.025,.01,-6],[-.03,-.01,-5],[.025,.04,9],[-.025,-.025,-7],[.02,.04,6],[.035,.01,8],[-.025,-.025,-5],[.02,.02,6],[-.02,-.02,-8]];
+const moreTools=["MSSQL","SQL","REST APIs","ETL pipelines","LLM integration","Text-to-SQL","Prompt engineering","Ollama","Llama 3","Mistral","Claude","HuggingFace","TensorFlow","PyTorch","OpenCV","HTML5","CSS3","GCP","CI/CD","Vercel","Motion","GSAP"];
 
 export default function StackPlotter(){
   const root=useRef<HTMLElement>(null);
+  const timeline=useRef<gsap.core.Timeline|null>(null);
   const [more,setMore]=useState(false);
+  const [playing,setPlaying]=useState(false);
+  const [canReplay,setCanReplay]=useState(false);
   useEffect(()=>{ScrollTrigger.refresh();},[more]);
   useGSAP(()=>{
     const mm=gsap.matchMedia();
     mm.add("(min-width: 900px) and (min-height: 720px) and (prefers-reduced-motion: no-preference)",()=>{
-      const el=root.current!;el.dataset.plotter="active";
-      const stage=el.querySelector<HTMLElement>(`.${s.stage}`)!;
-      const dot=el.querySelector<HTMLElement>(`.${s.dot}`)!;
-      const heading=el.querySelector<HTMLElement>(`.${s.heading}`)!;
-      const anchor=el.querySelector<HTMLElement>(`.${s.anchor}`)!;
-      const bus=el.querySelector<SVGPathElement>(`.${s.bus}`)!;
-      const strokes=Array.from(el.querySelectorAll<SVGGeometryElement>(`.${s.graph} path, .${s.node} svg rect, .${s.node} svg path, .${s.node} svg circle, .${s.node} svg ellipse`));
-      strokes.forEach(path=>{const length=path.getTotalLength();gsap.set(path,{strokeDasharray:length,strokeDashoffset:length});});
-      const point=(element:Element,x=.5,y=.5)=>{const a=element.getBoundingClientRect(),b=stage.getBoundingClientRect();return{x:a.left-b.left+a.width*x-7,y:a.top-b.top+a.height*y-7};};
-      const headingStart=()=>point(heading,0,.65);
-      const landing=()=>point(anchor,.5,.5);
-      const nodeEls=Array.from(el.querySelectorAll<HTMLElement>(`.${s.node}`));
-      gsap.set(dot,{...headingStart(),scale:0});
-      gsap.set(heading,{clipPath:"inset(0 100% 0 0)"});
-      gsap.set(`.${s.subtitle}, .${s.nodeLabel}, .${s.item}, .${s.foot}`,{autoAlpha:0});
-      gsap.set(`.${s.icon}`,{borderColor:"transparent"});
-      gsap.set(`.${s.splash} i`,{scale:0,opacity:0});
-      const tl=gsap.timeline({scrollTrigger:{trigger:el,start:"top top",end:"+=220%",scrub:.7,pin:stage,invalidateOnRefresh:true},defaults:{ease:"none"}});
-      tl.to(dot,{scale:1,duration:.04,ease:"back.out(2.5)"},0)
-        .to(dot,{x:()=>landing().x,y:()=>headingStart().y,duration:.25},.04)
-        .to(heading,{clipPath:"inset(0 0% 0 0)",duration:.25},.04)
-        .to(`.${s.subtitle}`,{autoAlpha:1,duration:.08},.22)
-        .to(dot,{x:()=>point(bus,0,0).x,y:()=>point(bus,0,0).y,duration:.04},.30)
-        .to(bus,{strokeDashoffset:0,duration:.36},.34)
-        .to(dot,{x:()=>point(bus,1,0).x,y:()=>point(bus,1,0).y,duration:.36},.34);
-      nodeEls.forEach((node,i)=>{
-        const at=.35+i*.105;
-        tl.to(node.querySelector(`.${s.icon}`),{borderColor:"#ff5a3638",duration:.07},at)
-          .to(node.querySelectorAll('svg path,svg rect,svg circle,svg ellipse'),{strokeDashoffset:0,duration:.065,stagger:.006},at+.015)
-          .to(node.querySelector(`.${s.nodeLabel}`),{autoAlpha:1,duration:.04},at+.055);
+      const el=root.current!, stage=el.querySelector<HTMLElement>(`.${s.stage}`)!, heading=el.querySelector<HTMLElement>(`.${s.heading}`)!, anchor=el.querySelector<HTMLElement>(`.${s.anchor}`)!,dot=el.querySelector<HTMLElement>(`.${s.dot}`)!;
+      const tiles=Array.from(el.querySelectorAll<HTMLElement>(`.${s.tile}`));
+      const point=(target:Element,x=.5,y=.5)=>{const a=target.getBoundingClientRect(),b=stage.getBoundingClientRect();return{x:a.left-b.left+a.width*x-7,y:a.top-b.top+a.height*y-7};};
+      const initial=point(heading,0,.7),landing=point(anchor);
+      const scatter=tiles.map((tile,i)=>{const [dx,dy,rotation]=offsets[i];const board=el.querySelector<HTMLElement>(`.${s.board}`)!;return{x:dx*board.clientWidth,y:dy*board.clientHeight,rotation};});
+      const positions=tiles.map((tile,i)=>{const p=point(tile);return{x:p.x+scatter[i].x,y:p.y+scatter[i].y};});
+      el.dataset.plotter="active";
+      const path=el.querySelector<SVGPathElement>(`.${s.trail}`)!;
+      const svg=el.querySelector<SVGSVGElement>(`.${s.trailSvg}`)!;
+      svg.setAttribute("viewBox",`0 0 ${stage.clientWidth} ${stage.clientHeight}`);
+      path.setAttribute("d",positions.map((p,i)=>`${i?"L":"M"}${p.x+7},${p.y+7}`).join(" "));
+      const length=path.getTotalLength();gsap.set(path,{strokeDasharray:length,strokeDashoffset:length});
+      tiles.forEach((tile,i)=>{gsap.set(tile,{...scatter[i],autoAlpha:0});const outline=tile.querySelector<SVGRectElement>("rect")!;const len=outline.getTotalLength();gsap.set(outline,{strokeDasharray:len,strokeDashoffset:len});});
+      gsap.set(dot,{...initial,scale:0});gsap.set(heading,{clipPath:"inset(0 100% 0 0)"});gsap.set(`.${s.subtitle}, .${s.skillIcon}, .${s.skillName}`,{autoAlpha:0});gsap.set(`.${s.splash} i`,{opacity:0,scale:0});
+      const tl=gsap.timeline({paused:true,onStart:()=>{setPlaying(true);setCanReplay(true);},onComplete:()=>{gsap.set(dot,point(anchor));setPlaying(false);}});timeline.current=tl;
+      tl.to(dot,{scale:1,duration:.22,ease:"back.out(2.5)"})
+        .to(dot,{x:landing.x,y:initial.y,duration:.85,ease:"power1.inOut"},.15)
+        .to(heading,{clipPath:"inset(0 0% 0 0)",duration:.85,ease:"power1.inOut"},.15)
+        .to(`.${s.subtitle}`,{autoAlpha:1,duration:.35},.75)
+        .to(path,{strokeDashoffset:0,duration:3.25,ease:"none"},1.15);
+      tiles.forEach((tile,i)=>{const at=1.15+i*.19;
+        tl.to(dot,{...positions[i],duration:.19,ease:"power1.inOut"},at)
+          .to(tile,{autoAlpha:1,duration:.08},at+.10)
+          .to(tile.querySelector("rect"),{strokeDashoffset:0,duration:.24,ease:"none"},at+.10)
+          .to(tile.querySelectorAll(`.${s.skillIcon}, .${s.skillName}`),{autoAlpha:1,duration:.2},at+.18);
       });
-      tl.to(`.${s.stem}`,{strokeDashoffset:0,duration:.1,stagger:.008},.70)
-        .to(`.${s.item}`,{autoAlpha:1,duration:.025,stagger:.007},.71)
-        .to(dot,{x:()=>point(nodeEls[2],.5,1).x,y:()=>point(nodeEls[2],.5,1).y+125,duration:.11},.70)
-        .to(dot,{x:()=>landing().x,duration:.16,ease:"power2.inOut"},.82)
-        .to(dot,{y:()=>landing().y-120,duration:.075,ease:"power2.out"},.82)
-        .to(dot,{y:()=>landing().y,duration:.085,ease:"bounce.out"},.895)
-        .to(dot,{scaleX:1.25,scaleY:.8,duration:.009,repeat:1,yoyo:true},.98)
-        .to(`.${s.splash} i`,{scale:1,opacity:1,duration:.006},.974)
-        .to(`.${s.splash} i`,{x:(i)=>Math.cos(i*Math.PI/3)*28,y:(i)=>Math.sin(i*Math.PI/3)*23,opacity:0,scale:.3,duration:.02},.98)
-        .to(`.${s.foot}`,{autoAlpha:1,duration:.02},.98);
-      return()=>{delete el.dataset.plotter;};
+      tl.to(path,{autoAlpha:0,duration:.5},4.5)
+        .to(tiles,{x:0,y:0,rotation:0,duration:1.05,stagger:{amount:.22},ease:"power3.inOut"},4.5)
+        .to(dot,{x:()=>point(anchor).x,duration:.9,ease:"power2.inOut"},5.8)
+        .to(dot,{y:()=>point(anchor).y-120,duration:.42,ease:"power2.out"},5.8)
+        .to(dot,{y:()=>point(anchor).y,duration:.48,ease:"bounce.out"},6.22)
+        .to(dot,{scaleX:1.25,scaleY:.8,duration:.065,repeat:1,yoyo:true},6.7)
+        .to(`.${s.splash} i`,{opacity:1,scale:1,duration:.03},6.68)
+        .to(`.${s.splash} i`,{x:(i)=>Math.cos(i*Math.PI/3)*28,y:(i)=>Math.sin(i*Math.PI/3)*23,opacity:0,duration:.35},6.71);
+      ScrollTrigger.create({trigger:el,start:"top 65%",once:true,onEnter:()=>tl.play()});
+      const finish=ScrollTrigger.create({trigger:el,start:"bottom top",onEnter:()=>{if(tl.isActive())tl.progress(1);}});
+      return()=>{finish.kill();timeline.current=null;delete el.dataset.plotter;};
     });
     return()=>mm.revert();
   },{scope:root});
   return <section id="skills" ref={root} className={s.section} aria-labelledby="stack-heading"><div className={s.stage}><div className={`${s.wrap} max-w-6xl mx-auto px-8 md:px-16`}>
-    <p className={s.eyebrow}>THE TOOLS / ONE CONNECTED SYSTEM</p><div className={s.headingRow}><h2 id="stack-heading" className={s.heading}>THE STACK<br/>BEHIND THE WORK<span className={s.anchor} aria-hidden="true"><span className={s.staticPeriod}>.</span><span className={s.splash}>{Array.from({length:6},(_,i)=><i key={i}/>)}</span></span></h2></div><p className={s.subtitle}>One request travels through an interface, an API, and data.</p>
-    <div className={s.diagram}><svg className={s.graph} viewBox="0 0 1000 240" preserveAspectRatio="none" aria-hidden="true"><path className={s.bus} d="M 166 20 H 834"/><path className={s.stem} d="M166 20V240"/><path className={s.stem} d="M500 20V240"/><path className={s.stem} d="M834 20V240"/></svg><div className={s.nodes}>{nodes.map((node,i)=><div className={s.lane} key={node.name}><div className={s.node}><svg className={s.nodeFrame} viewBox="0 0 240 100" preserveAspectRatio="none" aria-hidden="true"><rect x=".5" y=".5" width="239" height="99" rx="16"/></svg><span className={s.icon}><Icon index={i}/></span><span className={s.nodeLabel}>{node.name}</span></div><ul>{node.items.map(item=><li className={s.item} key={item}>{item}</li>)}</ul></div>)}</div></div>
-    <div className={s.foot}><button type="button" aria-expanded={more} onClick={()=>setMore(!more)}>{more?"− Fewer tools":"+ More tools"}</button><a href="#experience">Follow the request ↘</a></div>
-    </div><span className={s.dot} aria-hidden="true"/></div>{more&&<ul className={s.more}>{moreTools.map(tool=><li key={tool}>{tool}</li>)}</ul>}</section>;
+    <p className={s.eyebrow}>TOOLS BEHIND THE WORK <span>FROM A LITTLE CHAOS TO A CLEAR SYSTEM</span></p><h2 id="stack-heading" className={s.heading}>The stack behind the work<span className={s.anchor} aria-hidden="true"><span className={s.staticPeriod}>.</span><span className={s.splash}>{Array.from({length:6},(_,i)=><i key={i}/>)}</span></span></h2><p className={s.subtitle}>One request travels through an interface, an API, and data.</p>
+    <div className={s.board}><ul className={s.grid}>{skills.map(skill=><li className={s.tile} key={skill.name}><svg className={s.outline} viewBox="0 0 220 70" preserveAspectRatio="none" aria-hidden="true"><rect x=".5" y=".5" width="219" height="69" rx="11"/></svg><span className={s.skillIcon} style={{"--skill-color":skill.color} as CSSProperties}><skill.icon aria-hidden="true"/></span><span className={s.skillName}>{skill.name}</span></li>)}</ul></div>
+    <div className={s.foot}><button type="button" aria-expanded={more} onClick={()=>setMore(!more)}>{more?"− Fewer tools":"+ More tools"}</button>{canReplay&&<button className={s.replay} type="button" disabled={playing} onClick={()=>timeline.current?.restart()}>{playing?"Drawing the stack…":"↻ Replay drawing"}</button>}<a href="#experience">Follow the request ↘</a></div><p className={s.credit}>Technology marks: <a href="https://simpleicons.org/" target="_blank" rel="noreferrer">Simple Icons</a>.</p>
+    </div><svg className={s.trailSvg} aria-hidden="true"><path className={s.trail}/></svg><span className={s.dot} aria-hidden="true"/></div>{more&&<ul className={s.more}>{moreTools.map(tool=><li key={tool}>{tool}</li>)}</ul>}</section>;
 }
-

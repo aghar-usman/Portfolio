@@ -14,7 +14,7 @@ export default function SelectedWork() {
       if (!alive || !root.current) return;
       gsap.registerPlugin(ScrollTrigger);
       const mm = gsap.matchMedia();
-      mm.add("(min-width: 900px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)", () => {
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
         const el=root.current!;
         el.dataset.tear="active";
         const backdrop=el.querySelector<HTMLElement>(`.${s.backdrop}`)!;
@@ -40,6 +40,7 @@ export default function SelectedWork() {
       <div className={`${s.paper} ${s.upper}`} aria-hidden="true"><div className={s.paperContent}><span className={s.chapter}>01 / PROJECTS & EXPERIMENTS</span><span className={s.giant}>SELECTED<br/>WORK</span><span className={s.tearHint}>Keep scrolling to unfold <ArrowDown size={16}/></span></div></div>
       <div className={`${s.paper} ${s.lower}`} aria-hidden="true"><div className={s.paperContent}><span className={s.chapter}>01 / PROJECTS & EXPERIMENTS</span><span className={s.giant}>SELECTED<br/>WORK</span><span className={s.tearHint}>Keep scrolling to unfold <ArrowDown size={16}/></span></div></div>
     </div></div>
+    <div className={s.mobileDetails}><ul className={s.tags}>{featured.stack.map(tool=><li key={tool}>{tool}</li>)}</ul><details className={s.details}><summary>How I built SU·EN Studio</summary><ul>{featured.points.map(point=><li key={point}>{point}</li>)}</ul></details></div>
     <div className={s.moreWork}>{projects.slice(1).map((project,i)=><article className={s.secondary} key={project.name}><span className={s.smallIndex}>0{i+2}</span><div><span className={s.year}>{project.period}</span><h3>{project.name}</h3><p>{project.tagline}</p>{project.currentPage&&<p className={s.current}>You are viewing this page.</p>}<ul className={s.tags}>{project.stack.map(tool=><li key={tool}>{tool}</li>)}</ul><details className={s.details}><summary>How I built it</summary><ul>{project.points.map(point=><li key={point}>{point}</li>)}</ul></details></div><a className={s.source} href={project.github} target="_blank" rel="noreferrer" aria-label={`View ${project.name} on GitHub`}>GitHub <ArrowUpRight size={18}/></a></article>)}</div>
   </section>;
 }
