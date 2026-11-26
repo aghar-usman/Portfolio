@@ -41,7 +41,7 @@ export default function LiquidThemeToggle({dark,onToggle,className=""}:{dark:boo
   const settleLiquid=()=>{
     if(!membrane.current||running.current||matchMedia("(prefers-reduced-motion: reduce), (hover: none)").matches)return;
     settle.current?.cancel();
-    settle.current=animate(membrane.current,{scaleX:{from:1.08,to:1},scaleY:{from:.92,to:1},ease:spring({duration:450,bounce:.18})});
+    settle.current=animate(membrane.current,{scaleX:{from:1.035,to:1},scaleY:{from:.965,to:1},ease:spring({duration:360,bounce:.12})});
   };
   function change(button:HTMLButtonElement){
     if(running.current)return;

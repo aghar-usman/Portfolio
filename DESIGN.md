@@ -41,7 +41,7 @@ Education uses an academic-record composition with the original college crest on
 
 Contact uses a serif invitation, a bounded Skiper61 magnetic email action, copy-email feedback, a resume download, and labeled LinkedIn/GitHub brand icons. Keep touch controls stationary and all actions native links or buttons.
 
-The theme toggle owns the organic liquid transition. Its wet charcoal membrane uses restrained cool highlights and a small Anime.js spring settle. Native view transitions reveal the actual themed page through 22 smooth tendrils; canvas provides a fallback. Clear each temporary mask after completion. Keep approved theme tokens underneath and bypass motion for system reduced motion. Do not add similar takeover effects to ordinary controls.
+The theme toggle owns the organic liquid transition. Its hover uses matte brand-blue ink, a subtle organic edge, and a small Anime.js spring settle; avoid glossy black bubbles or a separate visual style. Native view transitions reveal the actual themed page through 22 smooth tendrils; canvas provides a fallback. Clear each temporary mask after completion. Keep approved theme tokens underneath and bypass motion for system reduced motion. Do not add similar takeover effects to ordinary controls.
 
 ## Do's and Don'ts
 Respect system reduced motion without a visible motion toggle. Retain focus indicators and text descriptions for statuses. Do not imply that the sample connects to Team Thai systems or a live language model. Preserve full-resolution portrait assets.
