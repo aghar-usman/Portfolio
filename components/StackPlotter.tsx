@@ -46,25 +46,24 @@ export default function StackPlotter(){
         .to(dot,{x:landing.x,y:initial.y,duration:.85,ease:"power1.inOut"},.15)
         .to(heading,{clipPath:"inset(0 0% 0 0)",duration:.85,ease:"power1.inOut"},.15)
         .to(`.${s.subtitle}`,{autoAlpha:1,duration:.35},.75)
-        .to(path,{strokeDashoffset:0,duration:3.25,ease:"none"},1.15);
-      tiles.forEach((tile,i)=>{const at=1.15+i*.19;
-        tl.to(dot,{...positions[i],duration:.19,ease:"power1.inOut"},at)
-          .to(tile,{autoAlpha:1,duration:.08},at+.10)
-          .to(tile.querySelector("rect"),{strokeDashoffset:0,duration:.24,ease:"none"},at+.10)
-          .to(tile.querySelectorAll(`.${s.skillIcon}, .${s.skillName}`),{autoAlpha:1,duration:.2},at+.18);
+        .to(path,{strokeDashoffset:0,duration:13.12,ease:"none"},1.4);
+      tiles.forEach((tile,i)=>{const at=1.4+i*.82;
+        tl.to(dot,{...positions[i],duration:.55,ease:"power1.inOut"},at)
+          .to(tile,{autoAlpha:1,duration:.15},at+.15)
+          .to(tile.querySelector("rect"),{strokeDashoffset:0,duration:.55,ease:"none"},at+.15)
+          .to(tile.querySelectorAll(`.${s.skillIcon}, .${s.skillName}`),{autoAlpha:1,duration:.3},at+.45);
       });
-      tl.to(path,{autoAlpha:0,duration:.5},4.5)
-        .to(tiles,{x:0,y:0,rotation:0,duration:1.05,stagger:{amount:.22},ease:"power3.inOut"},4.5)
-        .to(dot,{x:()=>point(anchor).x,duration:.9,ease:"power2.inOut"},5.8)
-        .to(dot,{y:()=>point(anchor).y-120,duration:.42,ease:"power2.out"},5.8)
-        .to(dot,{y:()=>point(anchor).y,duration:.48,ease:"bounce.out"},6.22)
-        .to(dot,{scaleX:1.25,scaleY:.8,duration:.065,repeat:1,yoyo:true},6.7)
-        .to(`.${s.splash} i`,{opacity:1,scale:1,duration:.03},6.68)
-        .to(`.${s.splash} i`,{x:(i)=>Math.cos(i*Math.PI/3)*28,y:(i)=>Math.sin(i*Math.PI/3)*23,opacity:0,duration:.35},6.71);
-      tl.timeScale(.375);
-      ScrollTrigger.create({trigger:el,start:"top 65%",once:true,onEnter:()=>tl.play()});
-      const finish=ScrollTrigger.create({trigger:el,start:"bottom top",onEnter:()=>{if(tl.isActive())tl.progress(1);}});
-      return()=>{finish.kill();timeline.current=null;delete el.dataset.plotter;};
+      tl.to(path,{autoAlpha:0,duration:.5},14.6)
+        .to(tiles,{x:0,y:0,rotation:0,duration:1.4,stagger:{amount:.2},ease:"power3.inOut"},14.6)
+        .to(dot,{x:()=>point(anchor).x,duration:1.5,ease:"power2.inOut"},16.4)
+        .to(dot,{y:()=>point(anchor).y-120,duration:.7,ease:"power2.out"},16.4)
+        .to(dot,{y:()=>point(anchor).y,duration:.8,ease:"bounce.out"},17.1)
+        .to(dot,{scaleX:1.25,scaleY:.8,duration:.065,repeat:1,yoyo:true},17.9)
+        .to(`.${s.splash} i`,{opacity:1,scale:1,duration:.03},17.88)
+        .to(`.${s.splash} i`,{x:(i)=>Math.cos(i*Math.PI/3)*28,y:(i)=>Math.sin(i*Math.PI/3)*23,opacity:0,duration:.35},17.91)
+        .to(dot,{scale:1,duration:.74},18.26);
+      ScrollTrigger.create({trigger:el,start:"top 20%",end:"bottom 20%",onEnter:()=>{if(tl.progress()<1)tl.play();},onEnterBack:()=>{if(tl.progress()<1)tl.resume();},onLeave:()=>tl.pause(),onLeaveBack:()=>tl.pause()});
+      return()=>{timeline.current=null;delete el.dataset.plotter;};
     });
     return()=>mm.revert();
   },{scope:root});
