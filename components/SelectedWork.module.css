@@ -14,3 +14,7 @@
 @media(max-width:899px),(max-height:699px){.work[data-tear=active] .featured{flex:none}.work[data-tear=active] .browser{flex:none}.work[data-tear=active] .screen{flex:none;aspect-ratio:1.6;max-height:40svh}.work[data-tear=active] .screen img{height:auto;aspect-ratio:1.6;object-fit:contain}.work[data-tear=active] .backdrop{justify-content:center}}
 /* The shared Skiper40 label provides the underline and keyboard feedback. */
 .liveLink::after{content:none}
+
+/* The cover belongs to the current theme; the project surface still inverts. */
+.paper .giant{color:#2b5b84}
+:global(html[data-theme=night]) .paper .giant{color:#82b6dc}

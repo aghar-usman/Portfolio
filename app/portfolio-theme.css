@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Serif+Display&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Serif+Display&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
 :root{--paper:#fdf5e8;--surface:#f7e3c6;--ink:#1e111a;--muted:#5a4452;--red:#2b5b84;--red-text:#1e4263;--green:#2b5b84;--hair:#d8c1a3;--border:#5a4452;--ui:#2b5b84;--api:#1e4263;--data:#1e111a;--button-text:#fdf5e8}
 :root[data-theme=night]{--paper:#141318;--surface:#1d1c24;--ink:#fdf5e8;--muted:#b8b2bd;--red:#3a76a8;--red-text:#f48c37;--green:#f48c37;--hair:#32303e;--border:#b8b2bd;--ui:#2b5b84;--api:#1e4263;--data:#272631;--button-text:#141318}
 body{font-family:'Space Grotesk',sans-serif;min-width:0}.section-head h2,.experience-copy h3,.college h3,.project-card h3{font-family:'DM Serif Display',serif;font-weight:400}.section{scroll-margin-top:0}.contact h2{font-family:'Syne',sans-serif;color:var(--red)}.contact .actions{position:relative;top:auto;right:auto;width:auto}.contact .email{max-width:none}.contact h2{position:relative;top:auto;left:auto;margin:70px 0;text-align:left;font-size:clamp(85px,13vw,180px)}.contact-inner{min-height:auto}.contact-links,.contact .copyright{position:relative!important;bottom:auto;left:auto}.contact .actions a{width:auto}.contact-inner>p:first-of-type{max-width:34ch}.contact{min-height:100svh}.contact h2 br{display:none}@media(max-width:600px){.contact .actions{display:grid;width:100%}.contact .actions a{width:100%}.contact h2{font-size:22vw}.contact .email{font-size:21px}.section{padding-block:85px 60px}}
@@ -15,3 +15,11 @@ html[data-liquid-direction=night]::view-transition-old(root){z-index:1}
 html[data-liquid-direction=night]::view-transition-new(root){z-index:2}
 html[data-liquid-direction=day]::view-transition-old(root){z-index:2}
 html[data-liquid-direction=day]::view-transition-new(root){z-index:1}
+:root{color-scheme:light}:root[data-theme=night]{color-scheme:dark}
+html.lenis{scroll-behavior:auto!important}
+::selection{background:#f48c37;color:#141318}
+.wrap{width:min(calc(100% - var(--page-gutter)*2),var(--content-max))}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
+/* Keep native scrolling and keyboard navigation, hide only the window chrome. */
+html{scrollbar-width:none}html::-webkit-scrollbar{display:none;width:0;height:0}
+html[data-liquid-direction] *,html[data-liquid-direction] *::before,html[data-liquid-direction] *::after{transition:none!important}

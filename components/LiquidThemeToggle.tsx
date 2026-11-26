@@ -59,7 +59,10 @@ export default function LiquidThemeToggle({dark,onToggle,className=""}:{dark:boo
       void vt.ready.then(()=>{
         const frames=Array.from({length:33},(_,i)=>({clipPath:liquidPath(contour(entering?i/32:1-i/32,x,y,radius))}));
         const reveal=document.documentElement.animate(frames,{duration:entering?1300:1050,easing:"linear",fill:"both",pseudoElement:entering?"::view-transition-new(root)":"::view-transition-old(root)"});
-        return reveal.finished.finally(()=>reveal.cancel());
+        // Keep the final mask applied until the snapshot layer is gone. Removing
+        // it earlier briefly exposes the complete old (dark) snapshot again.
+        void vt.finished.then(()=>reveal.cancel(),()=>reveal.cancel());
+        return reveal.finished;
       }).catch(()=>vt.skipTransition());
       void vt.finished.then(finish,finish);
       return;
@@ -87,5 +90,5 @@ export default function LiquidThemeToggle({dark,onToggle,className=""}:{dark:boo
     };
     frame.current=requestAnimationFrame(paint);
   }
-  return <><button type="button" className={`${className} ${s.toggle}`} data-dark={dark} disabled={busy} aria-label={`Preview ${dark?"light":"dark"} mode`} aria-pressed={dark} onPointerEnter={settleLiquid} onClick={e=>change(e.currentTarget)}><span ref={membrane} className={s.life} aria-hidden="true">{Array.from({length:3},(_,i)=><i key={i}/>)}</span>{dark?<Sun size={19} aria-hidden="true"/>:<Moon size={19} aria-hidden="true"/>}</button>{mounted&&createPortal(<canvas ref={canvas} className={s.canvas} aria-hidden="true"/>,document.body)}</>;
+  return <><button type="button" className={`${className} ${s.toggle}`} data-dark={dark} data-tooltip={`Switch to ${dark?"light":"dark"}`} disabled={busy} aria-label={`Preview ${dark?"light":"dark"} mode`} aria-pressed={dark} onPointerEnter={settleLiquid} onClick={e=>change(e.currentTarget)}><span ref={membrane} className={s.life} aria-hidden="true">{Array.from({length:3},(_,i)=><i key={i}/>)}</span>{dark?<Sun size={19} aria-hidden="true"/>:<Moon size={19} aria-hidden="true"/>}</button>{mounted&&createPortal(<canvas ref={canvas} className={s.canvas} aria-hidden="true"/>,document.body)}</>;
 }

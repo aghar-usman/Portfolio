@@ -33,7 +33,7 @@ Caveat is a limited handwritten accent for paper-note captions, the hero checkli
 Use the existing wrap for equal edges. Recompose columns into a single reading order on phones. The request playground keeps its input and action together, then shows the four processing stages and persistent results. Wrap code and labels without horizontal overflow.
 
 ## Components
-Navigation, project actions, and contact links share the free Skiper40 directional underline and arrow interaction. Maintain the visible Skiper UI attribution. Keep the effect CSS-only, with keyboard focus parity, visible touch arrows, and no transition for reduced motion.
+Navigation, project actions, and contact links share the free Skiper40 directional underline and arrow interaction. Maintain the visible Skiper UI attribution. Keep the effect CSS-only, with keyboard focus parity and no transition for reduced motion. Navbar arrows appear only on hover or keyboard focus, per the approved reference; its equal-width cells use blue accents.
 
 The Team Thai playground is a local, deterministic simulation. It starts on a deliberate Run action, explains each stage, and preserves the answer until the next action. Every sample and custom supported question uses fictional orders. Changing or deleting data is simulated as blocked. Keep the actual internship facts immediately below the interaction.
 
@@ -45,3 +45,12 @@ The theme toggle owns the organic liquid transition. Its hover uses matte brand-
 
 ## Do's and Don'ts
 Respect system reduced motion without a visible motion toggle. Retain focus indicators and text descriptions for statuses. Do not imply that the sample connects to Team Thai systems or a live language model. Preserve full-resolution portrait assets.
+
+## Final interaction polish
+Header icon controls use paper-tab labels on hover and keyboard focus. The portrait cue says “Give me a nudge” to match its nod response. Light and dark straw-hat pin variants preserve the original full-resolution portrait files.
+
+Lenis shares the GSAP ticker; touch scrolling remains native and reduced motion bypasses smoothing. Nested project details retain native scrolling. The window scrollbar is hidden without disabling scrolling.
+
+The skills drawing has a Show full stack action and replay. Team Thai uses one outlined case-study frame. Its lazy-loaded Remotion request graphic follows the same stage timing as the demo, pulses on arrival and stops at the guard for blocked examples. Reduced motion bypasses the graphic.
+
+Keep global palette declarations in portfolio-theme.css, not globals.css. Shared layout and focus tokens live in design-tokens.css. The tear cover title uses blue in both themes; the content underneath retains the inverse surface.

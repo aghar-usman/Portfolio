@@ -1,0 +1,14 @@
+/* Shared layout, focus, and interaction tokens extracted from the approved UI. */
+:root{
+  --content-max:1280px;
+  --page-gutter:40px;
+  --motion-fast:180ms;
+  --motion-ui:240ms;
+  --motion-settle:360ms;
+  --focus-color:var(--red-text,#1e4263);
+  --focus-width:2px;
+}
+@media(max-width:600px){:root{--page-gutter:20px}}
+
+:root{--sql:#1e111a;--success:#1f5c3a;--success-bg:#dcebe0}
+:root[data-theme=night]{--sql:#0b0d10;--success:#7fd6a0;--success-bg:#1c3a2a}

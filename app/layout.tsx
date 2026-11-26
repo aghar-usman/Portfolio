@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 import "./portfolio-theme.css";
+import "./design-tokens.css";
 
 const title = "Aghar Usman K T | Full-stack developer";
 const description = "React interfaces, Python APIs, and SQL that answers back. Explore Aghar Usman's work, experience, and projects.";
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: { title, description, type: "website", images: ["/share.svg"] },
   twitter: { card: "summary_large_image", title, description, images: ["/share.svg"] },
 };
-export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: [{ media: "(prefers-color-scheme: light)", color: "#EEEDE8" }, { media: "(prefers-color-scheme: dark)", color: "#111317" }] };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: [{ media: "(prefers-color-scheme: light)", color: "#FDF5E8" }, { media: "(prefers-color-scheme: dark)", color: "#141318" }] };
 const themeBoot = `try{document.documentElement.dataset.theme=localStorage.getItem('portfolio-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'light');delete document.documentElement.dataset.reduceMotion}catch{}`;
 
 // Grammarly can add attributes to body before hydration. Suppress only this element's attribute mismatch.
