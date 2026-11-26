@@ -40,7 +40,7 @@ export default function ExperienceLab() {
       <div className={s.labHead}><span><Database size={18} aria-hidden="true" /> ERP request playground</span><span>Interactive simulation · fictional data</span></div>
       <form onSubmit={e => { e.preventDefault(); run(); }} className={s.form}>
         <label htmlFor="erp-question">What would you like to know?</label>
-        <div className={s.inputRow}><input id="erp-question" value={question} maxLength={160} disabled={busy} onChange={e => { setQuestion(e.target.value); setError(""); }} aria-describedby={error ? "erp-error" : "erp-help"} /><button disabled={busy || !question.trim()} type="submit">{busy ? "Following request…" : step === 4 ? "Run again" : "Run request"}<ArrowRight size={18} aria-hidden="true" /></button></div>
+        <div className={s.inputRow}><input id="erp-question" value={question} maxLength={160} disabled={busy} onChange={e => { setQuestion(e.target.value); setError(""); setStep(0); setResult(null); }} aria-describedby={error ? "erp-error" : "erp-help"} /><button disabled={busy || !question.trim()} type="submit">{busy ? "Following request…" : step === 4 ? "Run again" : "Run request"}<ArrowRight size={18} aria-hidden="true" /></button></div>
         <p id="erp-help" className={s.help}>Try a sample, or type a question about the sample orders.</p>
         <div className={s.presets}>{examples.map(q => <button type="button" key={q} disabled={busy} aria-pressed={question === q} onClick={() => { setQuestion(q); setError(""); setStep(0); setResult(null); }}>{q}</button>)}</div>
         {error && <p role="alert" id="erp-error">{error}</p>}

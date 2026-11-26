@@ -5,6 +5,7 @@ import SelectedWork from "./SelectedWork";
 import StackPlotter from "./StackPlotter";
 import HeroStudy from "./HeroStudy";
 import ExperienceLab from "./ExperienceLab";
+import { Link001, Link002 } from "./ui/skiper-ui/skiper40";
 import { achievements, contact, education, languages } from "@/data";
 
 export default function Portfolio() {
@@ -40,7 +41,7 @@ export default function Portfolio() {
       <StackPlotter />
       <ExperienceLab />
       <section id="education" className="section education" aria-labelledby="education-title"><div className="wrap"><div className="section-head"><span className="eyebrow">04 / The foundation</span><h2 id="education-title">Education.</h2></div><div className="education-grid"><div><div className="college"><span className="college-mark" aria-hidden="true">MCE</span><div><h3>{education.school}</h3><p>{education.location} · {education.period}</p></div></div><p className="degree">{education.degree}</p><p>{education.detail}</p><div className="achievement"><span className="eyebrow">Achievement</span><p>{achievements[0]}</p></div><div className="languages"><span className="eyebrow">Languages</span><p>{languages.map(l => l.name).join(" · ")}</p></div></div><div className="coursework"><span className="eyebrow">Selected coursework</span><ul>{education.coursework.map(c => <li key={c}>{c}</li>)}</ul></div></div></div></section>
-      <section id="contact" className="section contact" aria-labelledby="contact-title"><div className="wrap contact-inner"><span className="eyebrow">05 / 200 OK</span><p>Email me about a full-stack role or a website you’re building.</p><a className="email" href={`mailto:${contact.email}`}>{contact.email}</a><div className="actions"><a className="primary" href={`mailto:${contact.email}`}>Send an email ↗</a><a className="outline" href={contact.resume} download>Download resume ↓</a></div><h2 id="contact-title">LET’S<br />TALK</h2><div className="contact-links"><a href={contact.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a><a href={contact.github} target="_blank" rel="noreferrer">GitHub ↗</a></div><p className="copyright">© {new Date().getFullYear()} Aghar Usman K T</p></div></section>
+      <section id="contact" className="section contact" aria-labelledby="contact-title"><div className="wrap contact-inner"><span className="eyebrow">05 / 200 OK</span><p>Email me about a full-stack role or a website you’re building.</p><Link002 className="email" href={`mailto:${contact.email}`}>{contact.email}</Link002><div className="actions"><a className="primary" href={`mailto:${contact.email}`}>Send an email ↗</a><a className="outline" href={contact.resume} download>Download resume ↓</a></div><h2 id="contact-title">LET’S TALK</h2><div className="contact-links"><Link001 href={contact.linkedin} target="_blank" rel="noreferrer">LinkedIn</Link001><Link001 href={contact.github} target="_blank" rel="noreferrer">GitHub</Link001></div><p className="copyright">© {new Date().getFullYear()} Aghar Usman K T</p><p className="ui-credit">Link interactions adapted from <a href="https://www.skiper-ui.com/v1/skiper40" target="_blank" rel="noopener noreferrer">Skiper UI</a>.</p></div></section>
     </main>
   </>;
 }

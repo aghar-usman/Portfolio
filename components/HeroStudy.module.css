@@ -13,3 +13,5 @@
 .nav{gap:25px}.nav a{position:relative}.nav a:after{content:"";position:absolute;bottom:3px;left:4px;right:4px;height:2px;background:var(--accent-amber);transform:scaleX(0);transition:transform .18s}.nav a:hover:after,.nav a:focus-visible:after{transform:scaleX(1)}@media(max-width:1150px){.nav{gap:15px}}@media(max-width:850px){.nav.open{gap:10px 20px}.nav.open a{min-width:85px;min-height:44px}}
 
 .description{font-size:15px}.availability,.location,.github{font-size:11px}.checklist{font-size:13px}.proof span,.workCard>span:last-child{font-size:12px}@media(max-width:1150px) and (min-width:851px){.proof{display:none}.notes .workCard{margin-top:30px}.copy{top:40%}.hero{min-height:700px}.sheet{min-height:790px}}@media(max-width:640px){.description{font-size:15px}.copy h1{font-size:clamp(29px,8.6vw,37px)}.location,.availability{font-size:10px}.github{font-size:10px}.actions{flex-wrap:wrap}.notes{display:none}.portrait{pointer-events:none}}
+/* Skiper40 owns link feedback; avoid stacking the previous underline. */
+.nav a::after{content:none}
