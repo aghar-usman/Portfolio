@@ -22,7 +22,7 @@ typography:
 Preserve Aghar's original professional facts. The hero uses illustrated portraits and oversized AUKT lettering. Demonstrations explain actual work and clearly identify simulated data.
 
 ## Colors
-Use the semantic CSS variables in app/portfolio-theme.css. Normal sections alternate the canvas with a secondary ground: #F7E3C6 in light mode and #1D1B22 in dark mode. Skills and Education use this alternate ground. Selected Work alone inverts its surface during the paper tear. Brand blue carries actions; amber highlights important details.
+Use the semantic CSS variables in app/portfolio-theme.css. Normal sections alternate the canvas with a secondary ground: #F6EBD9 in light mode and #1B1A20 in dark mode. Skills and Education use this alternate ground. Selected Work alone inverts its surface during the paper tear. Brand blue carries actions; amber highlights important details.
 
 ## Typography
 DM Serif Display gives section headings an editorial voice. Space Grotesk carries copy, navigation, inputs, and buttons. Syne carries hero lettering. Reserve monospace for SQL and other code.

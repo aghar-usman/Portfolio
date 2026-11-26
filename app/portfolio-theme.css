@@ -6,6 +6,6 @@ body{font-family:'Space Grotesk',sans-serif;min-width:0}.section-head h2,.experi
 .contact .email{display:inline-flex;align-items:center;max-width:100%;width:fit-content;line-height:1.4;gap:.45em}.contact .email>span{overflow-wrap:anywhere}.contact .email>svg{width:.55em;height:.55em}.contact-links>a{min-height:44px}.ui-credit{font-size:11px!important;line-height:1.7;color:var(--muted);margin-top:18px}.ui-credit a{text-underline-offset:3px}.ui-credit a:focus-visible{outline:2px solid var(--red-text);outline-offset:4px}@media(max-width:600px){.contact .email{font-size:clamp(16px,4.4vw,21px)}.contact-links{flex-wrap:wrap}}
 .contact h2{font-size:clamp(30px,9.5vw,130px);line-height:1.05;letter-spacing:-.045em;white-space:normal;overflow-wrap:normal;max-width:100%}.contact .actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.contact .actions a{min-width:190px;width:auto}@media(max-width:600px){.contact .actions{display:grid}.contact .actions a{width:100%;min-width:0}.contact h2{font-size:9.5vw;margin-block:55px}}
 /* Alternate the normal sections; Selected Work keeps its inverse surface. */
-:root{--section-alternate:#f7e3c6}
-:root[data-theme=night]{--section-alternate:#1d1b22}
+:root{--section-alternate:#f6ebd9}
+:root[data-theme=night]{--section-alternate:#1b1a20}
 .education{background:var(--section-alternate)}
