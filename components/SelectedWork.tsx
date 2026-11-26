@@ -17,12 +17,6 @@ export default function SelectedWork() {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const el=root.current!;
-        el.querySelectorAll<HTMLElement>(`.${s.secondary}`).forEach((panel, index) => {
-          gsap.fromTo(panel, { rotation: index % 2 ? .65 : -.65, y: 16, transformOrigin: "50% 0%" }, {
-            rotation: 0, y: 0, duration: 1.1, ease: "power3.out",
-            scrollTrigger: { trigger: panel, start: "top 92%", once: true },
-          });
-        });
         el.dataset.tear="active";
         const backdrop=el.querySelector<HTMLElement>(`.${s.backdrop}`)!;
         backdrop.inert=true;

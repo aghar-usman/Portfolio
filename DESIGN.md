@@ -31,7 +31,7 @@ DM Serif Display gives section headings an editorial voice. Space Grotesk carrie
 Use the existing wrap for equal edges. Recompose columns into a single reading order on phones. The request playground keeps its input and action together, then shows the four processing stages and persistent results. Wrap code and labels without horizontal overflow.
 
 ## Components
-Navigation, project actions, and contact links share the free Skiper40 directional underline and arrow interaction. Maintain the visible Skiper UI attribution. Keep the effect CSS-only, with keyboard focus parity, visible touch arrows, and no transition for reduced motion. Supporting project panels make one small swing into their resting position; they remain readable throughout and never obscure the internship demonstration.
+Navigation, project actions, and contact links share the free Skiper40 directional underline and arrow interaction. Maintain the visible Skiper UI attribution. Keep the effect CSS-only, with keyboard focus parity, visible touch arrows, and no transition for reduced motion.
 
 The Team Thai playground is a local, deterministic simulation. It starts on a deliberate Run action, explains each stage, and preserves the answer until the next action. Every sample and custom supported question uses fictional orders. Changing or deleting data is simulated as blocked. Keep the actual internship facts immediately below the interaction.
 
