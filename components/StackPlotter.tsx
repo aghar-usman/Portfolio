@@ -23,10 +23,21 @@ export default function StackPlotter(){
   const [more,setMore]=useState(false);
   const [playing,setPlaying]=useState(false);
   const [canReplay,setCanReplay]=useState(false);
+  const [layoutVersion,setLayoutVersion]=useState(0);
+  useEffect(()=>{
+    let alive=true;
+    let timer:ReturnType<typeof setTimeout>;
+    let width=window.innerWidth,height=window.innerHeight;
+    const refresh=()=>{clearTimeout(timer);timer=setTimeout(()=>{if(alive)setLayoutVersion(value=>value+1);},180);};
+    const resize=()=>{const nextWidth=window.innerWidth,nextHeight=window.innerHeight;if(nextWidth===width&&(nextWidth<900||Math.abs(nextHeight-height)<80))return;width=nextWidth;height=nextHeight;refresh();};
+    window.addEventListener("resize",resize);
+    void document.fonts.ready.then(refresh);
+    return()=>{alive=false;clearTimeout(timer);window.removeEventListener("resize",resize);};
+  },[]);
   useEffect(()=>{ScrollTrigger.refresh();},[more]);
   useGSAP(()=>{
     const mm=gsap.matchMedia();
-    mm.add("(min-width: 900px) and (min-height: 720px) and (prefers-reduced-motion: no-preference)",()=>{
+    mm.add("(prefers-reduced-motion: no-preference)",()=>{
       const el=root.current!, stage=el.querySelector<HTMLElement>(`.${s.stage}`)!, heading=el.querySelector<HTMLElement>(`.${s.heading}`)!, anchor=el.querySelector<HTMLElement>(`.${s.anchor}`)!,dot=el.querySelector<HTMLElement>(`.${s.dot}`)!;
       const tiles=Array.from(el.querySelectorAll<HTMLElement>(`.${s.tile}`));
       const point=(target:Element,x=.5,y=.5)=>{const a=target.getBoundingClientRect(),b=stage.getBoundingClientRect();return{x:a.left-b.left+a.width*x-7,y:a.top-b.top+a.height*y-7};};
@@ -62,11 +73,12 @@ export default function StackPlotter(){
         .to(`.${s.splash} i`,{opacity:1,scale:1,duration:.03},17.88)
         .to(`.${s.splash} i`,{x:(i)=>Math.cos(i*Math.PI/3)*28,y:(i)=>Math.sin(i*Math.PI/3)*23,opacity:0,duration:.35},17.91)
         .to(dot,{scale:1,duration:.74},18.26);
-      ScrollTrigger.create({trigger:el,start:"top 20%",end:"bottom 20%",onEnter:()=>{if(tl.progress()<1)tl.play();},onEnterBack:()=>{if(tl.progress()<1)tl.resume();},onLeave:()=>tl.pause(),onLeaveBack:()=>tl.pause()});
+      const trigger=ScrollTrigger.create({trigger:el,start:"top 70%",end:"bottom 10%",onEnter:()=>{if(tl.progress()<1)tl.play();},onEnterBack:()=>{if(tl.progress()<1)tl.resume();},onRefresh:self=>{if(self.isActive&&tl.progress()<1)tl.play();},onLeave:()=>tl.pause(),onLeaveBack:()=>tl.pause()});
+      if(trigger.isActive)tl.play();
       return()=>{timeline.current=null;delete el.dataset.plotter;};
     });
     return()=>mm.revert();
-  },{scope:root});
+  },{scope:root,dependencies:[layoutVersion],revertOnUpdate:true});
   return <section id="skills" ref={root} className={s.section} aria-labelledby="stack-heading"><div className={s.stage}><div className={`${s.wrap} max-w-6xl mx-auto px-8 md:px-16`}>
     <p className={s.eyebrow}>TOOLS BEHIND THE WORK <span>FROM A LITTLE CHAOS TO A CLEAR SYSTEM</span></p><h2 id="stack-heading" className={s.heading}>The stack behind the work<span className={s.anchor} aria-hidden="true"><span className={s.staticPeriod}>.</span><span className={s.splash}>{Array.from({length:6},(_,i)=><i key={i}/>)}</span></span></h2><p className={s.subtitle}>One request travels through an interface, an API, and data.</p>
     <div className={s.board}><ul className={s.grid}>{skills.map(skill=><li className={s.tile} key={skill.name}><svg className={s.outline} viewBox="0 0 220 70" preserveAspectRatio="none" aria-hidden="true"><rect x=".5" y=".5" width="219" height="69" rx="11"/></svg><span className={s.skillIcon} style={{"--skill-color":skill.color} as CSSProperties}><skill.icon aria-hidden="true"/></span><span className={s.skillName}>{skill.name}</span></li>)}</ul></div>
