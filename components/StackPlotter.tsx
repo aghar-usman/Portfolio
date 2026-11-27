@@ -42,6 +42,7 @@ export default function StackPlotter(){
       const tiles=Array.from(el.querySelectorAll<HTMLElement>(`.${s.tile}`));
       const point=(target:Element,x=.5,y=.5)=>{const a=target.getBoundingClientRect(),b=stage.getBoundingClientRect();return{x:a.left-b.left+a.width*x-7,y:a.top-b.top+a.height*y-7};};
       const initial=point(heading,0,.7),landing=point(anchor);
+      const finalScale=Math.min(.7,Math.max(.36,Number.parseFloat(getComputedStyle(heading).fontSize)*.14/14));
       const scatter=tiles.map((tile,i)=>{const [dx,dy,rotation]=offsets[i];const board=el.querySelector<HTMLElement>(`.${s.board}`)!;return{x:dx*board.clientWidth,y:dy*board.clientHeight,rotation};});
       const positions=tiles.map((tile,i)=>{const p=point(tile);return{x:p.x+scatter[i].x,y:p.y+scatter[i].y};});
       el.dataset.plotter="active";
@@ -72,7 +73,7 @@ export default function StackPlotter(){
         .to(dot,{scaleX:1.25,scaleY:.8,duration:.065,repeat:1,yoyo:true},17.9)
         .to(`.${s.splash} i`,{opacity:1,scale:1,duration:.03},17.88)
         .to(`.${s.splash} i`,{x:(i)=>Math.cos(i*Math.PI/3)*28,y:(i)=>Math.sin(i*Math.PI/3)*23,opacity:0,duration:.35},17.91)
-        .to(dot,{scale:1,duration:.74},18.26);
+        .to(dot,{scale:finalScale,duration:.74},18.26);
       const trigger=ScrollTrigger.create({trigger:el,start:"top 70%",end:"bottom 10%",onEnter:()=>{if(tl.progress()<1)tl.play();},onEnterBack:()=>{if(tl.progress()<1)tl.resume();},onRefresh:self=>{if(self.isActive&&tl.progress()<1)tl.play();},onLeave:()=>tl.pause(),onLeaveBack:()=>tl.pause()});
       if(trigger.isActive)tl.play();
       return()=>{timeline.current=null;delete el.dataset.plotter;};

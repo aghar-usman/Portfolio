@@ -82,12 +82,10 @@
 @media(max-width:640px){.title{opacity:.76}.availability,.location{font-size:11px}.github{font-size:11px}}
 @media(min-width:641px) and (max-height:600px){.availability,.location,.github{font-size:11px}}
 
-/* Navigation uses the same editorial serif as the portfolio headings. */
-.nav{font-family:"DM Serif Display",serif;font-weight:400;letter-spacing:0;text-transform:none}
-.nav a{font-size:18px}
-@media(min-width:851px) and (max-width:1150px){.nav a{font-size:17px}}
-@media(max-width:850px){.nav.open a{font-size:19px}.header .menu{font-family:"DM Serif Display",serif;font-size:16px;font-weight:400;letter-spacing:0;text-transform:none}}
-
-.nav{text-transform:uppercase}.nav a{font-size:16px;letter-spacing:.015em}
-@media(min-width:851px) and (max-width:1150px){.nav a{font-size:15px;padding-inline:9px}}
-@media(max-width:850px){.nav.open a{font-size:17px}.header .menu{text-transform:uppercase;font-size:13px;letter-spacing:.025em}}
+/* Geometric navigation complements the Syne wordmark without repeating it. */
+.nav{font-family:"Space Grotesk",sans-serif;font-weight:600;letter-spacing:.045em;text-transform:uppercase}
+.nav a{font-size:14px}
+@media(min-width:851px) and (max-width:1150px){.nav a{font-size:13px;padding-inline:9px}}
+@media(max-width:850px){.nav.open a{font-size:14px}.header .menu{font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:600;letter-spacing:.045em;text-transform:uppercase}}
+@media(min-width:851px) and (max-width:1150px){.nav{width:464px}}
+@media(min-width:851px) and (max-width:1000px){.header{padding-left:24px}.logo{font-size:30px;padding-right:12px}}
