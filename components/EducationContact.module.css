@@ -11,3 +11,8 @@
 
 .recordTop,.college>span,.grade>span,.contactTop,.mailButton span,.copyStatus{font-size:12px;line-height:1.5}
 @media(max-width:600px){.recordTop,.college>span,.grade>span,.contactTop{font-size:12px}.mailButton span{font-size:10px}.grade{gap:12px}.contactTop>span{max-width:15ch}.college p{font-size:14px}}
+
+/* Keep the circular action clear of the headline, including iOS text sizing. */
+.invitation h2{min-width:0}
+.mailButton span{display:block;max-width:10ch;text-align:center;white-space:normal;overflow-wrap:normal}
+@media(max-width:600px){.invitation{flex-direction:column;align-items:flex-start;gap:22px}.invitation h2{width:100%;max-width:none}.magnet{padding:0}.mailButton{width:88px;height:88px;gap:5px;padding:12px}.mailButton span{max-width:9ch;font-size:11px;line-height:1.3}.mailButton>svg{width:28px;height:28px}}
